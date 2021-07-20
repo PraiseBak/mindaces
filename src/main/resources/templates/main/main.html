@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mindaces</title>
+        <link rel='stylesheet' href='/webjars/bootstrap/4.5.0/css/bootstrap.min.css'>
+    </head>
+    <body>
+        <header th:insert="base/header.html"></header>
+
+        <form>
+            <fieldset>
+                <div class="login_area">
+                    <span>
+                        <input type="text" id="id_area" name="id_area" required maxlength="20" placeholder="ID">
+                    </span>
+                    <br>
+                    <span>
+                        <input type="text" id="pw_area" name="pw_area" required maxlength="20" placeholder="PASSWORD">
+                        <button>Login</button>
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+
+
+
+
+
+
+        <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+        <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
