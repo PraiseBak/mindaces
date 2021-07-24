@@ -11,7 +11,7 @@ public class UserDto
 {
 
     private Long userIdx;
-    private String userId;
+    private String userID;
     private String userPassword;
     private String userEmail;
 
@@ -19,7 +19,7 @@ public class UserDto
     {
         User user = User.builder()
                 .userIdx(userIdx)
-                .userId(userId)
+                .userID(userID)
                 .userPassword(userPassword)
                 .userEmail(userEmail)
                 .build();
@@ -27,12 +27,12 @@ public class UserDto
     }
 
     @Builder
-    public UserDto(Long userIdx,String userId,String userPassword,String userEmail)
+    public UserDto(Long userIdx,String userID,String userPassword,String userEmail)
     {
-        userIdx = userIdx;
-        userId = userId;
-        userPassword = userPassword;
-        userEmail = userEmail;
+        this.userIdx = userIdx;
+        this.userID = userID;
+        this.userPassword = userPassword;
+        this.userEmail = userEmail;
     }
 
 }
