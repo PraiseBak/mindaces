@@ -54,9 +54,10 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 //form 기반 인증 -> HttpSession 이용
                 .formLogin()
                 //커스텀 로그인 폼 사용 (커스텀 로그인 foam의 action과 loginPage()의 파라미터 경로가 일치해야함 주의)
-                .loginPage("/user/login")
+                .loginPage("/")
                 //성공후 이동하는 페이지
-                .defaultSuccessUrl("/user/login/result")
+                .defaultSuccessUrl("/")
+                .failureUrl("/")
                 .permitAll()
             .and()
                 //http 세션 제거

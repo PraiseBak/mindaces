@@ -30,8 +30,11 @@ public class UserController
     @GetMapping("/user/login")
     public String userlogin()
     {
+        System.out.println("쉥스농");
         return "/login";
     }
+
+
 
     @GetMapping("/user/login/result")
     public String loginResult()

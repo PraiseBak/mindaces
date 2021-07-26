@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec = "http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
     <head>
         <meta charset="UTF-8">
         <title>Mindaces</title>
@@ -10,27 +11,30 @@
         <header th:insert="base/header.html"></header>
         <div class="full_area">
             <div class="row" style="margin-left:10px;">
-                    <div class="login_area" style="margin-left:10px; margin-top: 10px; background:darkslategrey; width: 15%; height: 70px; border-left-width: 15px; border: darkslategrey 5px solid;">
+                    <div class="login_area" style="margin-left:10px; margin-top: 10px; background:darkslategrey; width: 17%; height: 110px; border-left-width: 15px; background: grey; border: darkslategrey 5px solid;">
                         <div class="side-top">
                             <section id="login_section">
-                                <form class="form-horizontal">
+                                <form class="form-horizontal"  th:action="@{/user/login}" method="post">
                                     <fieldset>
                                         <div class="id_area">
-                                            <input type="text" id="id_area" name="id_area" required maxlength="20" placeholder="ID">
+                                            <input style="width:70%;" type="text" id="id_area" name="userID" required maxlength="20" placeholder="ID">
                                         </div>
                                         <div class="pw_area">
-                                            <input type="text" id="pw_area" name="pw_area" required maxlength="20" placeholder="PASSWORD">
-                                            <button>Login</button>
+                                            <input style="float:left; width:70%;" type="text" id="pw_area" name="userPassword" required maxlength="20" placeholder="PASSWORD">
                                         </div>
-                                        <div>
-                                            <a sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-                                            <a sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
-                                            <a sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>
-                                            <a sec:authorize="hasRole('ROLE_MEMBER')" th:href="@{/user/info}">내정보</a>
-                                            <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}">어드민</a>
+                                        <div class="login_area">
+                                            <button type="submit" style="float:left; margin-left:10px; width:25%;" sec:authorize="isAnonymous()" th:onclick="'location.href=\''+ @{/user/login} + '\''">로그인</button>
                                         </div>
                                     </fieldset>
                                 </form>
+
+                                <div>
+                                    <button style="margin-top: 7px;" sec:authorize="isAnonymous()" th:onclick="'location.href=\''+ @{/user/signup} + '\''">회원가입</button>
+                                    <button style="margin-top: 7px; margin-left:3px;" sec:authorize="isAnonymous()" th:href="@{/user/findId}">ID 찾기</button>
+                                    <a sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+                                    <a sec:authorize="hasRole('ROLE_MEMBER')" th:href="@{/user/info}">내정보</a>
+                                    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}">어드민</a>
+                                </div>
                             </section>
                         </div>
                     </div>

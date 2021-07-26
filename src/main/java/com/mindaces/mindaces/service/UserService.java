@@ -5,6 +5,7 @@ import com.mindaces.mindaces.domain.entity.User;
 import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +30,18 @@ public class UserService implements UserDetailsService
     public Long joinUser(UserDto userDto)
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String inputID = userDto.getUserID();
+
+        if(userRepository.findByUserID(inputID).isPresent())
+        {
+            return (long) -1;
+        }
+
         userDto.setUserID(userDto.getUserID());
         userDto.setUserEmail(userDto.getUserEmail());
         userDto.setUserPassword(passwordEncoder.encode(userDto.getUserPassword()));
         return userRepository.save(userDto.toEntity()).getUserIdx();
+
     }
 
     @Override
@@ -39,9 +49,13 @@ public class UserService implements UserDetailsService
     {
         //Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);
         Optional<User> userEntityWrapper = userRepository.findByUserID(userID);
+
+        if(userEntityWrapper.isPresent())
+        {
+
+        }
         User user = userEntityWrapper.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
-
         if(("praisebak@naver.com").equals(userID))
         {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
@@ -52,6 +66,8 @@ public class UserService implements UserDetailsService
         }
         return new org.springframework.security.core.userdetails.
                 User(user.getUserID(),user.getUserPassword(),authorities);
+
+
     }
 
 
