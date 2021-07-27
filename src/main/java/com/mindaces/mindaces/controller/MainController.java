@@ -24,7 +24,16 @@ public class MainController
     {
         //List<BoardDto> boardDtoList = boardService.getBoardList();
         //model.addAttribute("recommandBoard",boardDtoList);
+
         return "main/main";
+    }
+
+    @GetMapping("/test")
+    public String test()
+    {
+        //List<BoardDto> boardDtoList = boardService.getBoardList();
+        //model.addAttribute("recommandBoard",boardDtoList);
+        return "/index.html";
     }
 
     @GetMapping("/post")

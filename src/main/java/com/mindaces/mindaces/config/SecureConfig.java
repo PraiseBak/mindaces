@@ -70,6 +70,11 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
             .and()
                 //예외 발생시 이동시킬 부분
                 .exceptionHandling().accessDeniedPage("/user/denied");
+            http.csrf()
+                .ignoringAntMatchers("/apitest");
+
+
+
     }
 
     //AutionticationManager가 모든 인증의 주체임

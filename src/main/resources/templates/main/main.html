@@ -14,16 +14,17 @@
                     <div class="login_area" style="margin-left:10px; margin-top: 10px; background:darkslategrey; width: 17%; height: 110px; border-left-width: 15px; background: grey; border: darkslategrey 5px solid;">
                         <div class="side-top">
                             <section id="login_section">
-                                <form class="form-horizontal"  th:action="@{/user/login}" method="post">
+                                <form class="form-horizontal"  sec:authorize="isAnonymous()" th:action="@{/}" method="post" >
                                     <fieldset>
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                         <div class="id_area">
-                                            <input style="width:70%;" type="text" id="id_area" name="userID" required maxlength="20" placeholder="ID">
+                                            <input style="width:70%;" type="text" id="userID" name="username" required maxlength="20" placeholder="ID">
                                         </div>
                                         <div class="pw_area">
-                                            <input style="float:left; width:70%;" type="text" id="pw_area" name="userPassword" required maxlength="20" placeholder="PASSWORD">
+                                            <input style="float:left; width:70%;" type="password" id="pw_area" name="password" required maxlength="20" placeholder="PASSWORD">
                                         </div>
                                         <div class="login_area">
-                                            <button type="submit" style="float:left; margin-left:10px; width:25%;" sec:authorize="isAnonymous()" th:onclick="'location.href=\''+ @{/user/login} + '\''">로그인</button>
+                                            <button type="submit" style="float:left; margin-left:10px; width:25%;" sec:authorize="isAnonymous()" th:onclick="'location.href=\''+ @{/} + '\''">로그인</button>
                                         </div>
                                     </fieldset>
                                 </form>
@@ -32,7 +33,7 @@
                                     <button style="margin-top: 7px;" sec:authorize="isAnonymous()" th:onclick="'location.href=\''+ @{/user/signup} + '\''">회원가입</button>
                                     <button style="margin-top: 7px; margin-left:3px;" sec:authorize="isAnonymous()" th:href="@{/user/findId}">ID 찾기</button>
                                     <a sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
-                                    <a sec:authorize="hasRole('ROLE_MEMBER')" th:href="@{/user/info}">내정보</a>
+                                    <a sec:authorize="hasRole('ROLE_USER')" th:href="@{/user/info}">내정보</a>
                                     <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}">어드민</a>
                                 </div>
                             </section>

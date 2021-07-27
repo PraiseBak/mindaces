@@ -1,12 +1,13 @@
 package com.mindaces.mindaces.controller;
 
 
+import com.mindaces.mindaces.domain.entity.User;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @AllArgsConstructor
@@ -23,17 +24,25 @@ public class UserController
     @PostMapping("/user/signup")
     public String execSignup(UserDto userDto)
     {
-        userService.joinUser(userDto);
+        if(userService.joinUser(userDto) == -1)
+        {
+            System.out.println("실패 마구마구!");
+        }
         return "redirect:/user/login";
     }
 
     @GetMapping("/user/login")
     public String userlogin()
     {
-        System.out.println("쉥스농");
         return "/login";
     }
 
+    @PostMapping("/")
+    public String userlogin(UserDto usertDto)
+    {
+        userService.loadUserByUsername(usertDto.getUserID());
+        return "/";
+    }
 
 
     @GetMapping("/user/login/result")
