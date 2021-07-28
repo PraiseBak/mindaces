@@ -32,11 +32,11 @@ public class UserService implements UserDetailsService
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String inputID = userDto.getUserID();
 
+        //중복확인으로 체크하긴 하지만 혹시모르니 더블 체크
         if(userRepository.findByUserID(inputID).isPresent())
         {
             return (long) -1;
         }
-
 
         userDto.setUserID(userDto.getUserID());
         userDto.setUserEmail(userDto.getUserEmail());
@@ -49,17 +49,11 @@ public class UserService implements UserDetailsService
     public UserDetails loadUserByUsername(String userID) throws UsernameNotFoundException
     {
         //Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);
-        System.out.println("농농!!2" + userID + "2");
-
         Optional<User> userEntityWrapper = userRepository.findByUserID(userID);
 
         if(userEntityWrapper.isEmpty())
         {
-            System.out.println("실패했농?");
-            System.out.println(userEntityWrapper);
-            System.out.println("농농\n\n");
             throw new UsernameNotFoundException(userID);
-
         }
 
         User user = userEntityWrapper.get();
@@ -72,7 +66,6 @@ public class UserService implements UserDetailsService
         {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
         }
-        System.out.println("첫번째 권한 값 테스트 : " + authorities.get(0));
 
         return new org.springframework.security.core.userdetails.
                 User(user.getUserID(),user.getUserPassword(),authorities);
@@ -87,10 +80,6 @@ public class UserService implements UserDetailsService
             return -1L;
         }
         return 1L;
-
-
-
-
     }
 
 
