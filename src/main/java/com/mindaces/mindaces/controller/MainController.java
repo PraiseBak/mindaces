@@ -28,13 +28,6 @@ public class MainController
         return "main/main";
     }
 
-    @GetMapping("/test")
-    public String test()
-    {
-        //List<BoardDto> boardDtoList = boardService.getBoardList();
-        //model.addAttribute("recommandBoard",boardDtoList);
-        return "/index.html";
-    }
 
     @GetMapping("/post")
     public String post()
@@ -49,5 +42,10 @@ public class MainController
         return "redirect:/";
     }
 
+    @GetMapping("/fail")
+    public String fail()
+    {
+        return "except/fail";
+    }
 
 }

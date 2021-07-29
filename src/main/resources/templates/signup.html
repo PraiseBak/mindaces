@@ -20,17 +20,23 @@
         <div class="row">
             <div class="col-md-5"></div>
             <div class="col-md-5">
-                <form th:action="@{/user/signup}" method="POST">
+                <form th:action="@{/user/signup}" onsubmit="return checkValid()" method="POST">
                     <div id="idArea">
-                        <input type="text" minlength="6" maxlength="20" name="userID" id="userID" placeholder="이메일을입력해주세요">
-                        <button class="btn btn-sm" type="button" onclick="sendUserID()">중복확인</button>
+                        <input type="text" minlength="6" maxlength="20" name="userID" required id="userID" placeholder="아이디를 입력해주세요">
                         <p id="alarmArea" th:text="${msg}"></p>
                     </div>
                     <div>
-                        <input type="password" name="userPassword" placeholder="비밀번호">
+                        <input type="password" minlength="8" maxlength="20" required id="userPassword" name="userPassword" placeholder="비밀번호">
+                        <p></p>
                     </div>
+                    <div>
+                        <input type="text" minlength="4" maxlength="40" required id="userEmail" name="userEmail" placeholder="인증 이메일">
+                    </div>
+
                     <p></p>
-                    <button type="submit">제출</button>
+                    <button>제출</button>
+                    <p id="resultArea" th:text="${msg}"></p>
+
                 </form>
             </div>
 
@@ -42,9 +48,8 @@
 </html>
 
 
-<script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
-<script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <script src="/js/AjaxAPI.js" defer></script>
+<script src="/js/CheckValid.js" defer></script>
 
 
 

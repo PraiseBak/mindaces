@@ -25,13 +25,27 @@ public class UserController
     @PostMapping("/sendIDAPI")
     public String idCheck(Model model,UserDto userDto)
     {
-        Long isDuplicateUser = userService.findUserID(userDto.getUserID());
-        String msg = "중복된 아이디입니다";
+        Long isDuplicateUser = 0L;
+        String msg = "중복된";
+        String idOrEmail = "아이디입니다";
+        if(userDto.getUserID() == null)
+        {
+            idOrEmail = "이메일입니다";
+            isDuplicateUser = userService.findUserEmail(userDto.getUserEmail());
+        }
+        else if(userDto.getUserEmail() == null)
+        {
+             isDuplicateUser = userService.findUserID(userDto.getUserID());
+        }
         if(isDuplicateUser == -1L)
         {
-            msg = "사용가능한 아이디입니다";
+            msg = "사용가능한";
         }
-        model.addAttribute("msg",msg);
+        model.addAttribute("msg",msg + " " + idOrEmail);
+        if(idOrEmail.equals("이메일입니다"))
+        {
+            return "/signup :: #resultArea";
+        }
         return "/signup :: #alarmArea";
     }
 
@@ -41,9 +55,9 @@ public class UserController
     {
         if(userService.joinUser(userDto) == -1)
         {
-            System.out.println("실패 마구마구!");
+            return "redirect:/fail";
         }
-        return "redirect:/user/login";
+        return "redirect:/";
     }
 
     @GetMapping("/user/login")

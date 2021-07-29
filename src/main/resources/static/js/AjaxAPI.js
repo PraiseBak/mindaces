@@ -1,51 +1,60 @@
-function sendUserID()
+let isValidID = false;
+let isValidEamil = false;
+let isValidPassword = false;
+var userID = document.querySelector("#userID");
+var userPassword = document.querySelector("#userPassword");
+var userEmail = document.querySelector("#userEmail");
+
+
+function checkDuplicateUserID (data)
 {
-    var data=$("#userID").val();
+    var userDTO=
+    {
+        userID : data
+    };
+    $.ajax({
+        url: "/sendIDAPI",
+        data: userDTO,
+        type: "POST"
 
-
-    if(data.length < 6 || data.length > 20)
-    {
-        $("#alarmArea").text("입력은 최소 6자 최대 20자만 가능합니다");
-    }
-    else if(!checkValidateID(data))
-    {
-        $("#alarmArea").text("영어와 숫자만 입력해주세요");
-    }
-    else
-    {
-        var userDTO=
+    }).done(function (fragment){
+        var alarmArea = $("#alarmArea");
+        alarmArea.replaceWith(fragment);
+        if(fragment.search("중복")=== -1)
         {
-            userID : data
-        };
-        $.ajax({
-            url: "/sendIDAPI",
-            data: userDTO,
-            type: "POST"
-            //,
-            //success:function(fragment){
-            //  alert(fragment);
-            //const element = document.getElementById("resultDiv");
-            //element.innerText = "쉥스농";
-            //}
+            isValidID = true;
+        }
+        else
+        {
+            isValidID = false;
+        }
+    });
 
-        }).done(function (fragment){
-            $("#alarmArea").replaceWith(fragment);
-        });
-    }
 }
 
-function checkValidateID(id)
+
+
+function checkDuplicateUserEmail (data)
 {
-    var spe = id.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
-    var korean = id.search(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/gi);
-    if (id.search(/₩s/) != -1)
+    var userDTO=
     {
-        return false;
-    }
-    if (spe > 0 || korean > 0) {
-        return false;
-    }
-    return true;
+        userEmail : data
+    };
+    $.ajax({
+        url: "/sendIDAPI",
+        data: userDTO,
+        type: "POST"
 
+    }).done(function (fragment){
+        var alarmArea = $("#resultArea");
+        alarmArea.replaceWith(fragment);
+        if(fragment.search("중복")=== -1)
+        {
+            isValidEmail = true;
+        }
+        else
+        {
+            isValidEmail = false;
+        }
+    });
 }
-

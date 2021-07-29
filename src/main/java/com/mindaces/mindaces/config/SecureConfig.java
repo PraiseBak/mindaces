@@ -57,7 +57,7 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .loginPage("/")
                 //성공후 이동하는 페이지
                 .defaultSuccessUrl("/")
-                .failureUrl("/")
+                .failureUrl("/fail")
                 .permitAll()
             .and()
                 //http 세션 제거

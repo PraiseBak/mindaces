@@ -31,7 +31,7 @@ public class User
     @Column(name="user_pw",length = 80,nullable = false)
     private String userPassword;
 
-    @Column(name="user_email",length = 45 ,nullable = false)
+    @Column(name="user_email",length = 45,nullable = false)
     private String userEmail;
 
     @CreatedDate
