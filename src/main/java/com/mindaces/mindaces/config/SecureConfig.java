@@ -69,7 +69,12 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .invalidateHttpSession(true)
             .and()
                 //예외 발생시 이동시킬 부분
-                .exceptionHandling().accessDeniedPage("/user/denied");
+                .exceptionHandling().accessDeniedPage("/user/denied")
+            .and()
+                .oauth2Login()
+                        .loginPage("/google");
+
+
             http.csrf()
                 .ignoringAntMatchers("/sendIDAPI");
 
