@@ -1,7 +1,6 @@
 package com.mindaces.mindaces.controller;
 
 
-import com.mindaces.mindaces.domain.entity.User;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ public class UserController
     @GetMapping("/user/signup")
     public String userSignUp()
     {
-        return "/signup";
+        return "userInfoPage/signup";
     }
 
     @PostMapping("/sendIDAPI")
@@ -27,7 +26,7 @@ public class UserController
     {
         Long isDuplicateUser = 0L;
         String msg = "중복된";
-        String idOrEmail = "아이디입니다";
+        String idOrEmail = "닉네임입니다";
         if(userDto.getUserID() == null)
         {
             idOrEmail = "이메일입니다";
@@ -46,7 +45,7 @@ public class UserController
         {
             return "/signup :: #resultArea";
         }
-        return "/signup :: #alarmArea";
+        return "userInfoPage/signup :: #alarmArea";
     }
 
 
@@ -63,44 +62,51 @@ public class UserController
     @GetMapping("/user/login")
     public String userlogin()
     {
-        return "/login";
+        return "userInfoPage/login";
     }
 
     @PostMapping("/")
     public String userlogin(UserDto usertDto)
     {
         userService.loadUserByUsername(usertDto.getUserID());
-        return "/";
+        return "userInfoPage/login";
     }
 
     @GetMapping("/user/login/result")
     public String loginResult()
     {
-        return "/loginSuccess";
+        return "userInfoPage/loginSuccess";
     }
 
     @GetMapping("/user/logout/result")
     public String logout()
     {
-        return "/logout";
+        return "userInfoPage/logout";
     }
 
     @GetMapping("/user/denied")
     public String denied()
     {
-        return "/denied";
+        return "userInfoPage/denied";
     }
 
     @GetMapping("/user/info")
     public String userInfo()
     {
-        return "/myinfo";
+        return "userInfoPage/myinfo";
     }
 
     @GetMapping("/admin")
     public String admin()
     {
-        return "/admin";
+        return "userInfoPage/admin";
+    }
+
+    @GetMapping("/user/selectSignup")
+    public String beforeSignup()
+    {
+        return "userInfoPage/selectSignup";
+
     }
 
 

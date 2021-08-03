@@ -1,7 +1,11 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.User;
+import com.mindaces.mindaces.helper.constants.SocialLoginType;
 import lombok.*;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Getter
 @Setter
@@ -11,9 +15,16 @@ public class UserDto
 {
 
     private Long userIdx;
+    //use as a nickname
     private String userID;
     private String userPassword;
     private String userEmail;
+    @Enumerated(EnumType.STRING)
+    private SocialLoginType provider;
+
+
+
+
 
     public User toEntity()
     {

@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>Mindaces</title>
     <link rel="stylesheet" href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css">
+    <meta name = "google-signin-client_id"content = " 복사한 클라이언트 ID ">
 </head>
 <body>
 <div class="navbar navbar-dark bg-dark shadow-sm mb-3">
@@ -14,15 +15,37 @@
             <strong>Mindaces</strong>
         </a>
     </div>
+
+    <nav class="nav-bar">
+        <div class='container-fluid'>
+            <nav class="nav">
+                <a class="nav-link" th:href="@{/user/selectSignup}" sec:authorize="isAnonymous()">회원가입</a>
+                <a class="nav-link" th:href="@{/user/login}"  sec:authorize="isAnonymous()">로그인</a>z
+                <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+            </nav>
+        </div>
+    </nav>
+
 </div>
+
+
+<style>
+    .nav a
+    {
+        color:#FFFFFF80;
+    }
+
+
+</style>
+
+
+
+
 
 </body>
 
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
-
-
 
 
 

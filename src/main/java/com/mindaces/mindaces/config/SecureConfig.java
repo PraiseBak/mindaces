@@ -1,6 +1,8 @@
 package com.mindaces.mindaces.config;
 
+import com.mindaces.mindaces.service.CustomOAuth2UserService;
 import com.mindaces.mindaces.service.UserService;
+import com.mindaces.mindaces.service.social.CustomOAuth2User;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +11,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 //설정관련 클래스는 Configuration이라고 명시해줘야함
@@ -24,7 +33,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecureConfig extends WebSecurityConfigurerAdapter
 {
     private UserService userService;
-
+    private CustomOAuth2UserService oauthUserService;
     //스프링 제공 비밀번호 암호화 객체
     @Bean
     public PasswordEncoder passwordEncoder()
@@ -49,10 +58,11 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/user/myinfo").hasAuthority("USER")
                 //petmitAll -> 권한없이 통과
                 .antMatchers("/**").permitAll()
-                //모든 요청에 대해 인증된 사용자만 접근하도록 설정?
+                .antMatchers("/","/login","/auth/**").permitAll()
+                .anyRequest().authenticated()
             .and()
                 //form 기반 인증 -> HttpSession 이용
-                .formLogin()
+                .formLogin().permitAll()
                 //커스텀 로그인 폼 사용 (커스텀 로그인 foam의 action과 loginPage()의 파라미터 경로가 일치해야함 주의)
                 .loginPage("/")
                 //성공후 이동하는 페이지
@@ -72,15 +82,32 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .exceptionHandling().accessDeniedPage("/user/denied")
             .and()
                 .oauth2Login()
-                        .loginPage("/google");
+                        .loginPage("/")
+                        .userInfoEndpoint()
+                                .userService(oauthUserService)
+                        .and()
+            .successHandler(new AuthenticationSuccessHandler() {
 
+                @Override
+                public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                                    Authentication authentication) throws IOException, ServletException
+                {
 
+                    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+
+                    userService.processOAuthPostLogin(oauthUser.getEmail());
+
+                    response.sendRedirect("/");
+                }
+            });
             http.csrf()
                 .ignoringAntMatchers("/sendIDAPI");
 
 
 
     }
+
+
 
     //AutionticationManager가 모든 인증의 주체임
     //AutionticationManagerBuilder를 이용해서 AutionticationManager를 사용함

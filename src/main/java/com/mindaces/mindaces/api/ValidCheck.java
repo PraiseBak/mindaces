@@ -37,8 +37,8 @@ public class ValidCheck
 
     public boolean isValidID(String id)
     {
-        //6자에서 20자 시작 영문, _ 제외한 특수문자 안됨
-        String regex = "^[a-zA-Z]{1}[a-zA-Z0-9_]{5,19}$";
+        //닉네임은 한글, 영문, 숫자만 가능하며 2-10자리 가능.
+        String regex = "^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{1,10}$";
         return Pattern.matches(regex,id);
     }
 

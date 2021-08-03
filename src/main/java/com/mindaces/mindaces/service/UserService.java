@@ -5,6 +5,7 @@ import com.mindaces.mindaces.domain.entity.User;
 import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
+import com.mindaces.mindaces.service.social.CustomOAuth2User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,12 +13,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+
 
 @Service
 @AllArgsConstructor
@@ -93,4 +98,7 @@ public class UserService implements UserDetailsService
     }
 
 
+    public void processOAuthPostLogin(String username)
+    {
+    }
 }

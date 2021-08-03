@@ -46,10 +46,10 @@ userPassword.onblur = function (e) {
 userID.onblur = function (e) {
     var data = $("#userID").val();
     isValidID = false;
-    if (data.length < 6 || data.length > 20) {
-        $("#alarmArea").text("입력은 최소 6자 최대 20자만 가능합니다");
+    if (data.length < 2 || data.length > 10) {
+        $("#alarmArea").text("입력은 최소 2자 최대 10자만 가능합니다");
     } else if (checkValidateID(data) === false) {
-        $("#alarmArea").text("아이디는 영어로 시작하고 영어와 숫자만 가능합니다");
+        $("#alarmArea").text("닉네임은 한글, 영문, 숫자만 가능합니다");
     }
     else
     {
@@ -58,11 +58,11 @@ userID.onblur = function (e) {
 }
 
 
-
-
 function checkValidateID(id)
 {
-    var regex = id.search(/^[a-zA-Z]{1}[a-zA-Z0-9_]{5,19}$/);
+
+    //닉네임은 한글, 영문, 숫자만 가능하며 2-10자리 가능.
+    var regex = id.search(/^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{1,10}$/);
     if(regex === -1)
     {
         return false;

@@ -1,5 +1,5 @@
 package com.mindaces.mindaces.service;
-
+/*
 import com.mindaces.mindaces.dto.MailDto;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -22,3 +22,5 @@ public class MailService {
         mailSender.send(message);
     }
 }
+
+ */

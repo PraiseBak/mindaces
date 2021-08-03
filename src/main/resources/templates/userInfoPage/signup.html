@@ -22,7 +22,7 @@
             <div class="col-md-5">
                 <form th:action="@{/user/signup}" onsubmit="return checkValid()" method="POST">
                     <div id="idArea">
-                        <input type="text" minlength="6" maxlength="20" name="userID" required id="userID" placeholder="아이디를 입력해주세요">
+                        <input type="text" minlength="2" maxlength="10" name="userID" required id="userID" placeholder="닉네임">
                         <p id="alarmArea" th:text="${msg}"></p>
                     </div>
                     <div>
@@ -30,20 +30,29 @@
                         <p></p>
                     </div>
                     <div>
-                        <input type="text" minlength="4" maxlength="40" required id="userEmail" name="userEmail" placeholder="인증 이메일">
+                        <input type="email" minlength="4" maxlength="40" required id="userEmail" name="userEmail" placeholder="인증 이메일">
                     </div>
 
                     <p></p>
                     <button>제출</button>
                     <p id="resultArea" th:text="${msg}"></p>
 
+
+
+
+                    <style>
+                        input
+                        {
+                            width:225px;
+                        }
+                    </style>
+
+
+
                 </form>
             </div>
 
         </div>
-
-
-
     </body>
 </html>
 
