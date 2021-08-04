@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+<head th:insert="base/head.html">
+    <meta charset="UTF-8">
+    <title>Mindaces</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="row">
+    <div class="col-md-5"></div>
+    <div class="col-md-6">
+        <h2>
+            Mindaces 회원가입
+        </h2>
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-5"></div>
+    <div class="col-md-5">
+            <button class="btn-lg" th:onclick="|location.href='@{/user/signup}'|">
+                Mindaces 회원가입
+            </button>
+            <p></p>
+
+            <button class="btn-lg" th:onclick="|location.href='@{/oauth2/authorization/google}'|">
+                구글로 로그인
+            </button>
+
+
+
+        </form>
+    </div>
+
+</div>
+</body>
+</html>
+
+<script src="/js/AjaxAPI.js" defer></script>
+<script src="/js/CheckValid.js" defer></script>
+
