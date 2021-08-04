@@ -7,15 +7,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
+import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 @Controller
 public class MainController
 {
     private BoardService boardService;
+    private HttpSession httpSession;
 
-    public MainController(BoardService boardService)
+
+    public MainController(BoardService boardService,HttpSession httpSession)
     {
+        this.httpSession = httpSession;
         this.boardService = boardService;
     }
 
@@ -24,7 +28,6 @@ public class MainController
     {
         //List<BoardDto> boardDtoList = boardService.getBoardList();
         //model.addAttribute("recommandBoard",boardDtoList);
-
         return "main/main";
     }
 
