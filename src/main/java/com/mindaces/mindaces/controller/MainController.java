@@ -6,7 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
@@ -23,9 +26,12 @@ public class MainController
         this.boardService = boardService;
     }
 
+
+    //TODO 수정
     @GetMapping("/")
-    public String main(Model model)
+    public String main(Model model, HttpServletRequest request)
     {
+        HttpSession session = request.getSession();
         //List<BoardDto> boardDtoList = boardService.getBoardList();
         //model.addAttribute("recommandBoard",boardDtoList);
         return "main/main";

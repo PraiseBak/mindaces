@@ -31,6 +31,9 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'org.webjars:bootstrap:4.5.0'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
+	implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.7.RELEASE'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 test {

@@ -5,17 +5,9 @@ import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 
 @Controller
 @AllArgsConstructor
@@ -23,6 +15,7 @@ public class UserController
 {
 
     private UserService userService;
+
 
     @GetMapping("/user/signup")
     public String userSignUp()
@@ -52,7 +45,7 @@ public class UserController
         model.addAttribute("msg",msg + " " + idOrEmail);
         if(idOrEmail.equals("이메일입니다"))
         {
-            return "/signup :: #resultArea";
+            return "userInfoPage/signup :: #resultArea";
         }
         return "userInfoPage/signup :: #alarmArea";
     }

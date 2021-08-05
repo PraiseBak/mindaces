@@ -34,6 +34,8 @@ import java.io.IOException;
 public class SecureConfig extends WebSecurityConfigurerAdapter
 {
 
+
+
     private UserService userService;
     private CustomOAuth2UserService oauthUserService;
     //스프링 제공 비밀번호 암호화 객체
@@ -87,7 +89,7 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .exceptionHandling().accessDeniedPage("/user/denied")
             .and()
                 .oauth2Login()
-                        .loginPage("/")
+                        .loginPage("/user/login")
                         .userInfoEndpoint()
                                 .userService(oauthUserService)
                         .and()
@@ -98,12 +100,12 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                                     Authentication authentication) throws IOException, ServletException
                 {
+                    System.out.println("테스트");
                     CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
                     userService.processOAuthPostLogin(oauthUser.getEmail());
                     response.sendRedirect("/");
                 }
             });
-
 
             http.csrf()
                 .ignoringAntMatchers("/sendIDAPI");
@@ -122,4 +124,8 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
 
     }
+
 }
+
+
+
