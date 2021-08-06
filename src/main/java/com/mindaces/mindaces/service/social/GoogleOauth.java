@@ -71,12 +71,14 @@ public class GoogleOauth implements SocialOauth
                 }
             }
         }
+
+
         Map<String, Object> revokeParams = new HashMap<>();
         revokeParams.put("header","Content-type:application/x-www-form-urlencoded");
         String revokeUrl = "https://oauth2.googleapis.com/revoke?token=" + accessCode;
-        responseEntity =
-                restTemplate.postForEntity(revokeUrl,revokeParams,String.class);
-        System.out.println("result::" + responseEntity.getStatusCode());
+        //responseEntity =
+        //        restTemplate.postForEntity(revokeUrl,revokeParams,String.class);
+        //System.out.println("result::" + responseEntity.getStatusCode());
 
         return accessCode;
     }

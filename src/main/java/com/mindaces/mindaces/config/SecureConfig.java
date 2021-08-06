@@ -12,8 +12,10 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -62,13 +64,13 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/user/myinfo").hasAuthority("USER")
                 //petmitAll -> 권한없이 통과
                 .antMatchers("/**").permitAll()
-                .antMatchers("/","/login","/auth/**").permitAll()
+                .antMatchers("/","user/login","/auth/**","/auth/google/callback/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 //form 기반 인증 -> HttpSession 이용
                 .formLogin().permitAll()
                 //커스텀 로그인 폼 사용 (커스텀 로그인 foam의 action과 loginPage()의 파라미터 경로가 일치해야함 주의)
-                .loginPage("/")
+                .loginPage("/user/login")
                 //성공후 이동하는 페이지
                 .defaultSuccessUrl("/")
                 .failureUrl("/fail")
@@ -88,24 +90,34 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 //예외 발생시 이동시킬 부분
                 .exceptionHandling().accessDeniedPage("/user/denied")
             .and()
-                .oauth2Login()
-                        .loginPage("/user/login")
-                        .userInfoEndpoint()
-                                .userService(oauthUserService)
-                        .and()
+                .oauth2Login().loginPage("/user/login")
+                .userInfoEndpoint()
+                    .userService(oauthUserService)
 
-            .successHandler(new AuthenticationSuccessHandler() {
-
-                @Override
-                public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                                    Authentication authentication) throws IOException, ServletException
+            .and()
+                .successHandler(new AuthenticationSuccessHandler() {
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                                        Authentication authentication) throws IOException, ServletException
+                    {
+                        System.out.println("테스트");
+                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                        userService.processOAuthPostLogin(oauthUser.getEmail());
+                        response.sendRedirect("/");
+                    }
+                })
+                .failureHandler(new AuthenticationFailureHandler()
                 {
-                    System.out.println("테스트");
-                    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-                    userService.processOAuthPostLogin(oauthUser.getEmail());
-                    response.sendRedirect("/");
-                }
-            });
+                    @Override
+                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException
+                    {
+                        System.out.println("인증에 실패했다고 생각하는건가 아니면 애초에 url이 인식이 안되는걸까");
+                    }
+                })
+        .and()
+            .oauth2Login().authorizationEndpoint().baseUri("/auth/google/callback");
+
+
 
             http.csrf()
                 .ignoringAntMatchers("/sendIDAPI");
