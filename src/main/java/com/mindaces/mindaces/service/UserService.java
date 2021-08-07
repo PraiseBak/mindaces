@@ -50,13 +50,14 @@ public class UserService implements UserDetailsService
     {
         //Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);
         Optional<User> userEntityWrapper = userRepository.findByUserID(userID);
-
         if(userEntityWrapper.isEmpty())
         {
+            System.out.println("존재하지 않은 유저입니다");
             throw new UsernameNotFoundException(userID);
         }
 
         User user = userEntityWrapper.get();
+
         List<GrantedAuthority> authorities = new ArrayList<>();
         if(("praisebak@naver.com").equals(userID))
         {
@@ -66,9 +67,7 @@ public class UserService implements UserDetailsService
         {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
         }
-
-        return new org.springframework.security.core.userdetails.
-                User(user.getUserID(),user.getUserPassword(),authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUserID(), user.getUserPassword(), authorities);
 
     }
 

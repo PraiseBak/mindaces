@@ -20,22 +20,19 @@
 <div class="row">
     <div class="col-md-5"></div>
     <div class="col-md-5">
-        <form th:action="@{/user/signup}" onsubmit="return checkValid()" method="POST">
+        <form action="/user/login" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div id="idArea">
-                <input type="text" minlength="6" maxlength="20" name="userID" required id="userID" placeholder="사용할 아이디을 입력해주세요(사용자는 이 아이디로 보이게 됩니다)">
-                <p id="alarmArea" th:text="${msg}"></p>
+                <input type="text" minlength="2" maxlength="20" name="userID" required id="userID" placeholder="사용할 아이디을 입력해주세요(사용자는 이 아이디로 보이게 됩니다)">
             </div>
             <div>
                 <input type="password" minlength="8" maxlength="20" required id="userPassword" name="userPassword" placeholder="비밀번호">
-                <p></p>
             </div>
             <div>
                 <input type="email" minlength="4" maxlength="40" required id="userEmail" name="userEmail" placeholder="이메일">
             </div>
 
-            <p></p>
-            <button>제출</button>
-            <p id="resultArea" th:text="${msg}"></p>
+            <button type="submit">제출</button>
 
         </form>
 
@@ -49,11 +46,8 @@
 </div>
 
 
-
 </body>
 </html>
 
 
-<script src="/js/AjaxAPI.js" defer></script>
-<script src="/js/CheckValid.js" defer></script>
 

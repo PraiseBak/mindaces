@@ -4,6 +4,7 @@ import com.mindaces.mindaces.helper.constants.SocialLoginType;
 import com.mindaces.mindaces.service.social.GoogleOauth;
 import com.mindaces.mindaces.service.social.SocialOauth;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +13,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OauthService {
+public class OauthService extends DefaultOAuth2UserService
+{
     private final List<SocialOauth> socialOauthList;
     private final GoogleOauth googleOauth;
     private final HttpServletResponse response;
@@ -50,5 +52,9 @@ public class OauthService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("알 수 없는 SocialLoginType 입니다."));
     }
+
+
+
+
 
 }
