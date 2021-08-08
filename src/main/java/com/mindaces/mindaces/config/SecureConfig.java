@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
@@ -23,6 +24,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 //WebSecurityConfigurerAdapter를 상속받아 일반적으로 메서드를 구현하는게 일반적인 방법
 public class SecureConfig extends WebSecurityConfigurerAdapter
 {
+
     private UserService userService;
     //스프링 제공 비밀번호 암호화 객체
     @Bean
@@ -43,24 +45,28 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
         http.authorizeRequests()
                 // 페이지 권한 설정
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/myinfo").hasRole("MEMBER")
+                .antMatchers("/user/myinfo").hasRole("USER")
                 .antMatchers("/**").permitAll()
-                .and() // 로그인 설정
-                .formLogin()
-                .loginPage("/user/login")
-                .defaultSuccessUrl("/user/login/result")
-                .permitAll()
+                //.and() // 로그인 설정
+                    //.formLogin()
+                    //.loginPage("/user/login")
+                    //.defaultSuccessUrl("/user/login/result")
+                    //.permitAll()
                 .and() // 로그아웃 설정
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/user/logout/result")
-                .invalidateHttpSession(true)
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
                 .and()
                 // 403 예외처리 핸들링
-                //this line has effect when user is authenticated
-                .exceptionHandling().accessDeniedPage("/user/denied");
+                    //this line has effect when user is authenticated
+                    .exceptionHandling()
+                        .accessDeniedPage("/user/denied");
+                        //.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+
         http.csrf()
                 .ignoringAntMatchers("/sendIDAPI");
+
     }
 
 

@@ -23,9 +23,6 @@ public class UserDto
     private SocialLoginType provider;
 
 
-
-
-
     public User toEntity()
     {
         User user = User.builder()
