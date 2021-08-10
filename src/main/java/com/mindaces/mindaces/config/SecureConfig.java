@@ -47,11 +47,11 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/myinfo").hasRole("USER")
                 .antMatchers("/**").permitAll()
-                //.and() // 로그인 설정
-                    //.formLogin()
-                    //.loginPage("/user/login")
-                    //.defaultSuccessUrl("/user/login/result")
-                    //.permitAll()
+                .and() // 로그인 설정
+                    .formLogin()
+                    .loginPage("/user/login")
+                    .defaultSuccessUrl("/user/login/result")
+                    .permitAll()
                 .and() // 로그아웃 설정
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))

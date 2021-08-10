@@ -68,15 +68,16 @@ public class UserController
     {
         return "userInfoPage/login";
     }
-
+/*
     @PostMapping("/user/login")
     public String userlogin(HttpServletRequest req,UserDto userDto)
     {
-        UserDetails userDetails = userService.loadUserByUsername(userDto.getUserID());
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+
+        //SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+        userService.loadUserByUsername(userDto.getUserID());
         return "redirect:/";
     }
-
+*/
 
     @GetMapping("/user/login/result")
     public String loginResult()

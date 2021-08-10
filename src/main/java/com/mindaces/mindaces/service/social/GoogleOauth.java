@@ -56,6 +56,10 @@ public class GoogleOauth implements SocialOauth
         String accessCode = "false";
         if (responseEntity.getStatusCode() == HttpStatus.OK)
         {
+            System.out.println("***");
+
+            System.out.println(responseEntity.getBody());
+
             String[] bodyArray = responseEntity
                     .getBody()
                     .split("\n");

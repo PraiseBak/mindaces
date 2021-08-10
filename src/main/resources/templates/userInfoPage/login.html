@@ -23,13 +23,10 @@
         <form action="/user/login" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div id="idArea">
-                <input type="text" minlength="2" maxlength="20" name="userID" required id="userID" placeholder="사용할 아이디을 입력해주세요(사용자는 이 아이디로 보이게 됩니다)">
+                <input type="text" minlength="2" maxlength="20" name="username" required id="userID" placeholder="사용할 아이디을 입력해주세요(사용자는 이 아이디로 보이게 됩니다)">
             </div>
             <div>
-                <input type="password" minlength="8" maxlength="20" required id="userPassword" name="userPassword" placeholder="비밀번호">
-            </div>
-            <div>
-                <input type="email" minlength="4" maxlength="40" required id="userEmail" name="userEmail" placeholder="이메일">
+                <input type="password" minlength="8" maxlength="20" required id="userPassword" name="password" placeholder="비밀번호">
             </div>
 
             <button type="submit">제출</button>

@@ -6,14 +6,17 @@ import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -67,8 +70,9 @@ public class UserService implements UserDetailsService
         {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
         }
-        return new org.springframework.security.core.userdetails.User(user.getUserID(), user.getUserPassword(), authorities);
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUserID(), user.getUserPassword(), authorities);
 
+        return userDetails;
     }
 
     public Long findUserID(String userID)
@@ -89,10 +93,6 @@ public class UserService implements UserDetailsService
             return -1L;
         }
         return 1L;
-    }
-
-    public void processOAuthPostLogin(String username)
-    {
     }
 
 
