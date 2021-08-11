@@ -2,23 +2,37 @@ package com.mindaces.mindaces.service.social;
 
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class CustomOAuth2User implements OAuth2User {
-
+@Data
+public class GoogleOAuth2User implements OAuth2User {
+    //private List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
     private OAuth2User oauth2User;
+    /*
+    private String id;
+    @JsonProperty("google_account")
+    private Map<String, Object> googleAccount;
+    private Map<String, Object> properties;
 
-    public CustomOAuth2User(OAuth2User oauth2User) {
-        this.oauth2User = oauth2User;
-    }
 
+     */
     @Override
     public Map<String, Object> getAttributes() {
+/*
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.putAll(googleAccount);
+        attributes.putAll(properties);
 
-        
+ */
+
         return oauth2User.getAttributes();
     }
 
@@ -35,7 +49,6 @@ public class CustomOAuth2User implements OAuth2User {
     public String getEmail() {
         return oauth2User.<String>getAttribute("email");
     }
-
 
 
 }

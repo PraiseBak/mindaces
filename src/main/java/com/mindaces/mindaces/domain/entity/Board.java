@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "BOARD")
 public class Board extends BaseTimeEntity
 {
@@ -37,8 +40,10 @@ public class Board extends BaseTimeEntity
     private String content;
 
 
+
+
     @Builder
-    public Board(Gallery gallery,User user,Long contentIdx,String title,String content)
+    public Board(Gallery gallery,User user,Long contentIdx,String title,String content,LocalDateTime createdDate,LocalDateTime modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;

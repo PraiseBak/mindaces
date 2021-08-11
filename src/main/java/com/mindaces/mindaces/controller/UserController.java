@@ -75,6 +75,7 @@ public class UserController
 
         //SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
         userService.loadUserByUsername(userDto.getUserID());
+
         return "redirect:/";
     }
 */

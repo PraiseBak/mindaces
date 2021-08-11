@@ -6,17 +6,14 @@ import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -27,7 +24,6 @@ import java.util.*;
 public class UserService implements UserDetailsService
 {
     private UserRepository userRepository;
-
     @Transactional
     public Long joinUser(UserDto userDto)
     {
@@ -60,8 +56,8 @@ public class UserService implements UserDetailsService
         }
 
         User user = userEntityWrapper.get();
-
         List<GrantedAuthority> authorities = new ArrayList<>();
+
         if(("praisebak@naver.com").equals(userID))
         {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
@@ -71,7 +67,6 @@ public class UserService implements UserDetailsService
             authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
         }
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUserID(), user.getUserPassword(), authorities);
-
         return userDetails;
     }
 

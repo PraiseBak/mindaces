@@ -4,6 +4,8 @@ import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Gallery;
 import com.mindaces.mindaces.domain.entity.User;
 import lombok.*;
+import org.apache.tomcat.jni.Local;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,6 +20,8 @@ public class BoardDto
     private Long contentIdx;
     private String title;
     private String content;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
     public Board toEntity()
     {
@@ -27,12 +31,14 @@ public class BoardDto
                 .contentIdx(contentIdx)
                 .title(title)
                 .content(content)
+                .createdDate(createdDate)
+                .modifiedDate(modifiedDate)
                 .build();
         return board;
     }
 
     @Builder
-    public BoardDto(Gallery gallery,User user,Long contentIdx,String title,String content)
+    public BoardDto(Gallery gallery, User user, Long contentIdx, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;
@@ -40,6 +46,5 @@ public class BoardDto
         this.title = title;
         this.content = content;
     }
-
 
 }
