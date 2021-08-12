@@ -19,13 +19,11 @@ import java.time.LocalDateTime;
 public class Board extends BaseTimeEntity
 {
 
-    @OneToOne
-    @JoinColumn(name = "gallery_idx")
-    private Gallery gallery;
+    @Column(nullable = false,length = 45)
+    private String gallery;
 
-    @OneToOne
-    @JoinColumn(name = "user_idx")
-    private User user;
+    @Column(nullable = false,length = 45)
+    private String user;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +41,7 @@ public class Board extends BaseTimeEntity
 
 
     @Builder
-    public Board(Gallery gallery,User user,Long contentIdx,String title,String content,LocalDateTime createdDate,LocalDateTime modifiedDate)
+    public Board(String gallery,String user,Long contentIdx,String title,String content,LocalDateTime createdDate,LocalDateTime modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;

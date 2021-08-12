@@ -2,7 +2,10 @@ package com.mindaces.mindaces.service;
 
 
 import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.entity.Gallery;
+import com.mindaces.mindaces.domain.entity.User;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
+import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.dto.GalleryDto;
 import org.springframework.data.domain.Page;
@@ -20,6 +23,7 @@ import java.util.List;
 public class BoardService
 {
     private BoardRepository boardRepository;
+    private GalleryRepository galleryRepository;
 
     public BoardService(BoardRepository boardRepository)
     {
@@ -53,6 +57,39 @@ public class BoardService
         return pagingList;
     }
 
+
+    public List<BoardDto> getGalleryPost(String galleryName)
+    {
+        List<BoardDto> boardDtoList = new ArrayList<>();
+        List<Board> boardEntity = boardRepository.findByGalleryContaining(galleryName);
+
+        if(boardEntity.isEmpty())
+        {
+            return boardDtoList;
+        }
+
+        for(Board board : boardEntity)
+        {
+            boardDtoList.add(this.convertEntityToDto(board));
+        }
+        return boardDtoList;
+
+    }
+
+    private BoardDto convertEntityToDto(Board board)
+    {
+        return BoardDto.builder()
+                .contentIdx(board.getContentIdx())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .gallery(board.getGallery())
+                .user(board.getUser())
+                .modifiedDate(board.getModifiedDate())
+                .createdDate(board.getCreatedDate())
+                .build();
+
+
+    }
 
 
 }

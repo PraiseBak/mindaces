@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 public class BoardDto
 {
 
-    private Gallery gallery;
-    private User user;
     private Long contentIdx;
+    private String gallery;
+    private String user;
     private String title;
     private String content;
     private LocalDateTime createdDate;
@@ -37,14 +37,19 @@ public class BoardDto
         return board;
     }
 
+
+
     @Builder
-    public BoardDto(Gallery gallery, User user, Long contentIdx, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;
         this.contentIdx = contentIdx;
         this.title = title;
         this.content = content;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+
     }
 
 }

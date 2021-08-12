@@ -28,14 +28,10 @@ public class MainController
 
     //TODO 수정
     @GetMapping("/")
-    public String main(Model model, HttpServletRequest request)
+    public String main()
     {
-        HttpSession session = request.getSession();
-        //List<BoardDto> boardDtoList = boardService.getBoardList();
-        //model.addAttribute("recommandBoard",boardDtoList);
         return "main/main";
     }
-
 
     @GetMapping("/post")
     public String post()
