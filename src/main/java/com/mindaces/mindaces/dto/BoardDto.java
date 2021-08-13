@@ -1,55 +1,39 @@
 package com.mindaces.mindaces.dto;
 
+
 import com.mindaces.mindaces.domain.entity.Board;
-import com.mindaces.mindaces.domain.entity.Gallery;
-import com.mindaces.mindaces.domain.entity.User;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ToString
-@NoArgsConstructor
+//파라미터가 없는 생성자를 자동으로 만들어줌
+@AllArgsConstructor
 public class BoardDto
 {
-
     private Long contentIdx;
-    private String gallery;
-    private String user;
-    private String title;
+    private Long galleryIdx;
+    private Long userIdx;
     private String content;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    private String title;
+    private LocalDateTime createdTime;
+    private LocalDateTime modifiedTime;
+
 
     public Board toEntity()
     {
-        Board board = Board.builder()
-                .gallery(gallery)
-                .user(user)
+        Board build = Board.builder()
                 .contentIdx(contentIdx)
-                .title(title)
+                .galleryIdx(galleryIdx)
+                .userIdx(userIdx)
                 .content(content)
-                .createdDate(createdDate)
-                .modifiedDate(modifiedDate)
+                .title(title)
+                .createdTime(createdTime)
+                .modifiedTime(modifiedTime)
                 .build();
-        return board;
+        return build;
     }
 
-
-
-    @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate)
-    {
-        this.gallery = gallery;
-        this.user = user;
-        this.contentIdx = contentIdx;
-        this.title = title;
-        this.content = content;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-
-    }
 
 }
