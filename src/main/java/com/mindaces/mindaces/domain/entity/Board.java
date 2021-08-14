@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class Board extends BaseTimeEntity
 {
 
+    //gallery 이름, user 이름으로 foregin key 설정할거임 이거 칼럼에서 추가하는거 있잖아 그거 하자
     @Column(nullable = false,length = 45)
     private String gallery;
 

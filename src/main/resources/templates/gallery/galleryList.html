@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+<head th:insert="base/head.html">
+</head>
+<body>
+    <div class="row text-center" style="width: 100%">
+
+        <div style="width: 30%; float:none; margin:0 auto" >
+            <h2>갤러리 목록</h2>
+            <!--button class="btn btn btn-danger btn-round" style="width: 100%">더보기</button!-->
+        </div>
+    </div>
+
+
+    <table class="table">
+        <tbody>
+            <tr th:each="gallery : ${galleryList}" class="text-center">
+                <td>
+                    <a th:href="@{'/gallery/' + ${gallery.galleryURL}}" th:text="${gallery.galleryName} "></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>

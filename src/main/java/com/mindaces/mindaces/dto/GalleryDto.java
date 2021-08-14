@@ -15,6 +15,8 @@ public class GalleryDto
 
     private String galleryName;
 
+    private String galleryURL;
+
     private Boolean specialGallery;
 
     private LocalDateTime galleryCreatedDate;
@@ -25,16 +27,18 @@ public class GalleryDto
                 .galleryIdx(galleryIdx)
                 .galleryName(galleryName)
                 .specialGallery(specialGallery)
+                .galleryURL(galleryURL)
                 .build();
         return gallery;
     }
 
     @Builder
-    public GalleryDto(Long galleryIdx,String galleryName,Boolean specialGallery,LocalDateTime galleryCreatedTime)
+    public GalleryDto(Long galleryIdx,String galleryName,String galleryURL,Boolean specialGallery,LocalDateTime galleryCreatedTime)
     {
         this.galleryIdx = galleryIdx;
         this.galleryName = galleryName;
         this.specialGallery = specialGallery;
+        this.galleryURL = galleryURL;
     }
 
 
