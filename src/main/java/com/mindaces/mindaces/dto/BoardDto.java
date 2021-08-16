@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BoardDto
 {
-
     private Long contentIdx;
     private String gallery;
     private String user;
@@ -22,6 +21,7 @@ public class BoardDto
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
 
     public Board toEntity()
     {

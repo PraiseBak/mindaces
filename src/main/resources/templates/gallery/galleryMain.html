@@ -10,13 +10,30 @@
 마구마구 갤러리 내용부분~
 
 <table class="table">
-    <tbody>
-    <tr th:each="post : ${postList}" class="text-center">
-        <td>
-            <a th:href="@{${post.contentIdx}}" th:text="${post.title} "></a>
-            <p th:text="${post.user}"></p>
-        </td>
+    <thead class="thead-light">
+    <tr class="text-center">
+        <th scope="col">인덱스</th>
+        <th scope="col">제목</th>
+        <th scope="col">작성자</th>
+        <th scope="col">추천수</th>
     </tr>
+    </thead>
+
+    <tbody>
+        <tr th:each="post : ${postList}" class="text-center">
+            <td>
+                <p th:text="${post.contentIdx}"></p>
+            </td>
+            <td>
+                <a th:href="@{${post.gallery} + '/' + ${post.contentIdx}}" th:text="${post.title} "></a>
+            </td>
+            <td>
+                <p th:text="${post.user}"></p>
+            </td>
+            <td>
+                <p th:text="${post.like}"></p>
+            </td>
+        </tr>
     </tbody>
 </table>
 

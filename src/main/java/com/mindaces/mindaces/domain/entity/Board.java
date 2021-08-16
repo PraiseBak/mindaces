@@ -32,6 +32,7 @@ public class Board extends BaseTimeEntity
     private Long contentIdx;
 
 
+
     @Column(nullable = false,length = 45)
     private String title;
 
