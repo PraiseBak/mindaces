@@ -2,22 +2,18 @@ package com.mindaces.mindaces.service;
 
 
 import com.mindaces.mindaces.domain.entity.Board;
-import com.mindaces.mindaces.domain.entity.Gallery;
-import com.mindaces.mindaces.domain.entity.User;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
 import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.BoardDto;
-import com.mindaces.mindaces.dto.GalleryDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BoardService
@@ -39,22 +35,24 @@ public class BoardService
     public Page<BoardDto> paging(@PageableDefault(sort="createdDate") Pageable pageRequest)
     {
         Page<Board> boardList = boardRepository.findAll(pageRequest);
-
+        //TODO 페이징
+        /*
         Page<BoardDto> pagingList = boardList.map(
                 post -> new BoardDto(
                             post.getGallery(),post.getUser(),
                             post.getContentIdx(),post.getContent(),
-                            post.getTitle(),post.getCreatedDate(),post.getModifiedDate()
+                            post.getTitle()//,post.getCreatedDate(),post.getModifiedDate()
                         ));
 
         for (BoardDto paging : pagingList)
         {
             System.out.println(paging.getTitle());
             System.out.println(paging.getContent());
-            System.out.println(paging.getCreatedDate());
+            //System.out.println(paging.getCreatedDate());
         }
-
-        return pagingList;
+         */
+        return null;
+        //return pagingList;
     }
 
 
@@ -84,12 +82,16 @@ public class BoardService
                 .content(board.getContent())
                 .gallery(board.getGallery())
                 .user(board.getUser())
-                .modifiedDate(board.getModifiedDate())
-                .createdDate(board.getCreatedDate())
+                .likes(board.getLikes())
+                .disLikes(board.getDisLikes())
                 .build();
-
 
     }
 
 
+    public BoardDto getBoardByIdx(Long contentIndex)
+    {
+        Board board = boardRepository.findById(contentIndex).get();
+        return this.convertEntityToDto(board);
+    }
 }

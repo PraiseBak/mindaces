@@ -1,40 +1,37 @@
 package com.mindaces.mindaces.dto;
 
+import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Like;
-import lombok.Builder;
-
-import javax.persistence.Column;
+import lombok.*;
 
 //TODO LIKE 추가해야함
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class LikeDto
 {
-    String likeIP;
-    String disLikeIP;
-    Long like;
-    Long disLike;
+    private Long contentIdx;
+    private String likeIP;
+    private String disLikeIP;
 
     public Like toEntity()
     {
         Like like = Like.builder()
+                .contentIdx(contentIdx)
                 .likeIP(likeIP)
                 .disLikeIP(disLikeIP)
-                .like(like)
-                .disLike(disLike)
                 .build();
-
         return like;
     }
 
     @Builder
-    public LikeDto(String likeIP,String disLikeIP,Long like, Long disLike)
+    public LikeDto(Long contentIdx,String likeIP,String disLikeIP)
     {
+        this.contentIdx = contentIdx;
         this.likeIP = likeIP;
         this.disLikeIP = disLikeIP;
-        this.like = like;
-        this.disLike = disLike;
-
     }
-
 
 
 }

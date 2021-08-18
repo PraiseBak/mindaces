@@ -6,6 +6,7 @@ import com.mindaces.mindaces.domain.entity.User;
 import lombok.*;
 import org.apache.tomcat.jni.Local;
 
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,9 +20,8 @@ public class BoardDto
     private String user;
     private String title;
     private String content;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
-
+    private Long likes;
+    private Long disLikes;
 
     public Board toEntity()
     {
@@ -31,25 +31,23 @@ public class BoardDto
                 .contentIdx(contentIdx)
                 .title(title)
                 .content(content)
-                .createdDate(createdDate)
-                .modifiedDate(modifiedDate)
+                .likes(likes)
+                .disLikes(disLikes)
                 .build();
         return board;
     }
 
 
-
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long disLikes)//LocalDateTime createdDate, LocalDateTime modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;
         this.contentIdx = contentIdx;
         this.title = title;
         this.content = content;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-
+        this.likes = likes;
+        this.disLikes = disLikes;
     }
 
 }

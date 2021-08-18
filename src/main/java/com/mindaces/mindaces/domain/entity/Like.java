@@ -3,46 +3,36 @@ package com.mindaces.mindaces.domain.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.implementation.bind.annotation.Default;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.annotation.CreatedDate;
-
+import lombok.Setter;
 import javax.persistence.*;
-import java.time.LocalDateTime;
-
+import java.io.Serializable;
 
 
 @Getter
 @Entity
+@Setter
 @NoArgsConstructor
-@Table(name = "Like")
-public class Like
+@Table(name = "LIKES")
+public class Like implements Serializable
 {
+
     @Id
-    @Column(name="board_idx")
-    Long boardIdx;
+    @Column(name="content_idx")
+    private Long contentIdx;
 
     @Column(name="like_ip")
-    String likeIP;
+    private String likeIP;
 
     @Column(name="notlike_ip")
-    String disLikeIP;
+    private String disLikeIP;
 
-    @Column(columnDefinition = "integer default 0")
-    Long like;
-
-    @Column(name="not_like")
-    @ColumnDefault("0")
-    Long disLike;
 
     @Builder
-    public Like(String likeIP,String disLikeIP,Long like,Long disLike)
+    public Like(Long contentIdx, String likeIP, String disLikeIP)
     {
+        this.contentIdx = contentIdx;
         this.likeIP = likeIP;
         this.disLikeIP = disLikeIP;
-        this.like = like;
-        this.disLike = disLike;
     }
 
 }

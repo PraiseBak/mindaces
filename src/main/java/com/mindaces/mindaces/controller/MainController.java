@@ -26,7 +26,6 @@ public class MainController
         this.boardService = boardService;
     }
 
-    //TODO 수정
     @GetMapping("/")
     public String main()
     {
