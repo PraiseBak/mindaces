@@ -2,23 +2,42 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="base/head.html">
 </head>
+
 <body>
-    <div class="container" style="margin-top:5%">
 
-        <div class="form-group row">
 
-            <div class="col-sm-6">
-                <textarea type="text" rows="10" class="form-control" th:text="${board.title}"> </textarea>
+
+
+    <div class="container"  style="margin-top:5%">
+        <div class="content-part">
+            <div class="form-group row board-info-part">
+                <div class="gallery-name-part col-sm-12" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
+                    <h2 th:text="|${board.gallery} 갤러리|"></h2>
+                </div>
+
+                <h3 class="col-sm-12" style="margin-top:3px;">
+                    <span th:text="${board.title}"></span>
+                </h3>
+
+                <div class="col-sm-12" style="margin-top: 15px; border-bottom:1px solid #eee">
+                    <span th:text="${board.user}"></span>
+                </div>
+
+                <div class="col-sm-12 modify-btns">
+                    <button class="btn btn-primary float-right " style="margin-left: 10px">삭제</button>
+                    <button class="btn btn-primary float-right">수정</button>
+                </div>
+
+                <div class="col-sm-12 text-body" style="margin-top: 20px">
+                    <span rows="10" th:text ="${board.content}"></span>
+                </div>
+
             </div>
-            <div class="col-sm-6">
-                <textarea type="text" rows="10" class="form-control" th:text="${board.user}"></textarea>
-            </div>
-        </div>
-        <div class="col-sm-12">
-            <textarea type="text" rows="10" class="form-control" th:text   ="${board.content}"></textarea>
-        </div>
 
+        </div>
     </div>
+
+
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>

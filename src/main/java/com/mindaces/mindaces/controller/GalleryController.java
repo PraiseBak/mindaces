@@ -1,20 +1,15 @@
 package com.mindaces.mindaces.controller;
 
-
-import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.dto.BoardDto;
-import com.mindaces.mindaces.dto.GalleryDto;
-import com.mindaces.mindaces.dto.LikeDto;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.GalleryService;
-import com.mindaces.mindaces.service.LikeService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import java.util.List;
 
 
@@ -48,6 +43,8 @@ public class GalleryController
             Model model,
             @PathVariable(name = "galleryName") String galleryName)
     {
+
+        System.out.println("갤러리이름: " + galleryName + "농");
         if(galleryName.equals("galleryList"))
         {
             model.addAttribute("galleryList",galleryService.getGalleryList());
@@ -56,15 +53,14 @@ public class GalleryController
 
         List<BoardDto> boardDtoList = boardService.getGalleryPost(galleryName);
         model.addAttribute("postList",boardDtoList);
-
+        model.addAttribute("galleryName",boardDtoList.get(0).getGallery());
         return "gallery/galleryMain";
     }
+
 
     @GetMapping(value = "/{galleryName}/postWrite")
     public String postWrite(@PathVariable(name = "galleryName") String galleryName)
     {
-
-        System.out.println(galleryName + "갤러리 에서의 글쓰기 요청");
         return "gallery/postWrite";
     }
 
@@ -72,15 +68,13 @@ public class GalleryController
     public String postSubmit(@PathVariable(name = "galleryName") String galleryName, BoardDto boardDto)
     {
         //TODO checkValid()
+        //존재하지 않는 갤러리라던가 등
         boardDto.setGallery(galleryName);
+        System.out.println("pw:" + boardDto.getPassword());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
         boardService.savePost(boardDto);
         return "redirect:";
     }
-
-
-
-
-
-
 
 }

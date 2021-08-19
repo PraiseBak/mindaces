@@ -40,9 +40,14 @@ public class Board extends BaseTimeEntity
     @Column(name="dis_likes",columnDefinition = "bigint default 0")
     private Long disLikes;
 
+    @Column(length = 80,nullable = false)
+    private String password;
+
+    @Column(columnDefinition = "tinyint(1) default 0",name = "is_logged_user")
+    private Long isLoggedUser;
 
     @Builder
-    public Board(String gallery,String user,Long contentIdx,String title,String content,Long likes,Long disLikes)
+    public Board(String gallery,String user,Long contentIdx,String title,String content,Long likes,Long disLikes,String password,Long isLoggedUser)
     {
         this.gallery = gallery;
         this.user = user;
@@ -51,7 +56,8 @@ public class Board extends BaseTimeEntity
         this.content = content;
         this.likes = likes;
         this.disLikes = disLikes;
+        this.password = password;
+        this.isLoggedUser = isLoggedUser;
     }
-
 
 }

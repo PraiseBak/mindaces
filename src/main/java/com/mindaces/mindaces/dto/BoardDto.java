@@ -1,13 +1,7 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.Board;
-import com.mindaces.mindaces.domain.entity.Gallery;
-import com.mindaces.mindaces.domain.entity.User;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
-
-import javax.persistence.Column;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -22,6 +16,9 @@ public class BoardDto
     private String content;
     private Long likes;
     private Long disLikes;
+    private String password;
+    private Long isLoggedUser;
+
 
     public Board toEntity()
     {
@@ -33,13 +30,15 @@ public class BoardDto
                 .content(content)
                 .likes(likes)
                 .disLikes(disLikes)
+                .password(password)
+                .isLoggedUser(isLoggedUser)
                 .build();
         return board;
     }
 
 
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long disLikes)//LocalDateTime createdDate, LocalDateTime modifiedDate)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long disLikes,String password,Long isLoggedUser)
     {
         this.gallery = gallery;
         this.user = user;
@@ -48,6 +47,8 @@ public class BoardDto
         this.content = content;
         this.likes = likes;
         this.disLikes = disLikes;
+        this.password = password;
+        this.isLoggedUser = isLoggedUser;
     }
 
 }
