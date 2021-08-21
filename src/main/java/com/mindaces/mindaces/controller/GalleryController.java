@@ -77,4 +77,43 @@ public class GalleryController
         return "redirect:";
     }
 
+    @GetMapping(value = "/{galleryName}/modify/{index}")
+    public String modify(
+            @PathVariable(name = "galleryName") String galleryName,
+            @PathVariable(name = "index") Long contentIdx,
+            Model model
+            )
+    {
+
+        BoardDto boardDto = boardService.getBoardInfoByGalleryAndIdx(galleryName,contentIdx);
+        boardDto.setPassword("****");
+        model.addAttribute("board",boardDto);
+        return "gallery/postWrite";
+    }
+
+    @PostMapping(value = "/{galleryName}/modify/postModify/{index}")
+    public String postModify(
+            @PathVariable(name = "galleryName") String galleryName,
+            @PathVariable(name = "index") Long contentIdx,
+            BoardDto boardDto
+    )
+    {
+
+        boardDto.setContentIdx(contentIdx);
+        Long result = boardService.updatePost(boardDto);
+        System.out.println("result : " + result);
+        return "redirect:/gallery/" + galleryName;
+    }
+
+    @GetMapping(value = "/{galleryName}/delete/{index}")
+    public String deletePost(
+            @PathVariable(name = "galleryName") String galleryName,
+            @PathVariable(name = "index") Long contentIdx
+    )
+    {
+
+        boardService.deletePost(contentIdx);
+        return "redirect:/gallery/" + galleryName;
+    }
+
 }

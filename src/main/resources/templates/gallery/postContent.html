@@ -23,14 +23,28 @@
                     <span th:text="${board.user}"></span>
                 </div>
 
-                <div class="col-sm-12 modify-btns">
-                    <button class="btn btn-primary float-right " style="margin-left: 10px">삭제</button>
-                    <button class="btn btn-primary float-right">수정</button>
+                <div class="col-sm-12 modify-btns" th:onclick="getPassword([[${board.contentIdx}]])" >
+
+                    <button class="btn btn-primary float-right" id="deleteBtn" style="margin-left: 10px"
+                            th:onclick="
+                            getPassword(
+                            [[${board.contentIdx}]],
+                            [[@{'/gallery/' + ${board.gallery} + '/delete/' + ${board.contentIdx}}]]
+                            )">삭제</button>
+
+                    <button class="btn btn-primary float-right" id="modifyBtn"
+                            th:onclick="
+                            getPassword(
+                            [[${board.contentIdx}]],
+                            [[@{'/gallery/' + ${board.gallery} + '/modify/' + ${board.contentIdx}}]]
+                            )">수정</button>
+
                 </div>
 
                 <div class="col-sm-12 text-body" style="margin-top: 20px">
                     <span rows="10" th:text ="${board.content}"></span>
                 </div>
+
 
             </div>
 
@@ -38,7 +52,10 @@
     </div>
 
 
+<script th:src="@{/js/ModifyBoard.js}"></script>
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+
 </body>
 </html>

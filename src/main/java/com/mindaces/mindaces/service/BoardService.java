@@ -94,4 +94,31 @@ public class BoardService
         Board board = boardRepository.findById(contentIndex).get();
         return this.convertEntityToDto(board);
     }
+
+    public BoardDto getBoardInfoByGalleryAndIdx(String galleryName, Long contentIdx)
+    {
+        Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx);
+        return this.convertEntityToDto(board);
+    }
+
+    public Long updatePost(BoardDto boardDto)
+    {
+        Board board = boardRepository.getById(boardDto.getContentIdx());
+        board.setContent(boardDto.getContent());
+        board.setTitle((boardDto.getTitle()));
+        return boardRepository.save(board).getContentIdx();
+    }
+
+    public void deletePost(Long contentIdx)
+    {
+        boardRepository.deleteById(contentIdx);
+    }
+
+    public Boolean checkPassword(Long contentIdx, String inputPassword)
+    {
+        Board board = boardRepository.findById(contentIdx).get();
+        return board.getPassword().equals(inputPassword);
+    }
 }
+
+
