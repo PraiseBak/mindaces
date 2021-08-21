@@ -23,7 +23,10 @@
                     <span th:text="${board.user}"></span>
                 </div>
 
-                <div class="col-sm-12 modify-btns" th:onclick="getPassword([[${board.contentIdx}]])" >
+                <div class="col-sm-12 modify-btns" >
+                    <form hidden id="hiddenPasswordForm" method="post">
+                        <input type="text" id="password" name="hiddenPassword" value="">
+                    </form>
 
                     <button class="btn btn-primary float-right" id="deleteBtn" style="margin-left: 10px"
                             th:onclick="
@@ -38,7 +41,6 @@
                             [[${board.contentIdx}]],
                             [[@{'/gallery/' + ${board.gallery} + '/modify/' + ${board.contentIdx}}]]
                             )">수정</button>
-
                 </div>
 
                 <div class="col-sm-12 text-body" style="margin-top: 20px">
@@ -52,7 +54,7 @@
     </div>
 
 
-<script th:src="@{/js/ModifyBoard.js}"></script>
+<script th:src="@{/js/ModifyBoardAPI.js}"></script>
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 

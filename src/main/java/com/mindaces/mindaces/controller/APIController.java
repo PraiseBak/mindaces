@@ -8,9 +8,11 @@ import com.mindaces.mindaces.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@RequestMapping("/API")
 public class APIController
 {
     UserService userService;
@@ -58,15 +60,4 @@ public class APIController
         Boolean result = boardService.checkPassword(contentIdx,inputPassword);
         return result;
     }
-
-    @PostMapping("/redirectModifyURL")
-    public String redirectURL(BoardDto boardDto)
-    {
-
-        return "";
-    }
-
-
-
-
 }

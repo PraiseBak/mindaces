@@ -68,8 +68,18 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                         .accessDeniedPage("/user/denied");
 
         http.csrf()
+                            .ignoringAntMatchers("/API/**")
+                            .ignoringAntMatchers("/gallery/**/modify/**")
+                            .ignoringAntMatchers("/gallery/**/delete/**")
+                            .ignoringAntMatchers("/gallery/**/postWrite/**");
+
+
+                /*
                 .ignoringAntMatchers("/sendIDAPI")
-                .ignoringAntMatchers("/checkBoardPasswordAPI");
+                .ignoringAntMatchers("/checkBoardPasswordAPI")
+                        .ignoringAntMatchers(/)
+
+                 */
 
         http.oauth2Login()
                 .loginPage("/user/login");

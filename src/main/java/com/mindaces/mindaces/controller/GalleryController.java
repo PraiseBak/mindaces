@@ -59,8 +59,14 @@ public class GalleryController
 
 
     @GetMapping(value = "/{galleryName}/postWrite")
-    public String postWrite(@PathVariable(name = "galleryName") String galleryName)
+    public String postWrite(
+            @PathVariable(name = "galleryName") String galleryName,
+            Model model
+    )
     {
+        model.addAttribute("inputPassword",null);
+        model.addAttribute("board",null);
+
         return "gallery/postWrite";
     }
 
@@ -70,23 +76,23 @@ public class GalleryController
         //TODO checkValid()
         //존재하지 않는 갤러리라던가 등
         boardDto.setGallery(galleryName);
-        System.out.println("pw:" + boardDto.getPassword());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
         boardService.savePost(boardDto);
         return "redirect:";
     }
 
-    @GetMapping(value = "/{galleryName}/modify/{index}")
+    @PostMapping(value = "/{galleryName}/modify/{index}")
     public String modify(
             @PathVariable(name = "galleryName") String galleryName,
             @PathVariable(name = "index") Long contentIdx,
-            Model model
+            Model model,
+            String hiddenPassword
             )
     {
-
         BoardDto boardDto = boardService.getBoardInfoByGalleryAndIdx(galleryName,contentIdx);
         boardDto.setPassword("****");
+        model.addAttribute("inputPassword",hiddenPassword);
         model.addAttribute("board",boardDto);
         return "gallery/postWrite";
     }
@@ -95,24 +101,33 @@ public class GalleryController
     public String postModify(
             @PathVariable(name = "galleryName") String galleryName,
             @PathVariable(name = "index") Long contentIdx,
+            String hiddenPassword,
             BoardDto boardDto
     )
     {
-
         boardDto.setContentIdx(contentIdx);
-        Long result = boardService.updatePost(boardDto);
-        System.out.println("result : " + result);
+        Boolean result = boardService.checkPassword(contentIdx,hiddenPassword);
+        if(result)
+        {
+            boardService.updatePost(boardDto);
+
+        }
         return "redirect:/gallery/" + galleryName;
     }
 
-    @GetMapping(value = "/{galleryName}/delete/{index}")
+    @PostMapping(value = "/{galleryName}/delete/{index}")
     public String deletePost(
             @PathVariable(name = "galleryName") String galleryName,
-            @PathVariable(name = "index") Long contentIdx
+            @PathVariable(name = "index") Long contentIdx,
+            String hiddenPassword
     )
     {
-
-        boardService.deletePost(contentIdx);
+        System.out.println(hiddenPassword);
+        Boolean result = boardService.checkPassword(contentIdx,hiddenPassword);
+        if(result)
+        {
+            boardService.deletePost(contentIdx);
+        }
         return "redirect:/gallery/" + galleryName;
     }
 

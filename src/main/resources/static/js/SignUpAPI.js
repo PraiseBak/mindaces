@@ -13,7 +13,7 @@ function checkDuplicateUserID (data)
         userID : data
     };
     $.ajax({
-        url: "/sendIDAPI",
+        url: "/API/sendIDAPI",
         data: userDTO,
         type: "POST"
 
@@ -41,7 +41,7 @@ function checkDuplicateUserEmail (data)
         userEmail : data
     };
     $.ajax({
-        url: "/sendIDAPI",
+        url: "/API/sendIDAPI",
         data: userDTO,
         type: "POST"
 
