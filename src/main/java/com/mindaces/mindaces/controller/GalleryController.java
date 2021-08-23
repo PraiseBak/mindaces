@@ -1,8 +1,14 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.BoardDto;
+import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.GalleryService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +50,6 @@ public class GalleryController
             @PathVariable(name = "galleryName") String galleryName)
     {
 
-        System.out.println("갤러리이름: " + galleryName + "농");
         if(galleryName.equals("galleryList"))
         {
             model.addAttribute("galleryList",galleryService.getGalleryList());
@@ -53,7 +58,7 @@ public class GalleryController
 
         List<BoardDto> boardDtoList = boardService.getGalleryPost(galleryName);
         model.addAttribute("postList",boardDtoList);
-        model.addAttribute("galleryName",boardDtoList.get(0).getGallery());
+        model.addAttribute("galleryName",galleryName);
         return "gallery/galleryMain";
     }
 
@@ -102,7 +107,8 @@ public class GalleryController
             @PathVariable(name = "galleryName") String galleryName,
             @PathVariable(name = "index") Long contentIdx,
             String hiddenPassword,
-            BoardDto boardDto
+            BoardDto boardDto,
+            Authentication authentication
     )
     {
         boardDto.setContentIdx(contentIdx);

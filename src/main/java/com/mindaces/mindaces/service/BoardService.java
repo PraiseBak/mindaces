@@ -8,6 +8,7 @@ import com.mindaces.mindaces.dto.BoardDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -117,7 +118,8 @@ public class BoardService
     public Boolean checkPassword(Long contentIdx, String inputPassword)
     {
         Board board = boardRepository.findById(contentIdx).get();
-        return board.getPassword().equals(inputPassword);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(inputPassword,board.getPassword());
     }
 }
 

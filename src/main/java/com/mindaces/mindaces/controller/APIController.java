@@ -5,6 +5,8 @@ import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,4 +62,26 @@ public class APIController
         Boolean result = boardService.checkPassword(contentIdx,inputPassword);
         return result;
     }
+
+    @PostMapping("/checkUserAPI")
+    @ResponseBody
+    public Boolean checkUser(BoardDto boardDto, Authentication authentication)
+    {
+        System.out.println("이쿠조!");
+
+        if(authentication == null)
+        {
+
+        }
+        else
+        {
+            if (authentication.getPrincipal() instanceof User)
+            {
+                System.out.println("유저있농");
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
