@@ -11,6 +11,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>
 {
     Page<Board> findAll(Pageable pageable);
     List<Board> findByGalleryContaining(String keyword);
-    Board findByGalleryAndContentIdx(String gallery,Long contentIdx);
-
+    <T> T findByGalleryAndContentIdx(String gallery,Long contentIdx,Class<T> type);
 }
+

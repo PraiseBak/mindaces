@@ -67,6 +67,7 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                     .exceptionHandling()
                         .accessDeniedPage("/user/denied");
 
+
         http.csrf()
                             .ignoringAntMatchers("/API/**")
                             .ignoringAntMatchers("/gallery/**/modify/**")

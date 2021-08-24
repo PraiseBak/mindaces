@@ -10,7 +10,6 @@
                 <div class="gallery-name-part" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
                     <h2 th:text="|${board.gallery} 갤러리|"></h2>
                 </div>
-
                 <h3 class="" style="margin-top:3px;">
                     <span th:text="${board.title}"></span>
                 </h3>
@@ -33,16 +32,17 @@
                 <div class="btns part" style="position: relative">
                     <div class="modifyBtnsArea float-right">
                         <div class="modifyBtns">
-                            <button class="btn btn-primary" id="modifyBtn" th:value="isRoleUserVal" th:action="(isRoleUserVal) ? 'checkUserAjax(${board.contentIdx},modifyURL)' : 'foldPasswordInput(modifyURL)' ">수정</button>
-                            <button class="btn btn-primary" id="modifyBtn" th:onclick=
-                                    isRoleUserVal ? checkUserAjax([[${board.contentIdx}]],deleteURL) : foldPasswordInput(deleteURL)>삭제</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkUserAjax([[${board.contentIdx}]],modifyURL,[[${board.gallery}]])">수정</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldPasswordInput(modifyURL) ">수정</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkUserAjax([[${board.contentIdx}]],deleteURL,[[${board.gallery}]])">삭제</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldPasswordInput(deleteURL) ">삭제</button>
                         </div>
                     </div>
 
                     <div class="inputPasswordArea float-right" id="inputPasswordArea"  style="display: none; position: absolute; width: 300px;">
                         <div class="input-part" sec:authorize="!isAuthenticated()">
                             <input type="password" placeholder="게시글 비밀번호" class="text-black-50" id="inputPassword" name="inputPassword" value="">
-                            <button class="btn btn-primary" th:onclick="getPassword([[${board.contentIdx}]])">제출</button>
+                            <button class="btn btn-primary" th:onclick="getPassword([[${board.contentIdx}]],[[${board.gallery}]])">제출</button>
                             <button class="btn btn-primary btn-" th:onclick="foldPasswordInput('')">취소</button>
                         </div>
 
@@ -72,6 +72,7 @@
     var deleteURL = [[@{'/gallery/' + ${board.gallery} + '/delete/' + ${board.contentIdx}}]];
     var redirectURL = "";
     var isRoleUserVal = $('#isRoleUser').val();
+    var isWriteLoggedBoard = [[${board.isLoggedUser}]] == 1;
 </script>
 
 <script th:src="@{/js/ModifyBoardAPI.js}"></script>

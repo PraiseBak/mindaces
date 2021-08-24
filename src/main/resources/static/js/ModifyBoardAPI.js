@@ -2,22 +2,24 @@
 var modifyBtn = document.getElementById("modifyBtn");
 var deleteBtn = document.getElementById("deleteBtn");
 
-function getPassword(contentIdx)
+function getPassword(contentIdx, galleryName)
 {
     url = redirectURL;
     var inputPassword = document.getElementById("inputPassword").value;
     var hiddenPassword = document.getElementById("password");
     hiddenPassword.setAttribute("value",inputPassword);
-    checkBoardPasswordAjax(inputPassword,contentIdx,url);
+    checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName);
 }
 
-function checkBoardPasswordAjax(inputPassword,contentIdx,url)
+function checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName)
 {
     var form = document.getElementById("hiddenPasswordForm");
     var boardDto =
     {
         contentIdx: contentIdx,
-        password: inputPassword
+        password: inputPassword,
+        gallery: galleryName
+
     };
 
     $.ajax({
@@ -38,14 +40,21 @@ function checkBoardPasswordAjax(inputPassword,contentIdx,url)
     });
 }
 
-function checkUserAjax(contentIdx,url)
+function checkUserAjax(contentIdx,url,galleryName)
 {
-    alert(isRoleUserVal);
+
+    if(!isWriteLoggedBoard)
+    {
+        alert("권한이 없습니다");
+        return;
+    }
+
     var boardDto =
     {
-        contentIdx: contentIdx
+        contentIdx: contentIdx,
+        gallery: galleryName
     };
-
+    var form = document.getElementById("hiddenPasswordForm");
     $.ajax({
         url: "/API/checkUserAPI",
         data: boardDto,
@@ -59,7 +68,7 @@ function checkUserAjax(contentIdx,url)
         }
         else
         {
-            alert("삭제할 권한이 없습니다");
+            alert("권한이 없습니다");
         }
     });
 }
@@ -68,21 +77,27 @@ function checkUserAjax(contentIdx,url)
 
 function foldPasswordInput(url)
 {
-    alert(isRoleUserVal);
-
-    if(url != "")
+    if(isWriteLoggedBoard)
     {
-        redirectURL = url;
-    }
-    var inputArea = document.getElementById("inputPasswordArea");
-    if(inputArea.style.display === "none")
-    {
-        inputArea.style.display = "inline-block";
+        alert("권한이 없습니다");
     }
     else
     {
-        inputArea.style.display = "none";
+        if(url != "")
+        {
+            redirectURL = url;
+        }
+        var inputArea = document.getElementById("inputPasswordArea");
+        if(inputArea.style.display === "none")
+        {
+            inputArea.style.display = "inline-block";
+        }
+        else
+        {
+            inputArea.style.display = "none";
+        }
     }
+
 
 }
 

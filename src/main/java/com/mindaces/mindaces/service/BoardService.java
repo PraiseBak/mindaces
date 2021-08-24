@@ -2,19 +2,21 @@ package com.mindaces.mindaces.service;
 
 
 import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
 import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BoardService
@@ -85,20 +87,19 @@ public class BoardService
                 .user(board.getUser())
                 .likes(board.getLikes())
                 .disLikes(board.getDisLikes())
+                .isLoggedUser(board.getIsLoggedUser())
                 .build();
-
     }
 
-
-    public BoardDto getBoardByIdx(Long contentIndex)
+    public BoardDto getBoardByIdx(String galleryName, Long contentIdx)
     {
-        Board board = boardRepository.findById(contentIndex).get();
+        Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);
         return this.convertEntityToDto(board);
     }
 
     public BoardDto getBoardInfoByGalleryAndIdx(String galleryName, Long contentIdx)
     {
-        Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx);
+        Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);
         return this.convertEntityToDto(board);
     }
 
@@ -115,11 +116,74 @@ public class BoardService
         boardRepository.deleteById(contentIdx);
     }
 
-    public Boolean checkPassword(Long contentIdx, String inputPassword)
+
+    public Boolean isUser(Authentication authentication)
     {
-        Board board = boardRepository.findById(contentIdx).get();
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.matches(inputPassword,board.getPassword());
+        if(authentication != null)
+        {
+            if(authentication.getPrincipal() instanceof User)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Boolean isLoggedUserWriteBoard(BoardWriteUserMapping boardWriteUserMapping)
+    {
+        Long isLoggedUser = boardWriteUserMapping.getIsLoggedUser();
+        if(isLoggedUser == 1L)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isSameWriteUser(BoardWriteUserMapping boardWriteUserMapping,String requestUser)
+    {
+        String writeUser = boardWriteUserMapping.getUser();
+        if(requestUser.equals(writeUser))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public BoardWriteUserMapping getBoardUserCheckMapping(String galleryName, Long contentIdx)
+    {
+        return boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,BoardWriteUserMapping.class);
+    }
+
+    //로그인한 케이스
+    public Boolean isBoardModifyAuthValidLoggedUser(Authentication authentication, Long contentIdx, String galleryName)
+    {
+        BoardWriteUserMapping boardWriteUserMapping = boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx, BoardWriteUserMapping.class);
+        if(boardWriteUserMapping != null)
+        {
+            if(isLoggedUserWriteBoard(boardWriteUserMapping))
+            {
+                if(isUser(authentication))
+                {
+                    if(isSameWriteUser(boardWriteUserMapping,authentication.getName()))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    //비로그인한 케이스
+    public Boolean isBoardModifyAuthValidUser(Long contentIdx, String inputPassword,String galleryName)
+    {
+        BoardWriteUserMapping boardWriteUserMapping = boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx, BoardWriteUserMapping.class);
+        if(boardWriteUserMapping.getIsLoggedUser() == 0L)
+        {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            return passwordEncoder.matches(inputPassword,boardWriteUserMapping.getPassword());
+        }
+        return false;
     }
 }
 
