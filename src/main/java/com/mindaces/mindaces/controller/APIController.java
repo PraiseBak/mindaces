@@ -69,12 +69,16 @@ public class APIController
         return boardService.isBoardModifyAuthValidLoggedUser(authentication,boardDto.getContentIdx(),boardDto.getGallery());
     }
 
-    @PostMapping("/checkBoardValidAPI")
+    @PostMapping("/checkBoardValidWriteAPI")
     @ResponseBody
-    public String checkBoardValid(BoardDto boardDto, Authentication authentication)
+    public String checkBoardValidWrite(BoardDto boardDto, Authentication authentication)
     {
-        return boardService.isBoardWriteValid(boardDto,authentication);
+        String mode = "write";
+        if(boardDto.getPassword().length() == 0)
+        {
+            mode = "modify";
+        }
+        return boardService.isBoardWriteValid(boardDto,authentication,mode);
     }
-
 
 }

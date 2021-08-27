@@ -194,13 +194,14 @@ public class BoardService
         return false;
     }
 
-    public String isBoardWriteValid(BoardDto boardDto, Authentication authentication)
+    public String isBoardWriteValid(BoardDto boardDto, Authentication authentication,String mode)
     {
         String title = boardDto.getTitle();
         String content = boardDto.getContent();
         String author = boardDto.getUser();
         String password = boardDto.getPassword();
         Boolean isUser = isUser(authentication);
+        Boolean isWriteMode = mode.equals("write");
         String result = "통과";
 
         if(title.length() < 2 || title.length() > 20)
@@ -213,7 +214,7 @@ public class BoardService
             result = "내용이 2자 미만이거나 65535byte를 초과합니다" + "\n현재 byte : " + Integer.toString(content.getBytes().length);
         }
 
-        if(!isUser)
+        if(!isUser && isWriteMode)
         {
             if(author.length() < 2 || author.length() > 20)
             {
@@ -221,7 +222,7 @@ public class BoardService
             }
         }
 
-        if(!isUser)
+        if(!isUser && isWriteMode)
         {
             if(password.length() < 4 || password.length() > 20)
             {

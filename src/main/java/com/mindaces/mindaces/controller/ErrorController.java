@@ -3,11 +3,14 @@ package com.mindaces.mindaces.controller;
 import com.mindaces.mindaces.service.ErrorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+
+@Controller
 @RequestMapping(value = "/error")
 public class ErrorController
 {
@@ -19,13 +22,12 @@ public class ErrorController
         this.errorService = errorService;
     }
 
-    @GetMapping(value =  "/{errorMsg}")
-    ModelAndView error(@PathVariable(name = "errorMsg") String[] errorMsg, Model model)
+    @RequestMapping(value =  "/{errorCase}")
+    String error(@PathVariable(name = "errorCase") String errorCase, @RequestParam String errorMsg, Model model)
     {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("except/fail");
-        mv.addObject("errorMsg",errorMsg);
-        return mv;
+        model.addAttribute("errorCase",errorCase);
+        model.addAttribute("errorMsg",errorMsg);
+        return "except/fail";
     }
 
 }

@@ -5,7 +5,14 @@ function checkValidBoardWrite()
     var authorName = document.getElementById("authorName").value;
     var password = document.getElementById("password").value;
     var content = document.getElementById("inputContent").value;
+    var isModify = document.getElementById("writeForm").action.includes("postModify/");
     var flag = false;
+    var ajaxURL = "/API/checkBoardValidWriteAPI";
+
+    if(isModify)
+    {
+        password = "";
+    }
     var board=
     {
         title : inputTitle,
@@ -17,7 +24,7 @@ function checkValidBoardWrite()
     $.ajax({
         type:"POST",
         data:board,
-        url:"/API/checkBoardValidAPI",
+        url:"/API/checkBoardValidWriteAPI",
         async:false
     }).done(function (result) {
         if(result === "통과")
