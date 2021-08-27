@@ -19,21 +19,20 @@ function checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName)
         contentIdx: contentIdx,
         password: inputPassword,
         gallery: galleryName
-
     };
 
     $.ajax({
         url: "/API/checkBoardPasswordAPI",
         data: boardDto,
         type: "POST",
-        async:false
+        async: false
     }).done(function (result){
         if(result === true)
         {
             form.setAttribute("action",url);
             form.submit();
         }
-        else
+    else
         {
             alert("비밀번호가 일치하지 않습니다");
         }

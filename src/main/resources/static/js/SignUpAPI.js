@@ -29,10 +29,7 @@ function checkDuplicateUserID (data)
             isValidID = false;
         }
     });
-
 }
-
-
 
 function checkDuplicateUserEmail (data)
 {

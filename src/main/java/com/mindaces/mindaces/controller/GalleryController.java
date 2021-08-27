@@ -41,18 +41,19 @@ public class GalleryController
     @GetMapping(value = "/{galleryName}" )
     public String galleryContentList(
             Model model,
-            @RequestParam(required = false,defaultValue = "1") Long page,
+            @RequestParam(required = false,defaultValue = "1") Integer page,
             @PathVariable(name = "galleryName") String galleryName)
     {
-
-        System.out.println(page);
         Boolean isGallery = galleryService.isGallery(galleryName);
         if(!isGallery)
         {
             return errorURL;
         }
+        List<BoardDto> boardDtoList = boardService.getGalleryPost(galleryName,page);
+        Integer[] pageList = boardService.getPageList(galleryName,page);
 
-        List<BoardDto> boardDtoList = boardService.getGalleryPost(galleryName);
+
+        model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
         model.addAttribute("galleryName",galleryName);
         return "gallery/galleryContentList";

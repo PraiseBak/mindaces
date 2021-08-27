@@ -7,7 +7,9 @@ import com.mindaces.mindaces.domain.repository.BoardRepository;
 import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -21,6 +23,9 @@ import java.util.List;
 @Service
 public class BoardService
 {
+    private static final int BLOCK_PAGE_NUM_COUNT = 10;
+    private static final int PAGE_POST_COUNT = 20;
+
     private BoardRepository boardRepository;
     private GalleryRepository galleryRepository;
 
@@ -35,34 +40,12 @@ public class BoardService
         return boardRepository.save(boardDto.toEntity()).getContentIdx();
     }
 
-    public Page<BoardDto> paging(@PageableDefault(sort="createdDate") Pageable pageRequest)
-    {
-        Page<Board> boardList = boardRepository.findAll(pageRequest);
-        //TODO 페이징
-        /*
-        Page<BoardDto> pagingList = boardList.map(
-                post -> new BoardDto(
-                            post.getGallery(),post.getUser(),
-                            post.getContentIdx(),post.getContent(),
-                            post.getTitle()//,post.getCreatedDate(),post.getModifiedDate()
-                        ));
-
-        for (BoardDto paging : pagingList)
-        {
-            System.out.println(paging.getTitle());
-            System.out.println(paging.getContent());
-            //System.out.println(paging.getCreatedDate());
-        }
-         */
-        return null;
-        //return pagingList;
-    }
-
-
-    public List<BoardDto> getGalleryPost(String galleryName)
+    public List<BoardDto> getGalleryPost(String galleryName,Integer page)
     {
         List<BoardDto> boardDtoList = new ArrayList<>();
-        List<Board> boardEntity = boardRepository.findByGalleryContaining(galleryName);
+
+        Page<Board> pageEntity = boardRepository.findByGallery(galleryName, PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        List<Board> boardEntity = pageEntity.getContent();
 
         if(boardEntity.isEmpty())
         {
@@ -74,8 +57,34 @@ public class BoardService
             boardDtoList.add(this.convertEntityToDto(board));
         }
         return boardDtoList;
-
     }
+    //비정상적 동작인 경우에서 자동으로 트랜잭션 기준으로 롤백해줌
+    //없으면 스스로 직접 롤백해줘야함
+    @Transactional
+    public Long getBoardCount(String gallery)
+    {
+        return boardRepository.countBoardByGallery(gallery);
+    }
+
+    public Integer[] getPageList(String gallery,Integer curPage)
+    {
+        Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
+        Double postsTotalCount = Double.valueOf(getBoardCount(gallery));
+        Integer totalLastPage = (int)(Math.ceil((postsTotalCount/PAGE_POST_COUNT)));
+
+        Integer blockLastPageNum = (totalLastPage > curPage + BLOCK_PAGE_NUM_COUNT)
+                ? curPage + BLOCK_PAGE_NUM_COUNT
+                : totalLastPage;
+
+        curPage = (curPage <= 3) ? 1 : curPage - 2;
+
+        for (int val = curPage, idx = 0; val <= blockLastPageNum; val++, idx++) {
+            pageList[idx] = val;
+        }
+
+        return pageList;
+    }
+
 
     private BoardDto convertEntityToDto(Board board)
     {
@@ -115,7 +124,6 @@ public class BoardService
     {
         boardRepository.deleteById(contentIdx);
     }
-
 
     public Boolean isUser(Authentication authentication)
     {
@@ -184,6 +192,43 @@ public class BoardService
             return passwordEncoder.matches(inputPassword,boardWriteUserMapping.getPassword());
         }
         return false;
+    }
+
+    public String isBoardWriteValid(BoardDto boardDto, Authentication authentication)
+    {
+        String title = boardDto.getTitle();
+        String content = boardDto.getContent();
+        String author = boardDto.getUser();
+        String password = boardDto.getPassword();
+        Boolean isUser = isUser(authentication);
+        String result = "통과";
+
+        if(title.length() < 2 || title.length() > 20)
+        {
+            result = "제목이 2자 미만이거나 20자 초과합니다";
+        }
+
+        if(content.length() < 2 || content.getBytes().length > 65535)
+        {
+            result = "내용이 2자 미만이거나 65535byte를 초과합니다" + "\n현재 byte : " + Integer.toString(content.getBytes().length);
+        }
+
+        if(!isUser)
+        {
+            if(author.length() < 2 || author.length() > 20)
+            {
+                result = "글작성자가 2자 미만이거나 20자 초과합니다";
+            }
+        }
+
+        if(!isUser)
+        {
+            if(password.length() < 4 || password.length() > 20)
+            {
+                result = "비밀번호가 4자 미만이거나 20자 초과합니다";
+            }
+        }
+        return result;
     }
 }
 

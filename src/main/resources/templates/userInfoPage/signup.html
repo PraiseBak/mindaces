@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-md-5"></div>
             <div class="col-md-5">
-                <form th:action="@{/user/signup}" onsubmit="return checkValid()" method="POST">
+                <form th:action="@{/user/signup}" onsubmit="return checkValidSignup()" method="POST">
                     <div id="idArea">
                         <input type="text" minlength="2" maxlength="10" name="userID" required id="userID" placeholder="닉네임">
                         <p id="alarmArea" th:text="${msg}"></p>
@@ -37,18 +37,12 @@
                     <button>제출</button>
                     <p id="resultArea" th:text="${msg}"></p>
 
-
-
-
                     <style>
                         input
                         {
                             width:225px;
                         }
                     </style>
-
-
-
                 </form>
             </div>
 
@@ -58,5 +52,5 @@
 
 
 <script src="/js/SignUpAPI.js" defer></script>
-<script src="/js/CheckValid.js" defer></script>
+<script src="/js/CheckValidSignup.js" defer></script>
 

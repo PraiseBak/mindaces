@@ -8,7 +8,9 @@
         <div class="info-part">
             <div class="form-group board-info-part">
                 <div class="gallery-name-part" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
-                    <h2 th:text="|${board.gallery} 갤러리|"></h2>
+                    <a th:href=".">
+                        <h2 th:text="|${board.gallery} 갤러리|"></h2>
+                    </a>
                 </div>
                 <h3 class="" style="margin-top:3px;">
                     <span th:text="${board.title}"></span>
@@ -41,7 +43,7 @@
 
                     <div class="inputPasswordArea float-right" id="inputPasswordArea"  style="display: none; position: absolute; width: 300px;">
                         <div class="input-part" sec:authorize="!isAuthenticated()">
-                            <input type="password" placeholder="게시글 비밀번호" class="text-black-50" id="inputPassword" name="inputPassword" value="">
+                            <input type="password" placeholder="게시글 비밀번호" class="text-black" id="inputPassword" name="inputPassword" value="">
                             <button class="btn btn-primary" th:onclick="getPassword([[${board.contentIdx}]],[[${board.gallery}]])">제출</button>
                             <button class="btn btn-primary btn-" th:onclick="foldPasswordInput('')">취소</button>
                         </div>
@@ -59,10 +61,8 @@
             </div>
         </div>
 
-        <div class="content-part">
-            <div class="text-body">
-                <span row="10" th:text ="${board.content}"></span>
-            </div>
+        <div class="content-part" style="margin-top: 50px" >
+            <pre style="white-space: pre-wrap; display: block;" th:text ="${board.content}"></pre>
         </div>
     </div>
 
@@ -78,7 +78,6 @@
 <script th:src="@{/js/ModifyBoardAPI.js}"></script>
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
 
 </body>
 </html>

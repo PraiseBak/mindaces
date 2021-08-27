@@ -23,7 +23,8 @@ public class BoardController
 {
     BoardService boardService;
     GalleryService galleryService;
-    String errorURL = "redirect:/error/galleryMiss";
+    String errorGalleryURL = "redirect:/error/galleryMiss";
+    String errorWriteURL = "redirect:/error/writeError";
 
     BoardController(BoardService boardService, GalleryService galleryService)
     {
@@ -40,7 +41,7 @@ public class BoardController
     {
         if(!galleryService.isGallery(galleryName))
         {
-            return errorURL;
+            return errorGalleryURL;
         }
 
         Board board = new Board();
@@ -56,16 +57,27 @@ public class BoardController
     }
 
     @PostMapping(value = "/{galleryName}/postWrite")
-    public String postSubmit(@PathVariable(name = "galleryName") String galleryName, BoardDto boardDto, Authentication authentication)
+    public String postSubmit(@PathVariable(name = "galleryName") String galleryName, BoardDto boardDto, Authentication authentication,Model model)
     {
         //로그인한 유저가 작성한 글의 비밀번호는 ****로 저장됨 어차피 나중에 확인할때 비밀번호 없이 확인할것이라 상관 X
-        //TODO checkValid()
+        //TODO checkValidSignup()
         //존재하지 않는 갤러리라던가 등
         if(!galleryService.isGallery(galleryName))
         {
-            return errorURL;
+            return errorGalleryURL;
         }
 
+        model.addAttribute("농딩동","농딩동");
+        return errorWriteURL;
+
+        /*
+        if(!boardService.isBoardWriteValid(boardDto,authentication).equals("통과"))
+        {
+            return errorWriteURL;
+        }
+        */
+
+        /*
         if(boardService.isUser(authentication))
         {
             boardDto.setUser(authentication.getName());
@@ -77,6 +89,7 @@ public class BoardController
         boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
         boardService.savePost(boardDto);
         return "redirect:";
+         */
     }
 
     @PostMapping(value = "/{galleryName}/modify/{index}")
@@ -89,7 +102,7 @@ public class BoardController
     {
         if(!galleryService.isGallery(galleryName))
         {
-            return errorURL;
+            return errorGalleryURL;
         }
 
         BoardDto boardDto = boardService.getBoardInfoByGalleryAndIdx(galleryName,contentIdx);
@@ -111,7 +124,7 @@ public class BoardController
     {
         if(!galleryService.isGallery(galleryName))
         {
-            return errorURL;
+            return errorGalleryURL;
         }
 
         boardDto.setContentIdx(contentIdx);
@@ -127,7 +140,6 @@ public class BoardController
         if(result)
         {
             boardService.updatePost(boardDto);
-
         }
         return "redirect:/gallery/" + galleryName;
     }
@@ -142,7 +154,7 @@ public class BoardController
     {
         if(!galleryService.isGallery(galleryName))
         {
-            return errorURL;
+            return errorGalleryURL;
         }
         Boolean result;
 

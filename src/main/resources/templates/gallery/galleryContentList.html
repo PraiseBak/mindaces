@@ -2,45 +2,57 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
 <head th:insert="base/head.html">
 </head>
+
 <body>
 
-<h2 th:text="|${galleryName} 갤러리|">
-</h2>
+    <h2 th:text="|${galleryName} 갤러리|">
+    </h2>
 
-<table class="table">
-    <thead class="thead-light">
-    <tr class="text-center">
-        <th scope="col">인덱스</th>
-        <th scope="col">제목</th>
-        <th scope="col">작성자</th>
-        <th scope="col">추천수</th>
-    </tr>
-    </thead>
+    <div class="content-part" style="width: 80%; margin-left: 10%" >
+        <table class="table">
+            <thead class="thead-light">
+            <tr class="text-center">
+                <th scope="col">인덱스</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">추천수</th>
+            </tr>
+            </thead>
 
-    <tbody>
-        <tr th:each="post : ${postList}" class="text-center">
-            <td>
-                <p th:text="${post.contentIdx}"></p>
-            </td>
-            <td>
-                <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx}}" th:text="${post.title} "></a>
-            </td>
-            <td>
-                <p th:text="${post.user}"></p>
-            </td>
-            <td>
-                <p th:text="${post.likes}"></p>
-            </td>
-        </tr>
-    </tbody>
+            <tbody>
+            <tr th:each="post : ${postList}" th:height="50px" class="text-center">
+                <td>
+                    <p th:text="${post.contentIdx}"></p>
+                </td>
+                <td>
+                    <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx}}" th:text="${post.title} "></a>
+                </td>
+                <td>
+                    <p th:text="${post.user}"></p>
+                </td>
+                <td>
+                    <p th:text="${post.likes}"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-</table>
+    </div>
 
-<div class="">
 
-    <button class="btn btn-primary float-right" style="margin-right: 100px"
-            th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite} + '\''">글쓰기</button>
-</div>
+    <div class="">
+        <button class="btn btn-primary float-right" style="margin-right: 100px"
+                th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite} + '\''">글쓰기</button>
+    </div>
+
+
+
+    <div class="text-center " style="float:none; margin:0 auto">
+        <span th:each="pageNum : ${pageList}" th:inline="text">
+            <button class="btn-lg" th:onclick="|location.href='@{'?page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
+        </span>
+
+    </div>
 
 </body>
 

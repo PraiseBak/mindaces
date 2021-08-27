@@ -20,7 +20,7 @@ public class Board extends BaseTimeEntity
     @Column(nullable = false,length = 45)
     private String gallery;
 
-    @Column(nullable = false,length = 45)
+    @Column(nullable = false)
     private String user;
 
     @Id
@@ -31,7 +31,7 @@ public class Board extends BaseTimeEntity
     @Column(nullable = false,length = 45)
     private String title;
 
-    @Column(nullable = false)
+    @Column(columnDefinition="text",nullable = false)
     private String content;
 
     @Column(columnDefinition = "bigint default 0")
