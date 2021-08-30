@@ -196,40 +196,49 @@ public class BoardService
 
     public String isBoardWriteValid(BoardDto boardDto, Authentication authentication,String mode)
     {
-        String title = boardDto.getTitle();
-        String content = boardDto.getContent();
-        String author = boardDto.getUser();
-        String password = boardDto.getPassword();
-        Boolean isUser = isUser(authentication);
-        Boolean isWriteMode = mode.equals("write");
-        String result = "통과";
-
-        if(title.length() < 2 || title.length() > 20)
+        try
         {
-            result = "제목이 2자 미만이거나 20자 초과합니다";
-        }
+            String title = boardDto.getTitle();
+            String content = boardDto.getContent();
+            String author = boardDto.getUser();
+            String password = boardDto.getPassword();
+            Boolean isUser = isUser(authentication);
+            Boolean isWriteMode = mode.equals("write");
+            String result = "통과";
 
-        if(content.length() < 2 || content.getBytes().length > 65535)
-        {
-            result = "내용이 2자 미만이거나 65535byte를 초과합니다" + "\n현재 byte : " + Integer.toString(content.getBytes().length);
-        }
-
-        if(!isUser && isWriteMode)
-        {
-            if(author.length() < 2 || author.length() > 20)
+            if(title.length() < 2 || title.length() > 20)
             {
-                result = "글작성자가 2자 미만이거나 20자 초과합니다";
+                result = "제목이 2자 미만이거나 20자 초과합니다";
             }
+
+            if(content.length() < 2 || content.getBytes().length > 65535)
+            {
+                result = "내용이 2자 미만이거나 65535byte를 초과합니다" + "\n현재 byte : " + Integer.toString(content.getBytes().length);
+            }
+
+            if(!isUser && isWriteMode)
+            {
+                if(author.length() < 2 || author.length() > 20)
+                {
+                    result = "글작성자가 2자 미만이거나 20자 초과합니다";
+                }
+            }
+
+            if(!isUser && isWriteMode)
+            {
+                if(password.length() < 4 || password.length() > 20)
+                {
+                    result = "비밀번호가 4자 미만이거나 20자 초과합니다";
+                }
+            }
+            return result;
+        }
+        catch (Exception e)
+        {
+            return "예기치 못한 에러입니다";
         }
 
-        if(!isUser && isWriteMode)
-        {
-            if(password.length() < 4 || password.length() > 20)
-            {
-                result = "비밀번호가 4자 미만이거나 20자 초과합니다";
-            }
-        }
-        return result;
+
     }
 }
 

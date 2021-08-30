@@ -23,7 +23,6 @@
                 <input id="isRoleUser" sec:authorize="isAuthenticated()" type="text" hidden value="true"/>
                 <input id="isRoleUser" sec:authorize="!isAuthenticated()" type="text" hidden value="false"/>
 
-
                 <div class="modify-btns">
                     <div class="hidden-password">
                         <form hidden id="hiddenPasswordForm" method="post">
@@ -60,18 +59,13 @@
 
                 </div>
 
-                <div class="form-group" style="margin-top: 50px;">
-                    <div class="col-sm-12">
-                        <textarea type="text" rows="20" name="content" class="form-control" th:text="${board?.content}"></textarea>
-                    </div>
+                <div style="margin-top: 50px;">
+                    <div th:utext="${board.content}"></div>
                 </div>
+
             </div>
         </div>
-
-
-
     </div>
-
 
 <script th:inline="javascript">
     var modifyURL = [[@{'/gallery/' + ${board.gallery} + '/modify/' + ${board.contentIdx}}]];

@@ -33,6 +33,15 @@ public class BoardController
         this.galleryService = galleryService;
     }
 
+    @GetMapping(value = "/test")
+    public String postWrite(
+    )
+    {
+        return "gallery/editor";
+    }
+
+
+
     @GetMapping(value = "/{galleryName}/postWrite")
     public String postWrite(
             @PathVariable(name = "galleryName") String galleryName,

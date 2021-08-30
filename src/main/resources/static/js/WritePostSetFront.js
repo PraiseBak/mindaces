@@ -1,9 +1,10 @@
 
 window.onload = function ()
 {
-    var author = document.getElementById("authorName")
+    loadContent();
+    var author = document.getElementById("authorName");
     var authorVal = author.getAttribute("value");
-    var password = document.getElementById("password")
+    var password = document.getElementById("password");
 
     if(authorVal != "")
     {

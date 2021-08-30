@@ -1,14 +1,12 @@
 
-function checkValidBoardWrite()
+function checkValidBoardWrite(content)
 {
     var inputTitle = document.getElementById("inputTitle").value;
     var authorName = document.getElementById("authorName").value;
     var password = document.getElementById("password").value;
-    var content = document.getElementById("inputContent").value;
-    var isModify = document.getElementById("writeForm").action.includes("postModify/");
+    var isModify = document.getElementById("tx_editor_form_writeForm").action.includes("postModify/");
     var flag = false;
     var ajaxURL = "/API/checkBoardValidWriteAPI";
-
     if(isModify)
     {
         password = "";
