@@ -8,11 +8,12 @@ import org.springframework.stereotype.Service;
 public class RoleService
 {
 
-    Boolean isUserRole(Authentication authentication)
+
+    public Boolean isUser(Authentication authentication)
     {
         if(authentication != null)
         {
-            if(authentication instanceof User)
+            if(authentication.getPrincipal() instanceof User)
             {
                 return true;
             }
@@ -20,7 +21,16 @@ public class RoleService
         return false;
     }
 
-
-
+    public String getUserName(Authentication authentication)
+    {
+        if(authentication != null)
+        {
+            if(authentication.getPrincipal() instanceof User)
+            {
+                return authentication.getName();
+            }
+        }
+        return "-";
+    }
 
 }

@@ -26,11 +26,13 @@ public class BoardService
     private static final int BLOCK_PAGE_NUM_COUNT = 10;
     private static final int PAGE_POST_COUNT = 20;
 
+    private RoleService roleService;
     private BoardRepository boardRepository;
     private GalleryRepository galleryRepository;
 
-    public BoardService(BoardRepository boardRepository)
+    public BoardService(BoardRepository boardRepository,RoleService roleService)
     {
+        this.roleService = roleService;
         this.boardRepository = boardRepository;
     }
 
@@ -112,9 +114,9 @@ public class BoardService
         return this.convertEntityToDto(board);
     }
 
-    public Long updatePost(BoardDto boardDto)
+    public Long updatePost(BoardDto boardDto,String galleryName)
     {
-        Board board = boardRepository.getById(boardDto.getContentIdx());
+        Board board = (Board) boardRepository.findByGalleryAndContentIdx(galleryName,boardDto.getContentIdx(),Board.class);
         board.setContent(boardDto.getContent());
         board.setTitle((boardDto.getTitle()));
         return boardRepository.save(board).getContentIdx();
@@ -125,17 +127,6 @@ public class BoardService
         boardRepository.deleteById(contentIdx);
     }
 
-    public Boolean isUser(Authentication authentication)
-    {
-        if(authentication != null)
-        {
-            if(authentication.getPrincipal() instanceof User)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public Boolean isLoggedUserWriteBoard(BoardWriteUserMapping boardWriteUserMapping)
     {
@@ -170,7 +161,7 @@ public class BoardService
         {
             if(isLoggedUserWriteBoard(boardWriteUserMapping))
             {
-                if(isUser(authentication))
+                if(roleService.isUser(authentication))
                 {
                     if(isSameWriteUser(boardWriteUserMapping,authentication.getName()))
                     {
@@ -202,7 +193,7 @@ public class BoardService
             String content = boardDto.getContent();
             String author = boardDto.getUser();
             String password = boardDto.getPassword();
-            Boolean isUser = isUser(authentication);
+            Boolean isUser = this.roleService.isUser(authentication);
             Boolean isWriteMode = mode.equals("write");
             String result = "통과";
 
@@ -237,8 +228,26 @@ public class BoardService
         {
             return "예기치 못한 에러입니다";
         }
+    }
 
-
+    public Boolean updateLikes(String mode,String gallery,Long boardIdx)
+    {
+        try
+        {
+            Board board = this.boardRepository.findByGalleryAndContentIdx(gallery,boardIdx,Board.class);
+            if(mode.equals("like"))
+            {
+                board.setLikes(board.getLikes() + 1L);
+            }
+            else
+            {
+                board.setLikes(board.getDisLikes() + 1L);
+            }
+        }catch (Exception e)
+        {
+            return false;
+        }
+        return true;
     }
 }
 

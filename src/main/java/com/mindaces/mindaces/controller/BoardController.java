@@ -5,6 +5,7 @@ import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.GalleryService;
+import com.mindaces.mindaces.service.RoleService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,14 +24,16 @@ public class BoardController
 {
     BoardService boardService;
     GalleryService galleryService;
+    RoleService roleService;
     String errorGalleryURL = "redirect:/error/galleryMiss";
     String errorWriteURL = "redirect:/error/writeError";
     final String galleryError = "존재하지 않는 갤러리입니다";
 
-    BoardController(BoardService boardService, GalleryService galleryService)
+    BoardController(BoardService boardService, GalleryService galleryService, RoleService roleService)
     {
         this.boardService = boardService;
         this.galleryService = galleryService;
+        this.roleService = roleService;
     }
 
     @GetMapping(value = "/test")
@@ -57,7 +60,7 @@ public class BoardController
         }
 
         Board board = new Board();
-        if(boardService.isUser(authentication))
+        if(roleService.isUser(authentication))
         {
             board.setUser(authentication.getName());
             board.setPassword("****");
@@ -89,7 +92,7 @@ public class BoardController
             return errorWriteURL;
         }
 
-        if(boardService.isUser(authentication))
+        if(roleService.isUser(authentication))
         {
             boardDto.setUser(authentication.getName());
             boardDto.setIsLoggedUser(1L);
@@ -146,7 +149,7 @@ public class BoardController
 
         boardDto.setContentIdx(contentIdx);
         Boolean result;
-        if(boardService.isUser(authentication))
+        if(roleService.isUser(authentication))
         {
             result = boardService.isBoardModifyAuthValidLoggedUser(authentication,contentIdx,galleryName);
         }
@@ -156,7 +159,7 @@ public class BoardController
         }
         if(result)
         {
-            boardService.updatePost(boardDto);
+            boardService.updatePost(boardDto,galleryName);
         }
         return "redirect:/gallery/" + galleryName;
     }
