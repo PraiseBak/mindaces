@@ -6,7 +6,13 @@
 
     <body>
         <div class="full_area">
+
             <div class="row" style="margin-top: 35px; margin-left: 17%;">
+
+                <div class="col-xs-12 col-md-10">
+                    <h2>인기 토픽 ✨</h2>
+                </div>
+
                 <div class="col-xs-12 col-md-10">
                     <table class="table">
                         <thead class="thead-light">
@@ -18,26 +24,22 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="text-center">
+                        <tr class="text-center" th:each="board : ${mostLikedBoardList}">
                             <th scope="row">
-                                <span th:text="쉑스농갤러리"></span>
+                                <span th:text="${board.gallery}"></span>
                             </th>
                             <td>
-                                <a th:href="농농">
-                                    <span th:text="농농농농농농농농농농농농농농농농농농농농농농농농"></span>
-                                    <span th:text="농."></span>
+                                <a th:href="|gallery/${board.gallery}/${board.contentIdx}|">
+                                    <span th:text="${board.title}"></span>
                                 </a>
                             </td>
                             <td>
-                                <a th:href="농농">
-                                    <span th:text="농나누누누누"></span>
+                                <a th:href="|userInfo/${board.user}|">
+                                    <span th:text="${board.user}"></span>
                                 </a>
                             </td>
                             <td>
-                                <a th:href="농농">
-                                    <span th:text="2"></span>
-                                </a>
-
+                                <span th:text="${board.likes}"></span>
                             </td>
 
                         </tr>

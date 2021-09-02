@@ -32,7 +32,7 @@ function checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName)
             form.setAttribute("action",url);
             form.submit();
         }
-    else
+        else
         {
             alert("비밀번호가 일치하지 않습니다");
         }
@@ -96,9 +96,53 @@ function foldPasswordInput(url)
             inputArea.style.display = "none";
         }
     }
-
-
 }
 
+function sendLikeRequest(mode,galleryName,boardIdx)
+{
+    var info =
+    {
+        gallery : galleryName,
+        mode : mode,
+        boardIdx : boardIdx
+    };
 
+    $.ajax({
+        url : "/API/requestRecommendAPI",
+        data: info,
+        type: "POST",
+        async : false
+    }).done(function (result){
+        if(result.match("통과"))
+        {
+            refreshLikes();
+        }
+        else
+        {
+            alert(result);
+        }
+    });
+}
 
+function refreshLikes()
+{
+    var likesBtn = document.getElementById("likesBtn");
+    var dislikesBtn = document.getElementById("dislikesBtn");
+    var info=
+    {
+        gallery : galleryName,
+        boardIdx : boardIdx
+    };
+
+    $.ajax({
+        url : "/API/getRecentLikesAPI",
+        data : info,
+        type : "POST",
+        dataType : "json",
+        async : false
+    }).done(function (result)
+    {
+        likesBtn.innerText = "개추 " +result['likes'];
+        dislikesBtn.innerText = "비추 " +result['dislikes']
+    });
+}

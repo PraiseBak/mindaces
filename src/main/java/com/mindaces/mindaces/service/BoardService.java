@@ -28,7 +28,6 @@ public class BoardService
 
     private RoleService roleService;
     private BoardRepository boardRepository;
-    private GalleryRepository galleryRepository;
 
     public BoardService(BoardRepository boardRepository,RoleService roleService)
     {
@@ -39,6 +38,8 @@ public class BoardService
     @Transactional
     public Long savePost(BoardDto boardDto)
     {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
         return boardRepository.save(boardDto.toEntity()).getContentIdx();
     }
 
@@ -97,7 +98,7 @@ public class BoardService
                 .gallery(board.getGallery())
                 .user(board.getUser())
                 .likes(board.getLikes())
-                .disLikes(board.getDisLikes())
+                .dislikes(board.getDislikes())
                 .isLoggedUser(board.getIsLoggedUser())
                 .build();
     }
@@ -105,6 +106,10 @@ public class BoardService
     public BoardDto getBoardByIdx(String galleryName, Long contentIdx)
     {
         Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);
+        if(board == null)
+        {
+            return null;
+        }
         return this.convertEntityToDto(board);
     }
 
@@ -241,14 +246,40 @@ public class BoardService
             }
             else
             {
-                board.setLikes(board.getDisLikes() + 1L);
+                board.setDislikes(board.getDislikes() + 1L);
             }
+            boardRepository.save(board);
         }catch (Exception e)
         {
             return false;
         }
         return true;
     }
+
+    public Boolean isThereBoardInGallery(String gallery,Long boardIdx)
+    {
+        if(boardRepository.findByGalleryAndContentIdx(gallery,boardIdx,Board.class) == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public List<BoardDto> getMostLikelyBoardList()
+    {
+        List<Board> boardList = boardRepository.findTop10ByOrderByLikesDesc();
+        List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
+        for(Board board : boardList)
+        {
+            if(board.getTitle().length() > 20)
+            {
+                board.setTitle(board.getTitle().substring(19) + "...");
+            }
+            boardDtoList.add(this.convertEntityToDto(board));
+        }
+        return boardDtoList;
+    }
+
 }
 
 

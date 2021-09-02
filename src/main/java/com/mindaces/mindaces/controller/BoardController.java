@@ -43,8 +43,6 @@ public class BoardController
         return "gallery/editor";
     }
 
-
-
     @GetMapping(value = "/{galleryName}/postWrite")
     public String postWrite(
             @PathVariable(name = "galleryName") String galleryName,
@@ -98,9 +96,7 @@ public class BoardController
             boardDto.setIsLoggedUser(1L);
         }
 
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boardDto.setGallery(galleryName);
-        boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
         boardService.savePost(boardDto);
         return "redirect:";
     }

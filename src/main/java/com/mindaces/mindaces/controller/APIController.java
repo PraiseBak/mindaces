@@ -163,11 +163,22 @@ public class APIController
         return fileInfo;    // @ResponseBody 어노테이션을 사용하여 Map을 JSON형태로 반환
     }
 
-    @PostMapping("/requestRecommand")
+    @PostMapping("/requestRecommendAPI")
     @ResponseBody
-    public Boolean recommandRequestAPI(@RequestParam Map<String, Object> map, HttpServletRequest request,Authentication authentication)
+    public String recommendRequestAPI(@RequestParam Map<String, Object> map, HttpServletRequest request,Authentication authentication)
     {
-        return this.likeService.recommand(map, request,authentication);
+        String result = this.likeService.recommand(map, request,authentication);
+        return result;
     }
+
+    @PostMapping("/getRecentLikesAPI")
+    @ResponseBody
+    public Map<String,Long> getRecentLikesAPI(@RequestParam(value = "gallery") String gallery, @RequestParam(value = "boardIdx") Long boardIdx)
+    {
+        Map<String,Long> map = new HashMap<String,Long>();
+        map = likeService.getRecentLikes(gallery,boardIdx);
+        return map;
+    }
+
 
 }

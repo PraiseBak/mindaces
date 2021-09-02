@@ -15,7 +15,7 @@ public class BoardDto
     private String title;
     private String content;
     private Long likes;
-    private Long disLikes;
+    private Long dislikes;
     private String password;
     private Long isLoggedUser;
 
@@ -29,7 +29,7 @@ public class BoardDto
                 .title(title)
                 .content(content)
                 .likes(likes)
-                .disLikes(disLikes)
+                .dislikes(dislikes)
                 .password(password)
                 .isLoggedUser(isLoggedUser)
                 .build();
@@ -38,7 +38,7 @@ public class BoardDto
 
 
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long disLikes,String password,Long isLoggedUser)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long dislikes,String password,Long isLoggedUser)
     {
         this.gallery = gallery;
         this.user = user;
@@ -46,7 +46,7 @@ public class BoardDto
         this.title = title;
         this.content = content;
         this.likes = likes;
-        this.disLikes = disLikes;
+        this.dislikes = dislikes;
         this.password = password;
         this.isLoggedUser = isLoggedUser;
     }

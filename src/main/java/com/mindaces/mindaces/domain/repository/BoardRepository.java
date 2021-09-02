@@ -13,6 +13,8 @@ public interface BoardRepository extends JpaRepository<Board, Long>
     List<Board> findByGallery(String keyword);
     <T> T findByGalleryAndContentIdx(String gallery,Long contentIdx,Class<T> type);
     Long countBoardByGallery(String gallery);
+    List<Board> findTop10ByOrderByLikesDesc();
+
 
 }
 

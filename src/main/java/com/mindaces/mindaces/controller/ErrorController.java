@@ -10,6 +10,18 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+
+
+@Controller
+public class ErrorController {
+
+    @GetMapping("/error")
+    public String errorpage(){
+        throw new IllegalStateException("Error");
+    }
+}
+
+/*
 @Controller
 @RequestMapping(value = "/error")
 public class ErrorController
@@ -22,6 +34,14 @@ public class ErrorController
         this.errorService = errorService;
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    String tmp()
+    {
+        System.out.println("tmp");
+        throw new IllegalStateException("Error");
+    }
+
+
     @RequestMapping(value =  "/{errorCase}")
     String error(@PathVariable(name = "errorCase") String errorCase, @RequestParam String errorMsg, Model model)
     {
@@ -31,6 +51,7 @@ public class ErrorController
     }
 
 }
+ */
 
 
 /*
