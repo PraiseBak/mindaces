@@ -1,6 +1,5 @@
 package com.mindaces.mindaces.service;
 
-import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.LikedUserInfo;
 import com.mindaces.mindaces.domain.repository.LikedUserInfoRepository;
 import com.mindaces.mindaces.dto.BoardDto;
@@ -145,7 +144,7 @@ public class LikedUserInfoService
     public Map<String, Long> getRecentLikes(String galleryName, Long boardIdx)
     {
         System.out.println(galleryName + " " + boardIdx);
-        BoardDto boardDto = this.boardService.getBoardByIdx(galleryName,boardIdx);
+        BoardDto boardDto = this.boardService.getBoardByIdxAndGalleryName(galleryName,boardIdx);
         Map<String,Long> map = new HashMap<String, Long>();
         map.put("likes",boardDto.getLikes());
         map.put("dislikes",boardDto.getDislikes());

@@ -1,14 +1,13 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.BoardDto;
+import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.service.BoardService;
+import com.mindaces.mindaces.service.CommentService;
 import com.mindaces.mindaces.service.GalleryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,13 +16,15 @@ import java.util.List;
 @RequestMapping(value = "/gallery")
 public class GalleryController
 {
-    BoardService boardService;
-    GalleryService galleryService;
+    private CommentService commentService;
+    private BoardService boardService;
+    private GalleryService galleryService;
 
     String errorURL = "redirect:/error/galleryMiss";
 
-    public GalleryController(BoardService boardService, GalleryService galleryService)
+    public GalleryController(BoardService boardService, GalleryService galleryService, CommentService commentService)
     {
+        this.commentService = commentService;
         this.boardService = boardService;
         this.galleryService = galleryService;
     }
@@ -73,8 +74,23 @@ public class GalleryController
             return errorURL;
         }
 
-        BoardDto boardDto = boardService.getBoardByIdx(galleryName,contentIdx);
+        BoardDto boardDto = boardService.getBoardByIdxAndGalleryName(galleryName,contentIdx);
+        List<CommentDto> commentDtoList = commentService.getCommentByContentIdxAndGalleryName(galleryName,contentIdx);
+
         model.addAttribute("board",boardDto);
+        model.addAttribute("commentList",commentDtoList);
+
+        return "gallery/postContent";
+    }
+
+
+    @PostMapping(value = "/{galleryName}/{index}")
+    public String commentAdd(
+            @PathVariable(name="galleryName") String galleryName,
+            @PathVariable(name="index") Long contentIdx
+    )
+    {
+        System.out.println("농농");
         return "gallery/postContent";
     }
 

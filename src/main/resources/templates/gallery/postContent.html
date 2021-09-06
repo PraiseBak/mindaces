@@ -70,6 +70,31 @@
 
             </div>
         </div>
+
+        <div class="comment-part" style="margin-bottom:20px; margin-top:20px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
+            <div class="comments" th:each="comment : ${commentList}">
+                <div class="col-sm-3 form-input">
+                    <p th:text="${comment.user}"></p>
+                </div>
+            </div>
+
+            <form class="input-comment row" method="POST" action="">
+                <!--div class="col-sm-3 form-input">
+                    <input type="text" name="user" minlength="2" maxlength="12" placeholder="글쓴이" class="form-control" id="user" th:value="${board?.user}" >
+                    <input type="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" id="commentPassword" th:value="${board?.password}" th:readonly="${board?.password}">
+                </div>
+                <div class="col-sm-9 form-input">
+                    <textarea minlength="2" maxlength="180" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>
+                </div>
+                <div class="col-sm-12 form-input" style="margin-bottom: 20px">
+                    <button class="btn btn-primary float-right">제출</button>
+                </div!-->
+                <button class="btn btn-primary float-right">제출</button>
+
+            </form>
+        </div>
+
+
     </div>
 
 <script th:inline="javascript">

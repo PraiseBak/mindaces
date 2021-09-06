@@ -188,5 +188,4 @@ public class BoardController
         return "redirect:/gallery/" + galleryName;
     }
 
-
 }

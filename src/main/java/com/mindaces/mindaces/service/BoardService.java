@@ -4,15 +4,11 @@ package com.mindaces.mindaces.service;
 import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
-import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -103,7 +99,7 @@ public class BoardService
                 .build();
     }
 
-    public BoardDto getBoardByIdx(String galleryName, Long contentIdx)
+    public BoardDto getBoardByIdxAndGalleryName(String galleryName, Long contentIdx)
     {
         Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);
         if(board == null)
