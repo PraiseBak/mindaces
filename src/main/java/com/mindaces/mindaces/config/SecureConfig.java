@@ -70,9 +70,11 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
 
         http.csrf()
                             .ignoringAntMatchers("/API/**")
+                            .ignoringAntMatchers("/gallery/**/**")
                             .ignoringAntMatchers("/gallery/**/modify/**")
                             .ignoringAntMatchers("/gallery/**/delete/**")
                             .ignoringAntMatchers("/gallery/**/postWrite/**");
+
 
 
                 /*

@@ -2,7 +2,9 @@ package com.mindaces.mindaces.domain.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -11,7 +13,9 @@ import javax.persistence.*;
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@DynamicInsert
 @Table(name = "COMMENT")
+@NoArgsConstructor
 public class Comment
 {
     @Id

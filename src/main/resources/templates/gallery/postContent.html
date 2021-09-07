@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:form="http://www.w3.org/1999/html">
 <head th:insert="base/head.html">
 </head>
 
@@ -72,30 +73,38 @@
         </div>
 
         <div class="comment-part" style="margin-bottom:20px; margin-top:20px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
-            <div class="comments" th:each="comment : ${commentList}">
+            <div class="comments row" th:each="comment : ${commentList}">
                 <div class="col-sm-3 form-input">
-                    <p th:text="${comment.user}"></p>
+                    <span th:text="${comment.user}"></span>
                 </div>
+                <div class="col-sm-8 form-input">
+                    <pre style="white-space: pre-wrap; width: 100%;  word-wrap: break-word" th:text="${comment.content}"></pre>
+                </div>
+                <div class="col-sm-1 form-input">
+                    <a th:href="." style="font-size: 80%">수정</a>
+                    <a th:href="." style="font-size: 80%">삭제</a>
+                </div>
+
             </div>
 
-            <form class="input-comment row" method="POST" action="">
-                <!--div class="col-sm-3 form-input">
-                    <input type="text" name="user" minlength="2" maxlength="12" placeholder="글쓴이" class="form-control" id="user" th:value="${board?.user}" >
+            <form method="post" class="write-comment row" onsubmit="return checkCommentValid()">
+                <div class="col-sm-3 form-input">
+                    <input type="text" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" id="commentUser" >
                     <input type="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" id="commentPassword" th:value="${board?.password}" th:readonly="${board?.password}">
                 </div>
                 <div class="col-sm-9 form-input">
-                    <textarea minlength="2" maxlength="180" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>
+                    <textarea minlength="2" maxlength="180" id="commentContent" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>
                 </div>
                 <div class="col-sm-12 form-input" style="margin-bottom: 20px">
                     <button class="btn btn-primary float-right">제출</button>
-                </div!-->
-                <button class="btn btn-primary float-right">제출</button>
-
+                </div>
             </form>
         </div>
 
 
     </div>
+
+
 
 <script th:inline="javascript">
     var galleryName = [[${board.gallery}]];
@@ -107,6 +116,7 @@
     var isWriteLoggedBoard = [[${board.isLoggedUser}]] == 1;
 </script>
 
+<script th:src="@{/js/ModifyCommentAPI.js}"></script>
 <script th:src="@{/js/ModifyBoardAPI.js}"></script>
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>

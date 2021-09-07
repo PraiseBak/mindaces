@@ -1,8 +1,10 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.BoardDto;
+import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.BoardService;
+import com.mindaces.mindaces.service.CommentService;
 import com.mindaces.mindaces.service.LikedUserInfoService;
 import com.mindaces.mindaces.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -27,12 +29,14 @@ public class APIController
     UserService userService;
     LikedUserInfoService likeService;
     BoardService boardService;
+    CommentService commentService;
 
-    APIController(UserService userService, BoardService boardService, LikedUserInfoService likeService)
+    APIController(UserService userService, BoardService boardService, LikedUserInfoService likeService,CommentService commentService)
     {
         this.userService= userService;
         this.boardService = boardService;
         this.likeService = likeService;
+        this.commentService = commentService;
     }
 
     @PostMapping("/sendIDAPI")
@@ -179,6 +183,17 @@ public class APIController
         map = likeService.getRecentLikes(gallery,boardIdx);
         return map;
     }
+
+    @PostMapping("/checkCommentValidAPI")
+    @ResponseBody
+    public Boolean checkCommentValidAPI(CommentDto commentDto)
+    {
+        System.out.println("농농");
+        Boolean result = commentService.commentValidCheck(commentDto);
+        System.out.println(result);
+        return result;
+    }
+
 
 
 }

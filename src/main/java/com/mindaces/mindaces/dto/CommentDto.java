@@ -1,8 +1,13 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.Comment;
-import lombok.Builder;
+import lombok.*;
 
+
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class CommentDto
 {
     Long commentIdx;

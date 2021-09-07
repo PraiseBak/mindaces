@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @Table(name = "BOARD")
 public class Board extends BaseTimeEntity

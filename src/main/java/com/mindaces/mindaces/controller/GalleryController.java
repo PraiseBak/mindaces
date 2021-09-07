@@ -5,6 +5,7 @@ import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.CommentService;
 import com.mindaces.mindaces.service.GalleryService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +61,8 @@ public class GalleryController
         return "gallery/galleryContentList";
     }
 
+
+
     //글 내용 보여주기
     @GetMapping(value = "/{galleryName}/{index}")
     public String postContent(
@@ -87,11 +90,17 @@ public class GalleryController
     @PostMapping(value = "/{galleryName}/{index}")
     public String commentAdd(
             @PathVariable(name="galleryName") String galleryName,
-            @PathVariable(name="index") Long contentIdx
+            @PathVariable(name="index") Long contentIdx,
+            CommentDto commentDto,
+            Authentication authentication
     )
     {
-        System.out.println("농농");
-        return "gallery/postContent";
+        commentService.addComment(galleryName,contentIdx,authentication,commentDto);
+        return "redirect:" + Long.toString(contentIdx);
     }
+
+
+
+
 
 }
