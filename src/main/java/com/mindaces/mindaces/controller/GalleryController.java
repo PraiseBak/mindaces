@@ -104,13 +104,12 @@ public class GalleryController
     public String commentDelete(
             @PathVariable(name="galleryName") String galleryName,
             @PathVariable(name="index") Long contentIdx,
-            String inputPassword,
-            Authentication authentication
+            CommentDto commentDto,
+            Authentication authentication,
+            String inputCommentPassword
     )
     {
-        System.out.println("테스트 of commentDelete method");
-        commentService.deleteComment(galleryName,contentIdx,authentication,inputPassword);
-
-        return "redirect:" + Long.toString(contentIdx);
+        commentService.deleteComment(commentDto,authentication,inputCommentPassword);
+        return "redirect:./";
     }
 }

@@ -71,7 +71,6 @@
 
             </div>
         </div>
-
         <div class="comment-part" style="margin-bottom:20px; margin-top:20px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
             <div class="comments row" th:each="comment : ${commentList}">
                 <div class="col-sm-3 form-input">
@@ -81,12 +80,12 @@
                     <pre style="white-space: pre-wrap; width: 100%;  word-wrap: break-word" th:text="${comment.content}"></pre>
                 </div>
                 <div class="col-sm-2 form-input">
-                    <form th:action="@{modifyComment}" id="commentModifyForm" method="post">
-                        <input id="inputCommentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 90%">
+                    <form id="commentModifyForm" method="post">
+                        <input hidden th:value="${comment.commentIdx}" name="commentIdx">
+                        <a href="javascript:;" th:onclick="checkAndSubmit(this,[[${comment.commentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
+                        <input id="inputCommentPassword" name="inputCommentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 85%">
                         <a href="javascript:;" onclick="showInput(this, 'modifyComment')" style="font-size: 80%">수정</a>
                         <a href="javascript:;" onclick="showInput(this,'deleteComment')" style="font-size: 80%">삭제</a>
-
-
                     </form>
 
                 </div>

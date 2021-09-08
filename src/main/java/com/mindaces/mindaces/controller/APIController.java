@@ -188,10 +188,16 @@ public class APIController
     @ResponseBody
     public Boolean checkCommentValidAPI(CommentDto commentDto)
     {
-        System.out.println("농농");
         Boolean result = commentService.commentValidCheck(commentDto);
-        System.out.println(result);
         return result;
+    }
+
+    @PostMapping("/checkCommentPasswordAPI")
+    @ResponseBody
+    public Boolean checkComentPasswordAPI(CommentDto commentDto)
+    {
+        String inputPassword = commentDto.getCommentPassword();
+        return commentService.commentPasswordCheck(commentDto,inputPassword);
     }
 
 

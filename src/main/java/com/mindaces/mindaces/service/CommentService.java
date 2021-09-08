@@ -35,6 +35,7 @@ public class CommentService
     private CommentDto convertEntityToDto(Comment comment)
     {
         return CommentDto.builder()
+                .commentIdx(comment.getCommentIdx())
                 .gallery(comment.getGallery())
                 .user(comment.getUser())
                 .content(comment.getContent())
@@ -106,13 +107,25 @@ public class CommentService
     }
 
 
-    public Boolean deleteComment(String galleryName, Long contentIdx,Authentication authentication,String inputPassword)
+    public Boolean deleteComment(CommentDto commentDto,Authentication authentication,String inputPassword)
     {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        //passwordEncoder.matches(inputPassword,boardWriteUserMapping.getPassword());
-
+        if(commentPasswordCheck(commentDto,inputPassword))
+        {
+            commentRepository.deleteById(commentDto.getCommentIdx());
+        }
 
         return false;
+    }
+
+    public Boolean commentPasswordCheck(CommentDto commentDto, String inputPassword)
+    {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        Long commentIdx = commentDto.getCommentIdx();
+        Comment objComment = this.commentRepository.getById(commentIdx);
+        if(objComment == null)
+        {
+            return false;
+        }
+        return passwordEncoder.matches(inputPassword,objComment.getCommentPassword());
     }
 }
