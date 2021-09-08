@@ -5,6 +5,7 @@ import com.mindaces.mindaces.domain.repository.CommentRepository;
 import com.mindaces.mindaces.dto.CommentDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -96,6 +97,8 @@ public class CommentService
             }
             commentDto.setGallery(galleryName);
             commentDto.setBoardIdx(contentIdx);
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            commentDto.setCommentPassword(passwordEncoder.encode(commentDto.getCommentPassword()));
             Comment comment = commentRepository.save(commentDto.toEntity());
             return true;
         }
@@ -103,8 +106,11 @@ public class CommentService
     }
 
 
-    public Boolean deleteComment(String galleryName, Long contentIdx,CommentDto commentDto)
+    public Boolean deleteComment(String galleryName, Long contentIdx,Authentication authentication,String inputPassword)
     {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        //passwordEncoder.matches(inputPassword,boardWriteUserMapping.getPassword());
 
 
         return false;

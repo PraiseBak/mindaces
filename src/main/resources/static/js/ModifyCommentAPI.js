@@ -1,12 +1,11 @@
-
+var commentSubmitMode = "modify";
+var curURL = window.location.pathname;
 
 function checkCommentValid()
 {
     var user = document.getElementById("commentUser").value;
     var content = document.getElementById("commentContent").value;
     var password = document.getElementById("commentPassword").value;
-
-
 
     var data=
     {
@@ -31,6 +30,22 @@ function checkCommentValid()
             return true;
         }
     });
+
 }
 
+function showInput(tag,mode)
+{
+    this.mode = mode;
+    commentSubmitMode = mode;
+
+    var inputArea = document.querySelector("#inputCommentPassword");
+    if(inputArea.style.display === "none")
+    {
+        inputArea.style.display = "inline-block";
+    }
+    else
+    {
+        inputArea.style.display = "none";
+    }
+}
 

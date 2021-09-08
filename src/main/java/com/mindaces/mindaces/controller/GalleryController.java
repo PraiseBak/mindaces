@@ -6,6 +6,7 @@ import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.CommentService;
 import com.mindaces.mindaces.service.GalleryService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -99,8 +100,17 @@ public class GalleryController
         return "redirect:" + Long.toString(contentIdx);
     }
 
+    @PostMapping(value = "/{galleryName}/{index}/deleteComment")
+    public String commentDelete(
+            @PathVariable(name="galleryName") String galleryName,
+            @PathVariable(name="index") Long contentIdx,
+            String inputPassword,
+            Authentication authentication
+    )
+    {
+        System.out.println("테스트 of commentDelete method");
+        commentService.deleteComment(galleryName,contentIdx,authentication,inputPassword);
 
-
-
-
+        return "redirect:" + Long.toString(contentIdx);
+    }
 }
