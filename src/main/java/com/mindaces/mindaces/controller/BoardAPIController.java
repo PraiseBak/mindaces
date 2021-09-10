@@ -48,7 +48,7 @@ public class BoardAPIController
         return result;
     }
 
-    @PostMapping("/checkUserAPI")
+    @PostMapping("/checkBoardUserAPI")
     @ResponseBody
     public Boolean checkUser(BoardDto boardDto, Authentication authentication)
     {
@@ -138,7 +138,7 @@ public class BoardAPIController
         return fileInfo;    // @ResponseBody 어노테이션을 사용하여 Map을 JSON형태로 반환
     }
 
-    @PostMapping("/requestRecommendAPI")
+    @PostMapping("/requestBoardRecommendAPI")
     @ResponseBody
     public String recommendRequestAPI(@RequestParam Map<String, Object> map, HttpServletRequest request,Authentication authentication)
     {
@@ -146,7 +146,7 @@ public class BoardAPIController
         return result;
     }
 
-    @PostMapping("/getRecentLikesAPI")
+    @PostMapping("/getRenewBoardLikesAPI")
     @ResponseBody
     public Map<String,Long> getRecentLikesAPI(@RequestParam(value = "gallery") String gallery, @RequestParam(value = "boardIdx") Long boardIdx)
     {
@@ -154,5 +154,6 @@ public class BoardAPIController
         map = likeService.getRecentLikes(gallery,boardIdx);
         return map;
     }
+
 
 }

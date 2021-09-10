@@ -10,7 +10,7 @@ var originUserVal = null;
 var originCommentVal = null;
 var prevCommentsTag = null;
 
-
+//제출할때 댓글 내용 확인
 function checkCommentValid()
 {
     var user = document.getElementById("commentUser").value;
@@ -41,14 +41,16 @@ function checkCommentValid()
             return true;
         }
     });
-
 }
 
-function showInput(aTag,mode)
+function  setCommentSubmitMode(mode)
 {
-    this.mode = mode;
-    commentSubmitMode = mode;
+    this.commentSubmitMode = mode;
+}
 
+//수정,삭제시에 비밀번호 입력하는 창 보이게하는 유무
+function toggleCommentPasswordInputPassword(aTag)
+{
     var inputArea = aTag.parentNode.querySelector("#inputCommentPassword");
     var checkBtn = aTag.parentNode.querySelector("#checkBtn");
     if(inputArea.style.display === "none")
@@ -70,15 +72,15 @@ function showInput(aTag,mode)
     }
 }
 
-
-function checkAndSubmit(childTag,commentIdx)
+//비밀번호 입력후 확인
+//삭제인 경우라면 비밀번호 입력 후 서버에 요청보냄(물론 서버에서 한번 더 유효한가 체크함)
+function checkPasswordAndSubmitNotLogged(childTag, commentIdx)
 {
-
-
-    var formTag = childTag.parentNode;
+    var formTag =
+        getParentTag(
+        getParentTag(
+        getParentTag(childTag)));
     var inputArea = formTag.parentNode.querySelector("#inputCommentPassword");
-    var commentInputArea = "";
-
     var commentDto =
     {
         commentIdx : commentIdx,
@@ -88,9 +90,8 @@ function checkAndSubmit(childTag,commentIdx)
     //수정창 열어놓고 또 다른창 누르는 경우 이전의 창을 닫아주는 역할
     if(prevCommentsTag != null)
     {
-        changeInputEnable(prevCommentsTag);
+        modifyInputToggle(prevCommentsTag);
     }
-
 
     $.ajax({
         url : "/API/checkCommentPasswordAPI",
@@ -107,21 +108,26 @@ function checkAndSubmit(childTag,commentIdx)
         {
             if(commentSubmitMode == "deleteComment")
             {
-                var url = getCorrectURL(formTag.action);
-                formTag.action = url;
-                formTag.submit();
+                formSubmit(formTag)
             }
             else
             {
-                showInput(childTag,commentSubmitMode);
-                changeInputEnable(formTag.parentNode.parentNode);
+                toggleCommentPasswordInputPassword(childTag,commentSubmitMode);
+                modifyInputToggle(formTag.parentNode.parentNode);
             }
         }
     });
 }
 
+function formSubmit(formTag)
+{
+    var url = getCommentSubmitURL(formTag.action);
+    formTag.action = url;
+    formTag.submit();
+}
 
-function changeInputEnable(commentsTag)
+//댓글 수정시에 비밀번호가 일치하여 입력창 보여주고
+function modifyInputToggle(commentsTag)
 {
     var userTag = commentsTag.querySelector("#commentModifyUser");
     var modifySubmitBtn = commentsTag.querySelector("#modifySubmitBtn");
@@ -166,10 +172,9 @@ function changeInputEnable(commentsTag)
         commentsTag.querySelector("#commentModifyContent").value = commentTagValue;
         prevCommentsTag = commentsTag;
     }
-
 }
 
-function getCorrectURL(url)
+function getCommentSubmitURL(url)
 {
     if(url.charAt(url.length-1) == '/')
     {
@@ -185,13 +190,77 @@ function getCorrectURL(url)
 
 function modifySubmit(btnTag)
 {
-    var formTag = btnTag.parentNode.parentNode.parentNode;
-    var url = getCorrectURL(formTag.action);
-    formTag.action = url;
-    formTag.submit();
+    var formTag =
+        getParentTag(
+        getParentTag(
+        getParentTag(btnTag)));
+    formSubmit(formTag);
+}
+
+function isUser()
+{
+    return isRoleUserVal;
+}
+
+function getParentTag(childTag)
+{
+    return childTag.parentNode;
+}
+
+function checkCommentUserAJAX(commentIdx,childTag)
+{
+    var formTag =
+        getParentTag(
+        getParentTag(
+        getParentTag(childTag)));
+    var commentIdxRequest =
+    {
+        commentIdx : commentIdx
+    };
+    commentUserCheckAndSubmitAJAX(formTag,commentIdxRequest);
 }
 
 
+function checkCommentUserAndInputToggle(aTag, mode, commentIdx)
+{
+    setCommentSubmitMode(mode);
+    if(isUser())
+    {
+        checkCommentUserAJAX(commentIdx,aTag);
+    }
+    else
+    {
+        toggleCommentPasswordInputPassword(aTag);
+    }
+}
+
+function commentUserCheckAndSubmitAJAX(formTag,commentIdxRequest)
+{
+    $.ajax({
+        data : commentIdxRequest,
+        url : "/API/checkCommentUserAPI",
+        type : "post",
+        async : false
+
+    }).done(function (result){
+        if(result == true)
+        {
+            if(commentSubmitMode == "deleteComment")
+            {
+                formSubmit(formTag)
+            }
+            else
+            {
+                modifyInputToggle(formTag.parentNode.parentNode);
+            }
+        }
+        else
+        {
+            alert("권한이 없습니다");
+        }
+    });
+
+}
 
 
 

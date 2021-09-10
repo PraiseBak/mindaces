@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleService
 {
-
-
     public Boolean isUser(Authentication authentication)
     {
         if(authentication != null)

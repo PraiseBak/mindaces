@@ -39,7 +39,7 @@ function checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName)
     });
 }
 
-function checkUserAjax(contentIdx,url,galleryName)
+function checkBoardUserAjax(contentIdx, url, galleryName)
 {
 
     if(!isWriteLoggedBoard)
@@ -55,7 +55,7 @@ function checkUserAjax(contentIdx,url,galleryName)
     };
     var form = document.getElementById("hiddenPasswordForm");
     $.ajax({
-        url: "/API/checkUserAPI",
+        url: "/API/checkBoardUserAPI",
         data: boardDto,
         type: "POST",
         async:false
@@ -74,7 +74,7 @@ function checkUserAjax(contentIdx,url,galleryName)
 
 
 
-function foldPasswordInput(url)
+function foldBoardPasswordInput(url)
 {
     if(isWriteLoggedBoard)
     {
@@ -98,7 +98,7 @@ function foldPasswordInput(url)
     }
 }
 
-function sendLikeRequest(mode,galleryName,boardIdx)
+function sendBoardLikeRequest(mode,galleryName,boardIdx)
 {
     var info =
     {
@@ -108,7 +108,7 @@ function sendLikeRequest(mode,galleryName,boardIdx)
     };
 
     $.ajax({
-        url : "/API/requestRecommendAPI",
+        url : "/API/requestBoardRecommendAPI",
         data: info,
         type: "POST",
         async : false
@@ -135,14 +135,14 @@ function refreshLikes()
     };
 
     $.ajax({
-        url : "/API/getRecentLikesAPI",
+        url : "/API/getRenewBoardLikesAPI",
         data : info,
         type : "POST",
         dataType : "json",
         async : false
     }).done(function (result)
     {
-        likesBtn.innerText = "개추 " +result['likes'];
-        dislikesBtn.innerText = "비추 " +result['dislikes']
+        likesBtn.innerText = "개추 " + result['likes'];
+        dislikesBtn.innerText = "비추 " + result['dislikes']
     });
 }

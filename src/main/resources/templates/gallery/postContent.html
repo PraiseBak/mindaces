@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns:form="http://www.w3.org/1999/html">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:form="http://www.w3.org/1999/html">
 <head th:insert="base/head.html">
 </head>
 
 <body>
-    <div class="container"  style="margin-top:5%">
+    <div class="container" style="margin-top:5%">
         <div class="info-part">
             <div class="form-group board-info-part">
                 <div class="gallery-name-part" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
@@ -21,8 +20,8 @@
                     <span th:text="${board.user}"></span>
                 </div>
 
-                <input id="isRoleUser" sec:authorize="isAuthenticated()" type="text" hidden value="true"/>
-                <input id="isRoleUser" sec:authorize="!isAuthenticated()" type="text" hidden value="false"/>
+                <input id="isRoleUser" sec:authorize="isAuthenticated()" type="text" hidden value="true">
+                <input id="isRoleUser" sec:authorize="!isAuthenticated()" type="text" hidden value="false">
 
                 <div class="modify-btns">
                     <div class="hidden-password">
@@ -34,18 +33,18 @@
                 <div class="btns part" style="position: relative">
                     <div class="modifyBtnsArea float-right">
                         <div class="modifyBtns">
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkUserAjax([[${board.contentIdx}]],modifyURL,[[${board.gallery}]])">수정</button>
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldPasswordInput(modifyURL) ">수정</button>
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkUserAjax([[${board.contentIdx}]],deleteURL,[[${board.gallery}]])">삭제</button>
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldPasswordInput(deleteURL) ">삭제</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],modifyURL,[[${board.gallery}]])">수정</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(modifyURL) ">수정</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],deleteURL,[[${board.gallery}]])">삭제</button>
+                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(deleteURL) ">삭제</button>
                         </div>
                     </div>
 
-                    <div class="inputPasswordArea float-right" id="inputPasswordArea"  style="display: none; position: absolute; width: 300px;">
+                    <div class="inputPasswordArea float-right" id="inputPasswordArea" style="display: none; position: absolute; width: 300px;">
                         <div class="input-part" sec:authorize="!isAuthenticated()">
                             <input type="password" placeholder="게시글 비밀번호" class="text-black" id="inputPassword" name="inputPassword" value="">
                             <button class="btn btn-primary" th:onclick="getPassword([[${board.contentIdx}]],[[${board.gallery}]])">제출</button>
-                            <button class="btn btn-primary btn-" th:onclick="foldPasswordInput('')">취소</button>
+                            <button class="btn btn-primary btn-" th:onclick="foldBoardPasswordInput('')">취소</button>
                         </div>
 
                         <style>
@@ -65,8 +64,8 @@
                 </div>
 
                 <div class="likes-btns" style="text-align: center;">
-                    <button class="btn btn-outline-primary" id="likesBtn" style="margin-right: 10px;" onclick="sendLikeRequest('like',galleryName,boardIdx)" th:text="|개추 ${board.likes}|"></button>
-                    <button class="btn btn-outline-primary" id="dislikesBtn" style="margin-left: 10px;" onclick="sendLikeRequest('dislike',galleryName,boardIdx)" th:text="|비추 ${board.dislikes}|"></button>
+                    <button class="btn btn-outline-primary" id="likesBtn" style="margin-right: 10px;" onclick="sendBoardLikeRequest('like',galleryName,boardIdx)" th:text="|개추 ${board.likes}|"></button>
+                    <button class="btn btn-outline-primary" id="dislikesBtn" style="margin-left: 10px;" onclick="sendBoardLikeRequest('dislike',galleryName,boardIdx)" th:text="|비추 ${board.dislikes}|"></button>
                 </div>
 
             </div>
@@ -85,10 +84,10 @@
                         <div class="col-sm-2 form-input">
                             <div class="modifyAndDeleteBtns">
                                 <input hidden th:value="${comment.commentIdx}" name="commentIdx">
-                                <a href="javascript:;" th:onclick="checkAndSubmit(this,[[${comment.commentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
+                                <a href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.commentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
                                 <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 85%">
-                                <a href="javascript:;" onclick="showInput(this, 'modifyComment')" style="font-size: 80%">수정</a>
-                                <a href="ejavascript:;" onclick="showInput(this,'deleteComment')" style="font-size: 80%">삭제</a>
+                                <a href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.commentIdx}]])">수정</a>
+                                <a href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.commentIdx}]])" style="font-size: 80%">삭제</a>
                             </div>
                             <div class="col-sm-0 form-input btn-primary" id="modifySubmitBtn" style="display: none">
                                 <button class="btn btn-primary" onclick="modifySubmit(this)">제출</button>
@@ -102,7 +101,7 @@
 
             <form method="post" class="write-comment row" onsubmit="return checkCommentValid()">
                 <div class="col-sm-3 form-input">
-                    <input type="text" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" id="commentUser" >
+                    <input type="text" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" id="commentUser">
                     <input type="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" id="commentPassword" th:value="${board?.password}" th:readonly="${board?.password}">
                 </div>
                 <div class="col-sm-9 form-input">

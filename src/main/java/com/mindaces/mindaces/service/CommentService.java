@@ -15,8 +15,11 @@ import java.util.List;
 public class CommentService
 {
     private CommentRepository commentRepository;
-    public CommentService(CommentRepository commentRepository)
+    private RoleService roleService;
+
+    public CommentService(CommentRepository commentRepository,RoleService roleService)
     {
+        this.roleService = roleService;
         this.commentRepository = commentRepository;
     }
 
@@ -48,7 +51,7 @@ public class CommentService
     }
 
 
-    public Boolean commentValidCheck(CommentDto commentDto)
+    public Boolean addCommentValidCheck(CommentDto commentDto)
     {
         int commentPasswordLen = commentDto.getCommentPassword().length();
         int userLen = commentDto.getUser().length();
@@ -72,25 +75,24 @@ public class CommentService
         return true;
     }
 
-    private Boolean isUser(Authentication authentication)
+    public Boolean modifyCommendValidCheck(CommentDto commentDto)
     {
-        if(authentication != null)
+        String content = commentDto.getContent();
+        if(content.length() < 2 || content.getBytes().length > 65535)
         {
-            if(authentication.getPrincipal() instanceof User)
-            {
-                return true;
-            }
+            return false;
         }
-        return false;
+        return true;
+
     }
 
 
     public Boolean addComment(String galleryName, Long contentIdx, Authentication authentication, CommentDto commentDto)
     {
-        Boolean isValid = commentValidCheck(commentDto);
+        Boolean isValid = addCommentValidCheck(commentDto);
         if(isValid)
         {
-            if(isUser(authentication))
+            if(roleService.isUser(authentication))
             {
                 commentDto.setIsLogged(1L);
                 commentDto.setCommentPassword("****");
@@ -109,11 +111,25 @@ public class CommentService
 
     public Boolean deleteComment(CommentDto commentDto,Authentication authentication)
     {
-        Comment matchComment = getMatchPasswordComment(commentDto);
-        if(matchComment != null)
+        String userName = roleService.getUserName(authentication);
+        //비로그인한 유저인경우 비밀번호 체크
+        if(userName.equals("-"))
         {
-            commentRepository.deleteById(commentDto.getCommentIdx());
-            return true;
+            Comment matchComment = getMatchPasswordComment(commentDto);
+            if(matchComment != null)
+            {
+                commentRepository.deleteById(commentDto.getCommentIdx());
+                return true;
+            }
+        }
+        //로그인한 유저인 경우 유저 체크
+        else
+        {
+            if(isSameUser(commentDto,authentication))
+            {
+                commentRepository.deleteById(commentDto.getCommentIdx());
+                return true;
+            }
         }
         return false;
     }
@@ -137,17 +153,50 @@ public class CommentService
 
     public void modifyComment(CommentDto commentDto, Authentication authentication)
     {
-        if(!commentValidCheck(commentDto))
+        if(!modifyCommendValidCheck(commentDto))
         {
             return;
         }
 
-        Comment matchComment = getMatchPasswordComment(commentDto);
-        if(matchComment != null)
+        String userName = roleService.getUserName(authentication);
+        //비로그인한 유저인경우 비밀번호 체크
+        if(userName.equals("-"))
         {
-            matchComment.setContent(commentDto.getContent());
-            matchComment.setUser(commentDto.getUser());
-            this.commentRepository.save(matchComment);
+            Comment matchComment = getMatchPasswordComment(commentDto);
+            if(matchComment != null)
+            {
+                matchComment.setContent(commentDto.getContent());
+                this.commentRepository.save(matchComment);
+            }
         }
+        else
+        {
+            if(isSameUser(commentDto,authentication))
+            {
+                Comment comment = commentRepository.getById(commentDto.getCommentIdx());
+                comment.setContent(commentDto.getContent());
+                this.commentRepository.save(comment);
+            }
+        }
+
+    }
+
+    public Boolean isSameUser(CommentDto commentDto,Authentication authentication)
+    {
+        String userName = roleService.getUserName(authentication);
+        Long commentIdx = commentDto.getCommentIdx();
+        if(userName.equals("-"))
+        {
+            return false;
+        }
+        Comment comment = commentRepository.getById(commentIdx);
+        if(comment.getIsLogged() == 1L)
+        {
+            if(comment.getUser().equals(userName))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
