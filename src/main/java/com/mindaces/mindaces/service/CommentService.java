@@ -107,25 +107,47 @@ public class CommentService
     }
 
 
-    public Boolean deleteComment(CommentDto commentDto,Authentication authentication,String inputPassword)
+    public Boolean deleteComment(CommentDto commentDto,Authentication authentication)
     {
-        if(commentPasswordCheck(commentDto,inputPassword))
+        Comment matchComment = getMatchPasswordComment(commentDto);
+        if(matchComment != null)
         {
             commentRepository.deleteById(commentDto.getCommentIdx());
+            return true;
         }
-
         return false;
     }
 
-    public Boolean commentPasswordCheck(CommentDto commentDto, String inputPassword)
+    public Comment getMatchPasswordComment(CommentDto commentDto)
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Long commentIdx = commentDto.getCommentIdx();
+        String inputPassword = commentDto.getCommentPassword();
         Comment objComment = this.commentRepository.getById(commentIdx);
         if(objComment == null)
         {
-            return false;
+            return null;
         }
-        return passwordEncoder.matches(inputPassword,objComment.getCommentPassword());
+        if(passwordEncoder.matches(inputPassword,objComment.getCommentPassword()))
+        {
+            return objComment;
+        }
+        return null;
+    }
+
+    public void modifyComment(CommentDto commentDto, Authentication authentication)
+    {
+        if(!commentValidCheck(commentDto))
+        {
+            return;
+        }
+
+        Comment matchComment = getMatchPasswordComment(commentDto);
+        if(matchComment != null)
+        {
+            matchComment.setContent(commentDto.getContent());
+            matchComment.setUser(commentDto.getUser());
+            this.commentRepository.save(matchComment);
+        }
     }
 }

@@ -24,47 +24,18 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/API")
-public class APIController
+public class BoardAPIController
 {
-    UserService userService;
     LikedUserInfoService likeService;
     BoardService boardService;
     CommentService commentService;
 
-    APIController(UserService userService, BoardService boardService, LikedUserInfoService likeService,CommentService commentService)
+    BoardAPIController(BoardService boardService, LikedUserInfoService likeService)
     {
-        this.userService= userService;
         this.boardService = boardService;
         this.likeService = likeService;
-        this.commentService = commentService;
     }
 
-    @PostMapping("/sendIDAPI")
-    public String idCheck(Model model, UserDto userDto)
-    {
-        Long isDuplicateUser = 0L;
-        String msg = "중복된";
-        String idOrEmail = "닉네임입니다";
-        if(userDto.getUserID() == null)
-        {
-            idOrEmail = "이메일입니다";
-            isDuplicateUser = userService.findUserEmail(userDto.getUserEmail());
-        }
-        else if(userDto.getUserEmail() == null)
-        {
-            isDuplicateUser = userService.findUserID(userDto.getUserID());
-        }
-        if(isDuplicateUser == -1L)
-        {
-            msg = "사용가능한";
-        }
-        model.addAttribute("msg",msg + " " + idOrEmail);
-        if(idOrEmail.equals("이메일입니다"))
-        {
-            return "userInfoPage/signup :: #resultArea";
-        }
-        return "userInfoPage/signup :: #alarmArea";
-    }
 
     @PostMapping("/checkBoardPasswordAPI")
     @ResponseBody
@@ -183,23 +154,5 @@ public class APIController
         map = likeService.getRecentLikes(gallery,boardIdx);
         return map;
     }
-
-    @PostMapping("/checkCommentValidAPI")
-    @ResponseBody
-    public Boolean checkCommentValidAPI(CommentDto commentDto)
-    {
-        Boolean result = commentService.commentValidCheck(commentDto);
-        return result;
-    }
-
-    @PostMapping("/checkCommentPasswordAPI")
-    @ResponseBody
-    public Boolean checkComentPasswordAPI(CommentDto commentDto)
-    {
-        String inputPassword = commentDto.getCommentPassword();
-        return commentService.commentPasswordCheck(commentDto,inputPassword);
-    }
-
-
 
 }

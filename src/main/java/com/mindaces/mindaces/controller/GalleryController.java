@@ -88,28 +88,5 @@ public class GalleryController
     }
 
 
-    @PostMapping(value = "/{galleryName}/{index}")
-    public String commentAdd(
-            @PathVariable(name="galleryName") String galleryName,
-            @PathVariable(name="index") Long contentIdx,
-            CommentDto commentDto,
-            Authentication authentication
-    )
-    {
-        commentService.addComment(galleryName,contentIdx,authentication,commentDto);
-        return "redirect:" + Long.toString(contentIdx);
-    }
 
-    @PostMapping(value = "/{galleryName}/{index}/deleteComment")
-    public String commentDelete(
-            @PathVariable(name="galleryName") String galleryName,
-            @PathVariable(name="index") Long contentIdx,
-            CommentDto commentDto,
-            Authentication authentication,
-            String inputCommentPassword
-    )
-    {
-        commentService.deleteComment(commentDto,authentication,inputCommentPassword);
-        return "redirect:./";
-    }
 }

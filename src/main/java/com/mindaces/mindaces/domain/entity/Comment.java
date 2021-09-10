@@ -16,7 +16,7 @@ import javax.persistence.*;
 @DynamicInsert
 @Table(name = "COMMENT")
 @NoArgsConstructor
-public class Comment
+public class Comment extends BaseTimeEntity
 {
     @Id
     @Column(name = "comment_idx")
