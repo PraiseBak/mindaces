@@ -5,6 +5,7 @@ import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.CommentService;
 import com.mindaces.mindaces.service.GalleryService;
+import com.mindaces.mindaces.service.RoleService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,16 @@ public class GalleryController
     private CommentService commentService;
     private BoardService boardService;
     private GalleryService galleryService;
+    private RoleService roleService;
 
     String errorURL = "redirect:/error/galleryMiss";
 
-    public GalleryController(BoardService boardService, GalleryService galleryService, CommentService commentService)
+    public GalleryController(BoardService boardService, GalleryService galleryService, CommentService commentService,RoleService roleService)
     {
         this.commentService = commentService;
         this.boardService = boardService;
         this.galleryService = galleryService;
+        this.roleService = roleService;
     }
 
     @GetMapping(value = "/galleryList" )
@@ -69,7 +72,8 @@ public class GalleryController
     public String postContent(
             Model model,
             @PathVariable(name="galleryName") String galleryName,
-            @PathVariable(name="index") Long contentIdx
+            @PathVariable(name="index") Long contentIdx,
+            Authentication authentication
     )
     {
         Boolean isGallery = galleryService.isGallery(galleryName);
@@ -83,10 +87,18 @@ public class GalleryController
 
         model.addAttribute("board",boardDto);
         model.addAttribute("commentList",commentDtoList);
-
+        String userName = roleService.getUserName(authentication);
+        String userPassword = "****";
+        if(userName.equals("-"))
+        {
+            userPassword = "";
+            userName = "";
+        }
+        model.addAttribute("userName",userName);
+        model.addAttribute("userPassword",userPassword);
         return "gallery/postContent";
     }
 
 
-
 }
+

@@ -95,14 +95,12 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
 
             <form method="post" class="write-comment row" onsubmit="return checkCommentValid()">
-                <div class="col-sm-3 form-input">
-                    <input type="text" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" id="commentUser">
-                    <input type="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" id="commentPassword" th:value="${board?.password}" th:readonly="${board?.password}">
+                <div class="col-sm-3 form-input" id="writeCommentInfo">
+                    <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName}">
+                    <input type="password" id="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword}">
                 </div>
                 <div class="col-sm-9 form-input">
                     <textarea minlength="2" maxlength="180" id="commentContent" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>

@@ -56,7 +56,5 @@ public class CommentController
         commentService.modifyComment(commentDto,authentication);
         return "redirect:./";
     }
-
-
-
+    
 }

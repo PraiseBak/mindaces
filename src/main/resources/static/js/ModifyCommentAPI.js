@@ -13,9 +13,9 @@ var prevCommentsTag = null;
 //제출할때 댓글 내용 확인
 function checkCommentValid()
 {
-    var user = document.getElementById("commentUser").value;
+    var user = document.getElementById("arthorName").value;
     var content = document.getElementById("commentContent").value;
-    var password = document.getElementById("commentPassword").value;
+    var password = document.getElementById("password").value;
 
 
     var data=
@@ -213,10 +213,12 @@ function checkCommentUserAJAX(commentIdx,childTag)
         getParentTag(
         getParentTag(
         getParentTag(childTag)));
+
     var commentIdxRequest =
     {
         commentIdx : commentIdx
     };
+
     commentUserCheckAndSubmitAJAX(formTag,commentIdxRequest);
 }
 
@@ -224,7 +226,7 @@ function checkCommentUserAJAX(commentIdx,childTag)
 function checkCommentUserAndInputToggle(aTag, mode, commentIdx)
 {
     setCommentSubmitMode(mode);
-    if(isUser())
+    if(isUser() === "true")
     {
         checkCommentUserAJAX(commentIdx,aTag);
     }
@@ -243,6 +245,7 @@ function commentUserCheckAndSubmitAJAX(formTag,commentIdxRequest)
         async : false
 
     }).done(function (result){
+
         if(result == true)
         {
             if(commentSubmitMode == "deleteComment")
@@ -258,6 +261,7 @@ function commentUserCheckAndSubmitAJAX(formTag,commentIdxRequest)
         {
             alert("권한이 없습니다");
         }
+
     });
 
 }
