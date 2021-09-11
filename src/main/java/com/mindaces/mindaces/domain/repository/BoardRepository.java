@@ -9,6 +9,12 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long>
 {
-    Page<Board> findAll(Pageable pageable);
-    List<Board> findByGalleryContaining(String keyword);
+    Page<Board> findByGallery(String keyword, Pageable pageable);
+    List<Board> findByGallery(String keyword);
+    <T> T findByGalleryAndContentIdx(String gallery,Long contentIdx,Class<T> type);
+    Long countBoardByGallery(String gallery);
+    List<Board> findTop10ByOrderByLikesDesc();
+
+
 }
+

@@ -21,6 +21,9 @@ public class Gallery
     @Column(name = "gallery_idx")
     private Long galleryIdx;
 
+    @Column(name = "gallery_url",nullable = false)
+    private String galleryURL;
+
     @Column(name = "gallery_name")
     private String galleryName;
 
@@ -32,9 +35,10 @@ public class Gallery
     private LocalDateTime galleryCreatedDate;
 
     @Builder
-    public Gallery(Long galleryIdx,String galleryName,Boolean specialGallery)
+    public Gallery(Long galleryIdx,String galleryName,String galleryURL,Boolean specialGallery)
     {
         this.galleryIdx = galleryIdx;
+        this.galleryURL = galleryURL;
         this.galleryName = galleryName;
         this.specialGallery = specialGallery;
     }

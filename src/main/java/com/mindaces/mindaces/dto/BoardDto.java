@@ -1,12 +1,7 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.Board;
-import com.mindaces.mindaces.domain.entity.Gallery;
-import com.mindaces.mindaces.domain.entity.User;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,14 +9,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BoardDto
 {
-
     private Long contentIdx;
     private String gallery;
     private String user;
     private String title;
     private String content;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    private Long likes;
+    private Long dislikes;
+    private String password;
+    private Long isLoggedUser;
+
 
     public Board toEntity()
     {
@@ -31,25 +28,27 @@ public class BoardDto
                 .contentIdx(contentIdx)
                 .title(title)
                 .content(content)
-                .createdDate(createdDate)
-                .modifiedDate(modifiedDate)
+                .likes(likes)
+                .dislikes(dislikes)
+                .password(password)
+                .isLoggedUser(isLoggedUser)
                 .build();
         return board;
     }
 
 
-
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long dislikes,String password,Long isLoggedUser)
     {
         this.gallery = gallery;
         this.user = user;
         this.contentIdx = contentIdx;
         this.title = title;
         this.content = content;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-
+        this.likes = likes;
+        this.dislikes = dislikes;
+        this.password = password;
+        this.isLoggedUser = isLoggedUser;
     }
 
 }

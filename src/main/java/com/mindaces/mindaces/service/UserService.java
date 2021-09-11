@@ -6,6 +6,7 @@ import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -89,7 +90,6 @@ public class UserService implements UserDetailsService
         }
         return 1L;
     }
-
 
 
 }

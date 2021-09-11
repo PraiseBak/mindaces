@@ -3,14 +3,11 @@ var userPassword = document.querySelector("#userPassword");
 var userEmail = document.querySelector("#userEmail");
 var submitBtn = document.querySelector("#submitBtn");
 
-
-
 userEmail.onblur = function (e) {
     var data = $("#userEmail").val();
     isValidEmail = false;
     if (data.length < 4 || data.length > 40) {
         $("#resultArea").text("유효하지 않은 이메일입니다");
-
     }
     if (checkValidateEmail(data) === false)
     {
@@ -60,7 +57,6 @@ userID.onblur = function (e) {
 
 function checkValidateID(id)
 {
-
     //닉네임은 한글, 영문, 숫자만 가능하며 2-10자리 가능.
     var regex = id.search(/^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{1,10}$/);
     if(regex === -1)
@@ -90,9 +86,7 @@ function checkValidateEmail(email)
     return 1;
 }
 
-
-
-function checkValid()
+function checkValidSignup()
 {
     if(isValidID && isValidEmail && isValidPassword)
     {
@@ -101,4 +95,6 @@ function checkValid()
     $("#resultArea").text("입력란을 제대로 입력했는지 확인해주세요");
     return false;
 }
+
+
 

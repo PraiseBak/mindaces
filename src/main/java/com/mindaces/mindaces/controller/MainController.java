@@ -12,6 +12,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
+import java.util.List;
 
 @Controller
 public class MainController
@@ -26,10 +27,11 @@ public class MainController
         this.boardService = boardService;
     }
 
-    //TODO 수정
     @GetMapping("/")
-    public String main()
+    public String main(Model model)
     {
+        List<BoardDto> boardDtoList = boardService.getMostLikelyBoardList();
+        model.addAttribute("mostLikedBoardList",boardDtoList);
         return "main/main";
     }
 

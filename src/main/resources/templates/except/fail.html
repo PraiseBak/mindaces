@@ -4,6 +4,8 @@
 
 <body>
 <h1>비정상적인 접근입니다</h1>
-<a th:href="@{'/'}">메인으로 이동</a>
+<h3 th:text="|Error Case [${errorCase}] |"></h3>
+<h5 th:text="|Error [${errorMsg}]|"></h5>
+<a th:href="@{'/'}">홈으로 이동</a>
 </body>
 </html>

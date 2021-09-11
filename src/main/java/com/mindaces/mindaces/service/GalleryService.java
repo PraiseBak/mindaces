@@ -3,7 +3,6 @@ package com.mindaces.mindaces.service;
 import com.mindaces.mindaces.domain.entity.Gallery;
 import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.GalleryDto;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,13 +23,11 @@ public class GalleryService
     {
         List<Gallery> galleries;
         List<GalleryDto> galleryDtoList = new ArrayList<>();
-
         galleries = galleryRepository.findAll();
         for(Gallery gallery : galleries)
         {
             galleryDtoList.add(this.convertEntityToDto(gallery));
         }
-
         return galleryDtoList;
     }
 
@@ -42,12 +39,27 @@ public class GalleryService
                 .galleryName(gallery.getGalleryName())
                 .specialGallery(gallery.getSpecialGallery())
                 .galleryCreatedTime(gallery.getGalleryCreatedDate())
+                .galleryURL(gallery.getGalleryURL())
                 .build();
     }
 
 
+    public GalleryDto getGalleryInfo(String galleryName)
+    {
+        Gallery gallery = galleryRepository.findByGalleryName(galleryName);
+        GalleryDto galleryDto = this.convertEntityToDto(gallery);
+        return galleryDto;
+    }
 
-
+    public Boolean isGallery(String galleryName)
+    {
+        Gallery gallery = galleryRepository.findByGalleryName(galleryName);
+        if(gallery == null)
+        {
+            return false;
+        }
+        return true;
+    }
 }
 
 

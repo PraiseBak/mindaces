@@ -13,7 +13,7 @@ function checkDuplicateUserID (data)
         userID : data
     };
     $.ajax({
-        url: "/sendIDAPI",
+        url: "/API/sendIDAPI",
         data: userDTO,
         type: "POST"
 
@@ -29,10 +29,7 @@ function checkDuplicateUserID (data)
             isValidID = false;
         }
     });
-
 }
-
-
 
 function checkDuplicateUserEmail (data)
 {
@@ -41,7 +38,7 @@ function checkDuplicateUserEmail (data)
         userEmail : data
     };
     $.ajax({
-        url: "/sendIDAPI",
+        url: "/API/sendIDAPI",
         data: userDTO,
         type: "POST"
 
