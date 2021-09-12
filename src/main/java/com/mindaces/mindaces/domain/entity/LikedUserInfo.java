@@ -28,8 +28,6 @@ public class LikedUserInfo
     public String disLikedIP;
     @Column(name="user_name",columnDefinition="varchar(45) default '-'")
     public String userName;
-    @Column(name="is_comment",columnDefinition = "tinyint(1) default 0")
-    public Long isComment;
 
     @Builder
     public LikedUserInfo(String gallery,Long boardIdx,String likedIP,String disLikedIP,String userName)
@@ -41,14 +39,4 @@ public class LikedUserInfo
         this.userName = userName;
     }
 
-    @Builder
-    public LikedUserInfo(String gallery,Long boardIdx,String likedIP,String disLikedIP,String userName,Long isComment)
-    {
-        this.gallery = gallery;
-        this.boardIdx = boardIdx;
-        this.likedIP = likedIP;
-        this.disLikedIP = disLikedIP;
-        this.userName = userName;
-        this.isComment = isComment;
-    }
 }

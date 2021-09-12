@@ -96,6 +96,8 @@ public class BoardService
                 .likes(board.getLikes())
                 .dislikes(board.getDislikes())
                 .isLoggedUser(board.getIsLoggedUser())
+                .createdDate(board.getCreatedDate())
+                .modifiedDate(board.getModifiedDate())
                 .build();
     }
 

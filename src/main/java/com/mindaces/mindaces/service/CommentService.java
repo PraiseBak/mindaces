@@ -1,5 +1,6 @@
 package com.mindaces.mindaces.service;
 
+import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Comment;
 import com.mindaces.mindaces.domain.repository.CommentRepository;
 import com.mindaces.mindaces.dto.CommentDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentService
@@ -44,10 +46,9 @@ public class CommentService
                 .content(comment.getContent())
                 .isLogged(comment.getIsLogged())
                 .likes(comment.getLikes())
-                .dislikes(comment.getDislikes())
+                .createdDate(comment.getCreatedDate())
+                .modifiedDate(comment.getModifiedDate())
                 .build();
-
-
     }
 
 
@@ -199,4 +200,27 @@ public class CommentService
         }
         return false;
     }
+
+    public boolean updateLikes(Long commentIdx)
+    {
+        try
+        {
+            Optional<Comment> optionalComment = commentRepository.findById(commentIdx);
+            Comment comment = optionalComment.get();
+            comment.setLikes(comment.getLikes() + 1);
+            commentRepository.save(comment);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    public Comment getCommentByID(Long commentIdx)
+    {
+        return commentRepository.getById(commentIdx);
+    }
+
 }

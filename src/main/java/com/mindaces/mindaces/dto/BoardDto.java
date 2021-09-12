@@ -3,6 +3,8 @@ package com.mindaces.mindaces.dto;
 import com.mindaces.mindaces.domain.entity.Board;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -18,6 +20,8 @@ public class BoardDto
     private Long dislikes;
     private String password;
     private Long isLoggedUser;
+    private String createdDate;
+    private String modifiedDate;
 
 
     public Board toEntity()
@@ -38,7 +42,7 @@ public class BoardDto
 
 
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long dislikes,String password,Long isLoggedUser)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long dislikes,String password,Long isLoggedUser,String createdDate,String modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;
@@ -49,6 +53,8 @@ public class BoardDto
         this.dislikes = dislikes;
         this.password = password;
         this.isLoggedUser = isLoggedUser;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
     }
 
 }

@@ -1,15 +1,11 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.BoardDto;
-import com.mindaces.mindaces.dto.CommentDto;
-import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.CommentService;
-import com.mindaces.mindaces.service.LikedUserInfoService;
-import com.mindaces.mindaces.service.UserService;
+import com.mindaces.mindaces.service.LikeService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,11 +22,10 @@ import java.util.UUID;
 @RequestMapping("/API")
 public class BoardAPIController
 {
-    LikedUserInfoService likeService;
+    LikeService likeService;
     BoardService boardService;
-    CommentService commentService;
 
-    BoardAPIController(BoardService boardService, LikedUserInfoService likeService)
+    BoardAPIController(BoardService boardService, LikeService likeService)
     {
         this.boardService = boardService;
         this.likeService = likeService;
@@ -154,6 +149,8 @@ public class BoardAPIController
         map = likeService.getRecentLikes(gallery,boardIdx);
         return map;
     }
+
+
 
 
 }

@@ -44,12 +44,9 @@ public class Comment extends BaseTimeEntity
     @Column(columnDefinition = "bigint default 0")
     private Long likes;
 
-    @Column(name="dis_likes",columnDefinition = "bigint default 0")
-    private Long dislikes;
-
 
     @Builder
-    public Comment(Long commentIdx,Long boardIdx,String gallery,String user,String content,String commentPassword,Long isLogged,Long likes,Long dislikes)
+    public Comment(Long commentIdx,Long boardIdx,String gallery,String user,String content,String commentPassword,Long isLogged,Long likes)
     {
         this.commentIdx = commentIdx;
         this.boardIdx = boardIdx;
@@ -59,7 +56,8 @@ public class Comment extends BaseTimeEntity
         this.commentPassword = commentPassword;
         this.isLogged = isLogged;
         this.likes = likes;
-        this.dislikes = dislikes;
     }
 
 }
+
+

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:form="http://www.w3.org/1999/html">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity" xmlns:color="http://www.w3.org/1999/xhtml">>
 <head th:insert="base/head.html">
 </head>
 
@@ -16,9 +17,19 @@
                     <span th:text="${board.title}"></span>
                 </h3>
 
+                <div class="float-right">
+                    <p  th:text="|작성 ${board.createdDate}|" style="color: #9f9f9f"></p>
+                    <p  th:text="|수정 ${board.modifiedDate}|" style="color: #9f9f9f"></p>
+                </div>
+                <br>
+                <br>
+
+
                 <div class="" style="margin-top: 15px; border-bottom:1px solid #eee">
                     <span th:text="${board.user}"></span>
                 </div>
+
+
 
                 <input id="isRoleUser" sec:authorize="isAuthenticated()" type="text" hidden value="true">
                 <input id="isRoleUser" sec:authorize="!isAuthenticated()" type="text" hidden value="false">
@@ -70,15 +81,36 @@
 
             </div>
         </div>
+
         <div class="comment-part" style="margin-bottom:20px; margin-top:20px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
+            <div id="mostLikedComments" style="cursor:pointer; background-color: #d9d9d9; border-bottom:2px solid #cecece;" th:if="${mostLikedCommentList}">
+                <h4>✨ 개추 댓글</h4>
+                <div class="likedComments row" th:each="likedComment : ${mostLikedCommentList}" th:id="'likedComment'+${likedComment.commentIdx}"  th:onclick="|location.href='#commentModifyForm'+${likedComment.commentIdx}|" >
+                    <div class="col-sm-2 form-input">
+                        <span id="commentModifyUser" th:text="${likedComment.user}"></span>
+                    </div>
+                    <div class="col-sm-8 form-input" >
+                        <pre id="commentModifyContent" class="comment-content form-control" th:text="${likedComment.content}"></pre>
+                    </div>
+
+                    <div class="col-sm-2 form-input">
+                        &nbsp; <span th:text="|👍 ${likedComment.likes}|"></span>
+                    </div>
+                </div>
+            </div>
+            &nbsp;
+            <!-- border:3px solid #4d4d4d;  border-radius: 10px; !-->
+
             <div class="comments" th:each="comment : ${commentList}">
-                <div class="comment">
-                    <form id="commentModifyForm" class="row" method="post">
+                <div class="comment"  style="margin-top: 10px">
+                    <form th:id="'commentModifyForm'+${comment.commentIdx}" class="row" method="post">
                         <div class="col-sm-3 form-input">
                             <span id="commentModifyUser" th:text="${comment.user}"></span>
                         </div>
-                        <div class="col-sm-7 form-input">
+                        <div class="col-sm-7 form-input" >
                             <pre id="commentModifyContent" class="comment-content form-control" th:text="${comment.content}"></pre>
+                            <span th:text="|작성 ${comment.createdDate}|" style="color: #9f9f9f"></span>
+                            <span th:text="|수정 ${comment.modifiedDate}|" style="margin-left: 5%; color: #9f9f9f" th:if="${comment.modifiedDate} != ${comment.createdDate}"></span>
                         </div>
 
                         <div class="col-sm-2 form-input">
@@ -86,9 +118,12 @@
                                 <input hidden th:value="${comment.commentIdx}" name="commentIdx">
                                 <a href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.commentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
                                 <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 85%">
-                                <a href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.commentIdx}]])">수정</a>
-                                <a href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.commentIdx}]])" style="font-size: 80%">삭제</a>
+                                <a href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.commentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])">수정</a>
+                                <a href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.commentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])" style="font-size: 80%">삭제</a>
+                                &nbsp;
+                                <a href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.commentIdx}]],this)" th:text="|👍 ${comment.likes}|"></a>
                             </div>
+
                             <div class="col-sm-0 form-input btn-primary" id="modifySubmitBtn" style="display: none">
                                 <button class="btn btn-primary" onclick="modifySubmit(this)">제출</button>
                             </div>
@@ -99,8 +134,8 @@
 
             <form method="post" class="write-comment row" onsubmit="return checkCommentValid()">
                 <div class="col-sm-3 form-input" id="writeCommentInfo">
-                    <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName}">
-                    <input type="password" id="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword}">
+                    <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName} != ''">
+                    <input type="password" id="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword} != ''">
                 </div>
                 <div class="col-sm-9 form-input">
                     <textarea minlength="2" maxlength="180" id="commentContent" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>
@@ -110,8 +145,6 @@
                 </div>
             </form>
         </div>
-
-
     </div>
 
 
@@ -134,6 +167,7 @@
     var redirectURL = "";
     var isRoleUserVal = $('#isRoleUser').val();
     var isWriteLoggedBoard = [[${board.isLoggedUser}]] == 1;
+    var loggedUserName = [[${userName}]];
 </script>
 
 <script th:src="@{/js/ModifyCommentAPI.js}"></script>

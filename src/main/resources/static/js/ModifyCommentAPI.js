@@ -199,7 +199,11 @@ function modifySubmit(btnTag)
 
 function isUser()
 {
-    return isRoleUserVal;
+    if(isRoleUserVal === "true")
+    {
+        return 1;
+    }
+    return 0;
 }
 
 function getParentTag(childTag)
@@ -223,11 +227,22 @@ function checkCommentUserAJAX(commentIdx,childTag)
 }
 
 
-function checkCommentUserAndInputToggle(aTag, mode, commentIdx)
+function checkCommentUserAndInputToggle(aTag, mode, commentIdx,commentIsLogged,userName)
 {
-    setCommentSubmitMode(mode);
-    if(isUser() === "true")
+
+    if(commentIsLogged != isUser())
     {
+        alert("권한이 없습니다");
+        return;
+    }
+    setCommentSubmitMode(mode);
+    if(isUser() === 1)
+    {
+        if(userName != loggedUserName)
+        {
+            alert("권한이 없습니다");
+            return;
+        }
         checkCommentUserAJAX(commentIdx,aTag);
     }
     else
@@ -265,6 +280,43 @@ function commentUserCheckAndSubmitAJAX(formTag,commentIdxRequest)
     });
 
 }
+
+//중복되는지 확인
+function commentLikeDupliCheck(commentIdx,aTag)
+{
+    $.ajax({
+        url : "/API/requestCommentRecommendAPI",
+        data : {commentIdx : commentIdx},
+        type: "POST",
+        async : false
+    }).done(function (result){
+        if(result.match("통과"))
+        {
+            location.reload();
+            //refreshCommentLikes(aTag,commentIdx);
+        }
+        else
+        {
+            alert(result);
+        }
+    });
+}
+
+function refreshCommentLikes(aTag,commentIdx)
+{
+    $.ajax({
+        url : "/API/getRenewCommentLikesAPI",
+        data : {commentIdx : commentIdx},
+        type : "POST",
+        dataType : "json",
+        async : false
+    }).done(function (result)
+    {
+        aTag.text = "👍 " + result['likes'];
+    });
+}
+
+
 
 
 
