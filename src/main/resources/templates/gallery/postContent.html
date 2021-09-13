@@ -18,8 +18,8 @@
                 </h3>
 
                 <div class="float-right">
-                    <p  th:text="|작성 ${board.createdDate}|" style="color: #9f9f9f"></p>
-                    <p  th:text="|수정 ${board.modifiedDate}|" style="color: #9f9f9f"></p>
+                    <p  th:text="|작성 ${#temporals.format(board.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
+                    <p  th:text="|수정 ${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
                 </div>
                 <br>
                 <br>
@@ -28,8 +28,6 @@
                 <div class="" style="margin-top: 15px; border-bottom:1px solid #eee">
                     <span th:text="${board.user}"></span>
                 </div>
-
-
 
                 <input id="isRoleUser" sec:authorize="isAuthenticated()" type="text" hidden value="true">
                 <input id="isRoleUser" sec:authorize="!isAuthenticated()" type="text" hidden value="false">
@@ -70,11 +68,11 @@
 
                 </div>
 
-                <div style="margin-top: 50px;">
+                <div style="margin-top: 60px;">
                     <div th:utext="${board.content}"></div>
                 </div>
 
-                <div class="likes-btns" style="text-align: center;">
+                <div class="likes-btns" style="text-align: center; margin-top:100px;">
                     <button class="btn btn-outline-primary" id="likesBtn" style="margin-right: 10px;" onclick="sendBoardLikeRequest('like',galleryName,boardIdx)" th:text="|개추 ${board.likes}|"></button>
                     <button class="btn btn-outline-primary" id="dislikesBtn" style="margin-left: 10px;" onclick="sendBoardLikeRequest('dislike',galleryName,boardIdx)" th:text="|비추 ${board.dislikes}|"></button>
                 </div>
@@ -82,7 +80,7 @@
             </div>
         </div>
 
-        <div class="comment-part" style="margin-bottom:20px; margin-top:20px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
+        <div class="comment-part" style="margin-bottom:20px; margin-top:50px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
             <div id="mostLikedComments" style="cursor:pointer; background-color: #d9d9d9; border-bottom:2px solid #cecece;" th:if="${mostLikedCommentList}">
                 <h4>✨ 개추 댓글</h4>
                 <div class="likedComments row" th:each="likedComment : ${mostLikedCommentList}" th:id="'likedComment'+${likedComment.commentIdx}"  th:onclick="|location.href='#commentModifyForm'+${likedComment.commentIdx}|" >
@@ -109,8 +107,8 @@
                         </div>
                         <div class="col-sm-7 form-input" >
                             <pre id="commentModifyContent" class="comment-content form-control" th:text="${comment.content}"></pre>
-                            <span th:text="|작성 ${comment.createdDate}|" style="color: #9f9f9f"></span>
-                            <span th:text="|수정 ${comment.modifiedDate}|" style="margin-left: 5%; color: #9f9f9f" th:if="${comment.modifiedDate} != ${comment.createdDate}"></span>
+                            <span th:text="|작성 ${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
+                            <span th:text="|수정 ${#temporals.format(comment.modifiedDate,'yyyy-MM-dd HH:mm:ss')}|" style="margin-left: 5%; color: #9f9f9f" th:if="${comment.modifiedDate} != ${comment.createdDate}"></span>
                         </div>
 
                         <div class="col-sm-2 form-input">
