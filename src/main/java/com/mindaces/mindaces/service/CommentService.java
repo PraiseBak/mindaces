@@ -4,6 +4,7 @@ import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Comment;
 import com.mindaces.mindaces.domain.repository.CommentRepository;
 import com.mindaces.mindaces.dto.CommentDto;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,15 +26,20 @@ public class CommentService
         this.commentRepository = commentRepository;
     }
 
+    Sort getSortByCreateDate()
+    {
+        return Sort.by(Sort.Direction.ASC,"createdDate");
+
+    }
+
     public List<CommentDto> getCommentByContentIdxAndGalleryName(String galleryName, Long contentIdx)
     {
-        List<Comment> commentList = commentRepository.getCommentByBoardIdxAndGallery(contentIdx,galleryName);
+        List<Comment> commentList = commentRepository.getCommentByBoardIdxAndGalleryOrderByCreatedDateAsc(contentIdx,galleryName);
         List<CommentDto> commentDtoList = new ArrayList<>();
         for(Comment comment: commentList)
         {
             commentDtoList.add(convertEntityToDto(comment));
         }
-
         return commentDtoList;
     }
 

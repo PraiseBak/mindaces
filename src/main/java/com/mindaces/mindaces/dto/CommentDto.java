@@ -3,7 +3,7 @@ package com.mindaces.mindaces.dto;
 import com.mindaces.mindaces.domain.entity.Comment;
 import lombok.*;
 
-import java.util.Comparator;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -20,8 +20,8 @@ public class CommentDto
     String commentPassword;
     Long isLogged;
     Long likes;
-    String createdDate;
-    String modifiedDate;
+    LocalDateTime createdDate;
+    LocalDateTime modifiedDate;
 
     public Comment toEntity()
     {
@@ -39,7 +39,7 @@ public class CommentDto
     }
 
     @Builder
-    public CommentDto(Long commentIdx,Long boardIdx,String gallery,String user,String content,String commentPassword,Long isLogged,Long likes,String createdDate,String modifiedDate)
+    public CommentDto(Long commentIdx, Long boardIdx, String gallery, String user, String content, String commentPassword, Long isLogged, Long likes, LocalDateTime createdDate, LocalDateTime modifiedDate)
     {
         this.commentIdx = commentIdx;
         this.boardIdx = boardIdx;

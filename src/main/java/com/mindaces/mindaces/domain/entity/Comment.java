@@ -44,7 +44,6 @@ public class Comment extends BaseTimeEntity
     @Column(columnDefinition = "bigint default 0")
     private Long likes;
 
-
     @Builder
     public Comment(Long commentIdx,Long boardIdx,String gallery,String user,String content,String commentPassword,Long isLogged,Long likes)
     {

@@ -20,8 +20,8 @@ public class BoardDto
     private Long dislikes;
     private String password;
     private Long isLoggedUser;
-    private String createdDate;
-    private String modifiedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
 
     public Board toEntity()
@@ -42,7 +42,7 @@ public class BoardDto
 
 
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long dislikes,String password,Long isLoggedUser,String createdDate,String modifiedDate)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long dislikes,String password,Long isLoggedUser,LocalDateTime createdDate,LocalDateTime modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;

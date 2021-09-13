@@ -292,7 +292,7 @@ function commentLikeDupliCheck(commentIdx,aTag)
     }).done(function (result){
         if(result.match("통과"))
         {
-            location.reload();
+            //location.reload();
             //refreshCommentLikes(aTag,commentIdx);
         }
         else

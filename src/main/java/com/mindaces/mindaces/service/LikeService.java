@@ -227,10 +227,19 @@ public class LikeService
 
     public List<CommentDto> getMostLikedCommentList(List<CommentDto> commentDtoList)
     {
-        Collections.sort(commentDtoList, new LikeComparator<CommentDto>());
+
+        List<CommentDto> tmpCommentDtoList = new ArrayList<>();
         List<CommentDto> mostLikedCommentDtoList = new ArrayList<>();
         int count = 0;
+
         for (CommentDto commentDto : commentDtoList)
+        {
+            tmpCommentDtoList.add(commentDto);
+        }
+
+        tmpCommentDtoList.sort(new LikeComparator<CommentDto>());
+
+        for (CommentDto commentDto : tmpCommentDtoList)
         {
             if(count == 3 || commentDto.getLikes() == 0)
             {

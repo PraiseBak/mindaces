@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 //보여주거나 갤러리에 관련된것만 (board 수정하는건 BoardController)
@@ -95,7 +96,7 @@ public class GalleryController
 
         boardDto = boardService.getBoardByIdxAndGalleryName(galleryName,contentIdx);
         commentDtoList = commentService.getCommentByContentIdxAndGalleryName(galleryName,contentIdx);
-
+        model.addAttribute("commentList",commentDtoList);
         if(principal != null)
         {
             userName = principal.getAttribute("name");
@@ -115,7 +116,6 @@ public class GalleryController
 
         model.addAttribute("mostLikedCommentList",mostLikedCommentList);
         model.addAttribute("board",boardDto);
-        model.addAttribute("commentList",commentDtoList);
         model.addAttribute("userName",userName);
         model.addAttribute("userPassword",userPassword);
 
