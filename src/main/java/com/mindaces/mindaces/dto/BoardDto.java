@@ -1,6 +1,7 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.entity.Likes;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,8 +17,7 @@ public class BoardDto
     private String user;
     private String title;
     private String content;
-    private Long likes;
-    private Long dislikes;
+    private Likes likes;
     private String password;
     private Long isLoggedUser;
     private LocalDateTime createdDate;
@@ -33,7 +33,6 @@ public class BoardDto
                 .title(title)
                 .content(content)
                 .likes(likes)
-                .dislikes(dislikes)
                 .password(password)
                 .isLoggedUser(isLoggedUser)
                 .build();
@@ -42,7 +41,7 @@ public class BoardDto
 
 
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Long likes ,Long dislikes,String password,Long isLoggedUser,LocalDateTime createdDate,LocalDateTime modifiedDate)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Likes likes,String password,Long isLoggedUser,LocalDateTime createdDate,LocalDateTime modifiedDate)
     {
         this.gallery = gallery;
         this.user = user;
@@ -50,7 +49,6 @@ public class BoardDto
         this.title = title;
         this.content = content;
         this.likes = likes;
-        this.dislikes = dislikes;
         this.password = password;
         this.isLoggedUser = isLoggedUser;
         this.createdDate = createdDate;

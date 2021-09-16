@@ -83,9 +83,10 @@ function checkPasswordAndSubmitNotLogged(childTag, commentIdx)
     var inputArea = formTag.parentNode.querySelector("#inputCommentPassword");
     var commentDto =
     {
-        commentIdx : commentIdx,
+        contentIdx : commentIdx,
         commentPassword : inputArea.value
     };
+
 
     //수정창 열어놓고 또 다른창 누르는 경우 이전의 창을 닫아주는 역할
     if(prevCommentsTag != null)
@@ -220,7 +221,7 @@ function checkCommentUserAJAX(commentIdx,childTag)
 
     var commentIdxRequest =
     {
-        commentIdx : commentIdx
+        contentIdx :commentIdx
     };
 
     commentUserCheckAndSubmitAJAX(formTag,commentIdxRequest);
@@ -286,13 +287,13 @@ function commentLikeDupliCheck(commentIdx,aTag)
 {
     $.ajax({
         url : "/API/requestCommentRecommendAPI",
-        data : {commentIdx : commentIdx},
+        data : {contentIdx :commentIdx},
         type: "POST",
         async : false
     }).done(function (result){
         if(result.match("통과"))
         {
-            //location.reload();
+            location.reload();
             //refreshCommentLikes(aTag,commentIdx);
         }
         else
@@ -306,7 +307,7 @@ function refreshCommentLikes(aTag,commentIdx)
 {
     $.ajax({
         url : "/API/getRenewCommentLikesAPI",
-        data : {commentIdx : commentIdx},
+        data : {contentIdx :commentIdx},
         type : "POST",
         dataType : "json",
         async : false

@@ -73,8 +73,8 @@
                 </div>
 
                 <div class="likes-btns" style="text-align: center; margin-top:100px;">
-                    <button class="btn btn-outline-primary" id="likesBtn" style="margin-right: 10px;" onclick="sendBoardLikeRequest('like',galleryName,boardIdx)" th:text="|개추 ${board.likes}|"></button>
-                    <button class="btn btn-outline-primary" id="dislikesBtn" style="margin-left: 10px;" onclick="sendBoardLikeRequest('dislike',galleryName,boardIdx)" th:text="|비추 ${board.dislikes}|"></button>
+                    <button class="btn btn-outline-primary" id="likesBtn" style="margin-right: 10px;" onclick="sendBoardLikeRequest('like',galleryName,boardIdx)" th:text="|개추 ${board.likes?.likes}|"></button>
+                    <button class="btn btn-outline-primary" id="dislikesBtn" style="margin-left: 10px;" onclick="sendBoardLikeRequest('dislike',galleryName,boardIdx)" th:text="|비추 ${board.likes?.dislikes}|"></button>
                 </div>
 
             </div>
@@ -83,7 +83,7 @@
         <div class="comment-part" style="margin-bottom:20px; margin-top:50px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
             <div id="mostLikedComments" style="cursor:pointer; background-color: #d9d9d9; border-bottom:2px solid #cecece;" th:if="${mostLikedCommentList}">
                 <h4>✨ 개추 댓글</h4>
-                <div class="likedComments row" th:each="likedComment : ${mostLikedCommentList}" th:id="'likedComment'+${likedComment.commentIdx}"  th:onclick="|location.href='#commentModifyForm'+${likedComment.commentIdx}|" >
+                <div class="likedComments row" th:each="likedComment : ${mostLikedCommentList}" th:id="'likedComment'+${likedComment.getContentIdx}" th:onclick="|location.href='#commentModifyForm'+${likedComment.getContentIdx}|" >
                     <div class="col-sm-2 form-input">
                         <span id="commentModifyUser" th:text="${likedComment.user}"></span>
                     </div>
@@ -92,7 +92,7 @@
                     </div>
 
                     <div class="col-sm-2 form-input">
-                        &nbsp; <span th:text="|👍 ${likedComment.likes}|"></span>
+                        &nbsp; <span th:text="|👍 ${likedComment.likes?.likes}|"></span>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
 
             <div class="comments" th:each="comment : ${commentList}">
                 <div class="comment"  style="margin-top: 10px">
-                    <form th:id="'commentModifyForm'+${comment.commentIdx}" class="row" method="post">
+                    <form th:id="'commentModifyForm'+${comment.getContentIdx}" class="row" method="post">
                         <div class="col-sm-3 form-input">
                             <span id="commentModifyUser" th:text="${comment.user}"></span>
                         </div>
@@ -113,13 +113,12 @@
 
                         <div class="col-sm-2 form-input">
                             <div class="modifyAndDeleteBtns">
-                                <input hidden th:value="${comment.commentIdx}" name="commentIdx">
-                                <a href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.commentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
+                                <input hidden th:value="${comment.getContentIdx}" name="contentIdx">
+                                <a href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.contentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
                                 <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 85%">
-                                <a href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.commentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])">수정</a>
-                                <a href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.commentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])" style="font-size: 80%">삭제</a>
-                                &nbsp;
-                                <a href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.commentIdx}]],this)" th:text="|👍 ${comment.likes}|"></a>
+                                <a href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])">수정</a>
+                                <a href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])" style="font-size: 80%">삭제</a>
+                                <a href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.contentIdx}]],this)" th:text="|👍 ${comment.likes?.likes}|"></a>
                             </div>
 
                             <div class="col-sm-0 form-input btn-primary" id="modifySubmitBtn" style="display: none">

@@ -89,7 +89,7 @@ public class BoardController
             redirectAttributes.addAttribute("errorMsg",checkBoardWriteValid);
             return errorWriteURL;
         }
-
+        boardDto.setIsLoggedUser(0L);
         if(roleService.isUser(authentication))
         {
             boardDto.setUser(authentication.getName());

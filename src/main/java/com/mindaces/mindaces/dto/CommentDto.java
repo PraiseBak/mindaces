@@ -1,6 +1,7 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.Comment;
+import com.mindaces.mindaces.domain.entity.Likes;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,21 +13,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentDto
 {
-    Long commentIdx;
+    Long contentIdx;
     Long boardIdx;
     String gallery;
     String user;
     String content;
     String commentPassword;
     Long isLogged;
-    Long likes;
+    Likes likes;
     LocalDateTime createdDate;
     LocalDateTime modifiedDate;
 
     public Comment toEntity()
     {
         Comment comment = Comment.builder()
-               .commentIdx(commentIdx)
+               .contentIdx(contentIdx)
                .boardIdx(boardIdx)
                .gallery(gallery)
                .user(user)
@@ -39,9 +40,9 @@ public class CommentDto
     }
 
     @Builder
-    public CommentDto(Long commentIdx, Long boardIdx, String gallery, String user, String content, String commentPassword, Long isLogged, Long likes, LocalDateTime createdDate, LocalDateTime modifiedDate)
+    public CommentDto(Long contentIdx, Long boardIdx, String gallery, String user, String content, String commentPassword, Long isLogged, Likes likes, LocalDateTime createdDate, LocalDateTime modifiedDate)
     {
-        this.commentIdx = commentIdx;
+        this.contentIdx = contentIdx;
         this.boardIdx = boardIdx;
         this.gallery = gallery;
         this.user = user;

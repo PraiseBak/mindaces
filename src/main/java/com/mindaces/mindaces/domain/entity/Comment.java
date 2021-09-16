@@ -3,13 +3,11 @@ package com.mindaces.mindaces.domain.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
-@Setter
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -21,7 +19,7 @@ public class Comment extends BaseTimeEntity
     @Id
     @Column(name = "comment_idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long commentIdx;
+    Long contentIdx;
 
     @Column(name = "board_idx",nullable = false)
     Long boardIdx;
@@ -38,16 +36,16 @@ public class Comment extends BaseTimeEntity
     @Column(name = "comment_password",nullable = false,length = 80)
     String commentPassword;
 
-    @Column(columnDefinition = "tinyint(1) default 0",name = "is_logged_user")
+    @Column(columnDefinition = "tinyint(1) default 0",nullable = false,name = "is_logged_user")
     Long isLogged;
 
-    @Column(columnDefinition = "bigint default 0")
-    private Long likes;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Likes likes;
 
     @Builder
-    public Comment(Long commentIdx,Long boardIdx,String gallery,String user,String content,String commentPassword,Long isLogged,Long likes)
+    public Comment(Long contentIdx, Long boardIdx, String gallery, String user, String content, String commentPassword, Long isLogged, Likes likes)
     {
-        this.commentIdx = commentIdx;
+        this.contentIdx = contentIdx;
         this.boardIdx = boardIdx;
         this.gallery = gallery;
         this.user = user;
@@ -57,6 +55,15 @@ public class Comment extends BaseTimeEntity
         this.likes = likes;
     }
 
+    public void modifyContent(String content)
+    {
+        this.content = content;
+    }
+
+    public void setLikes(Likes likes)
+    {
+        this.likes = likes;
+    }
 }
 
 

@@ -48,7 +48,6 @@ public class GalleryController
         return "gallery/galleryList";
     }
 
-    //갤러리 목록 or 갤러리 메인 페이지
     @GetMapping(value = "/{galleryName}" )
     public String galleryContentList(
             Model model,
@@ -62,7 +61,6 @@ public class GalleryController
         }
         List<BoardDto> boardDtoList = boardService.getGalleryPost(galleryName,page);
         Integer[] pageList = boardService.getPageList(galleryName,page);
-
 
         model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
@@ -118,8 +116,6 @@ public class GalleryController
         model.addAttribute("board",boardDto);
         model.addAttribute("userName",userName);
         model.addAttribute("userPassword",userPassword);
-
-
         return "gallery/postContent";
     }
 

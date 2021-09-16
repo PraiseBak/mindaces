@@ -2,8 +2,10 @@ package com.mindaces.mindaces.service;
 
 
 import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
+import com.mindaces.mindaces.domain.repository.LikesRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,11 +26,13 @@ public class BoardService
 
     private RoleService roleService;
     private BoardRepository boardRepository;
+    private LikesRepository likesRepository;
 
-    public BoardService(BoardRepository boardRepository,RoleService roleService)
+    public BoardService(BoardRepository boardRepository,RoleService roleService,LikesRepository likesRepository)
     {
         this.roleService = roleService;
         this.boardRepository = boardRepository;
+        this.likesRepository = likesRepository;
     }
 
     @Transactional
@@ -36,7 +40,16 @@ public class BoardService
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
-        return boardRepository.save(boardDto.toEntity()).getContentIdx();
+        boardDto.setIsLoggedUser(0L);
+        Board savedBoard= boardRepository.save(boardDto.toEntity());
+
+        Likes likes = Likes.builder()
+                .contentIdx(savedBoard.getContentIdx())
+                .isComment(false)
+                .build();
+        savedBoard.setLikes(likes);
+        boardRepository.save(savedBoard);
+        return 0L;
     }
 
     public List<BoardDto> getGalleryPost(String galleryName,Integer page)
@@ -94,7 +107,6 @@ public class BoardService
                 .gallery(board.getGallery())
                 .user(board.getUser())
                 .likes(board.getLikes())
-                .dislikes(board.getDislikes())
                 .isLoggedUser(board.getIsLoggedUser())
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
@@ -237,18 +249,19 @@ public class BoardService
     {
         try
         {
-            Board board = this.boardRepository.findByGalleryAndContentIdx(gallery,boardIdx,Board.class);
+            Likes likes = this.likesRepository.findByContentIdxAndIsComment(boardIdx,false);
             if(mode.equals("like"))
             {
-                board.setLikes(board.getLikes() + 1L);
+                likes.updateLikes();
             }
             else
             {
-                board.setDislikes(board.getDislikes() + 1L);
+                likes.updateDislikes();
             }
-            boardRepository.save(board);
+            likesRepository.save(likes);
         }catch (Exception e)
         {
+            System.out.println(e);
             return false;
         }
         return true;

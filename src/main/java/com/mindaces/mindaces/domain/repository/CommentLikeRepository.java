@@ -1,10 +1,10 @@
 package com.mindaces.mindaces.domain.repository;
 
-import com.mindaces.mindaces.domain.entity.CommentLike;
+import com.mindaces.mindaces.domain.entity.CommentLikeUserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommentLikeRepository extends JpaRepository<CommentLike,Long>
+public interface CommentLikeRepository extends JpaRepository<CommentLikeUserInfo,Long>
 {
-    CommentLike findByCommentIdxAndLikedIP(Long commentIdx,String likedIP);
-    CommentLike findByCommentIdxAndUserName(Long commentIdx, String userName);
+    CommentLikeUserInfo findByCommentIdxAndLikedIP(Long commentIdx, String likedIP);
+    CommentLikeUserInfo findByCommentIdxAndUserName(Long commentIdx, String userName);
 }

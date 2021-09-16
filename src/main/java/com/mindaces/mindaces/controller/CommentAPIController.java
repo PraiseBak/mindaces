@@ -67,7 +67,7 @@ public class CommentAPIController
     @ResponseBody
     public Map<String,Long> getRecentCommentLikesAPI(@RequestParam(value = "commentIdx") Long commentIdx)
     {
-        return this.likeService.getRecentLikes(commentIdx);
+        return this.likeService.getRecentCommentLikes(commentIdx);
     }
 
 

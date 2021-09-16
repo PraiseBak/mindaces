@@ -1,29 +1,31 @@
 package com.mindaces.mindaces.service;
 
-import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Comment;
+import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.CommentRepository;
+import com.mindaces.mindaces.domain.repository.LikesRepository;
 import com.mindaces.mindaces.dto.CommentDto;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentService
 {
     private CommentRepository commentRepository;
     private RoleService roleService;
+    private LikesRepository likesRepository;
 
-    public CommentService(CommentRepository commentRepository,RoleService roleService)
+    public CommentService(CommentRepository commentRepository,RoleService roleService,LikesRepository likesRepository)
     {
         this.roleService = roleService;
         this.commentRepository = commentRepository;
+        this.likesRepository = likesRepository;
     }
 
     Sort getSortByCreateDate()
@@ -46,7 +48,7 @@ public class CommentService
     private CommentDto convertEntityToDto(Comment comment)
     {
         return CommentDto.builder()
-                .commentIdx(comment.getCommentIdx())
+                .contentIdx(comment.getContentIdx())
                 .gallery(comment.getGallery())
                 .user(comment.getUser())
                 .content(comment.getContent())
@@ -93,12 +95,13 @@ public class CommentService
 
     }
 
-
+    @Transactional
     public Boolean addComment(String galleryName, Long contentIdx, Authentication authentication, CommentDto commentDto)
     {
         Boolean isValid = addCommentValidCheck(commentDto);
         if(isValid)
         {
+            commentDto.setIsLogged(0L);
             if(roleService.isUser(authentication))
             {
                 commentDto.setIsLogged(1L);
@@ -109,13 +112,23 @@ public class CommentService
             commentDto.setBoardIdx(contentIdx);
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             commentDto.setCommentPassword(passwordEncoder.encode(commentDto.getCommentPassword()));
-            Comment comment = commentRepository.save(commentDto.toEntity());
+
+            Comment savedComment = commentRepository.save(commentDto.toEntity());
+
+            Likes likes = Likes.builder()
+                .contentIdx(savedComment.getContentIdx())
+                .isComment(true)
+                .build();
+
+            savedComment.setLikes(likes);
+            likesRepository.save(likes);
+            commentRepository.save(savedComment);
             return true;
         }
         return false;
     }
 
-
+    @Transactional
     public Boolean deleteComment(CommentDto commentDto,Authentication authentication)
     {
         String userName = roleService.getUserName(authentication);
@@ -125,7 +138,8 @@ public class CommentService
             Comment matchComment = getMatchPasswordComment(commentDto);
             if(matchComment != null)
             {
-                commentRepository.deleteById(commentDto.getCommentIdx());
+                likesRepository.deleteByIsCommentAndContentIdx(true,commentDto.getContentIdx());
+                commentRepository.deleteById(commentDto.getContentIdx());
                 return true;
             }
         }
@@ -134,7 +148,8 @@ public class CommentService
         {
             if(isSameUser(commentDto,authentication))
             {
-                commentRepository.deleteById(commentDto.getCommentIdx());
+                likesRepository.deleteByIsCommentAndContentIdx(true,commentDto.getContentIdx());
+                commentRepository.deleteById(commentDto.getContentIdx());
                 return true;
             }
         }
@@ -144,7 +159,7 @@ public class CommentService
     public Comment getMatchPasswordComment(CommentDto commentDto)
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Long commentIdx = commentDto.getCommentIdx();
+        Long commentIdx = commentDto.getContentIdx();
         String inputPassword = commentDto.getCommentPassword();
         Comment objComment = this.commentRepository.getById(commentIdx);
         if(objComment == null)
@@ -172,7 +187,7 @@ public class CommentService
             Comment matchComment = getMatchPasswordComment(commentDto);
             if(matchComment != null)
             {
-                matchComment.setContent(commentDto.getContent());
+                matchComment.modifyContent(commentDto.getContent());
                 this.commentRepository.save(matchComment);
             }
         }
@@ -180,8 +195,8 @@ public class CommentService
         {
             if(isSameUser(commentDto,authentication))
             {
-                Comment comment = commentRepository.getById(commentDto.getCommentIdx());
-                comment.setContent(commentDto.getContent());
+                Comment comment = commentRepository.getById(commentDto.getContentIdx());
+                comment.modifyContent(commentDto.getContent());
                 this.commentRepository.save(comment);
             }
         }
@@ -191,7 +206,7 @@ public class CommentService
     public Boolean isSameUser(CommentDto commentDto,Authentication authentication)
     {
         String userName = roleService.getUserName(authentication);
-        Long commentIdx = commentDto.getCommentIdx();
+        Long commentIdx = commentDto.getContentIdx();
         if(userName.equals("-"))
         {
             return false;
@@ -211,10 +226,9 @@ public class CommentService
     {
         try
         {
-            Optional<Comment> optionalComment = commentRepository.findById(commentIdx);
-            Comment comment = optionalComment.get();
-            comment.setLikes(comment.getLikes() + 1);
-            commentRepository.save(comment);
+            Likes likes = likesRepository.findByContentIdxAndIsComment(commentIdx,true);
+            likes.updateLikes();
+            likesRepository.save(likes);
         }
         catch (Exception e)
         {

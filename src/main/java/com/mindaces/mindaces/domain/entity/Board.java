@@ -34,20 +34,17 @@ public class Board extends BaseTimeEntity
     @Column(columnDefinition = "text", nullable = false)
     private String content;
 
-    @Column(columnDefinition = "bigint default 0")
-    private Long likes;
-
-    @Column(name = "dis_likes", columnDefinition = "bigint default 0")
-    private Long dislikes;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Likes likes;
 
     @Column(length = 80, nullable = false)
     private String password;
 
-    @Column(columnDefinition = "tinyint(1) default 0", name = "is_logged_user")
+    @Column(columnDefinition = "tinyint(1) default 0", name = "is_logged_user",nullable = false)
     private Long isLoggedUser;
 
     @Builder
-    public Board(String gallery, String user, Long contentIdx, String title, String content, Long likes, Long dislikes, String password, Long isLoggedUser)
+    public Board(String gallery, String user, Long contentIdx, String title, String content, Likes likes, String password, Long isLoggedUser)
     {
         this.gallery = gallery;
         this.user = user;
@@ -55,7 +52,6 @@ public class Board extends BaseTimeEntity
         this.title = title;
         this.content = content;
         this.likes = likes;
-        this.dislikes = dislikes;
         this.password = password;
         this.isLoggedUser = isLoggedUser;
     }

@@ -15,7 +15,7 @@ import javax.persistence.*;
 @DynamicInsert
 @Table(name = "COMMENT_LIKE")
 @NoArgsConstructor
-public class CommentLike
+public class CommentLikeUserInfo
 {
     @Id
     @Column(name = "like_idx")
@@ -29,7 +29,7 @@ public class CommentLike
     public String userName;
 
     @Builder
-    public CommentLike(Long commentIdx, String likedIP, String userName)
+    public CommentLikeUserInfo(Long commentIdx, String likedIP, String userName)
     {
         this.commentIdx = commentIdx;
         this.likedIP = likedIP;

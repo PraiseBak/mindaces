@@ -1,7 +1,7 @@
 package com.mindaces.mindaces.service;
 
 import com.mindaces.mindaces.domain.entity.Comment;
-import com.mindaces.mindaces.domain.entity.CommentLike;
+import com.mindaces.mindaces.domain.entity.CommentLikeUserInfo;
 import com.mindaces.mindaces.domain.entity.LikedUserInfo;
 import com.mindaces.mindaces.domain.repository.CommentLikeRepository;
 import com.mindaces.mindaces.domain.repository.LikedUserInfoRepository;
@@ -35,7 +35,7 @@ public class LikeService
         this.commentLikeRepository = commentLikeRepository;
     }
 
-    public Boolean isRecommandModeOk(String mode)
+    public Boolean isRecommendModeOk(String mode)
     {
         if(mode.equals("like"))
         {
@@ -55,7 +55,7 @@ public class LikeService
             return "존재하지 않는 갤러리입니다";
         }
 
-        if(!isRecommandModeOk(recommendMode))
+        if(!isRecommendModeOk(recommendMode))
         {
             return "예기치 못한 에러입니다";
         }
@@ -150,23 +150,23 @@ public class LikeService
     }
 
 
-    public Map<String, Long> getRecentLikes(String galleryName, Long boardIdx)
+    public Map<String, Long> getRecentCommentLikes(String galleryName, Long boardIdx)
     {
         BoardDto boardDto = this.boardService.getBoardByIdxAndGalleryName(galleryName,boardIdx);
         Map<String,Long> map = new HashMap<String, Long>();
-        map.put("likes",boardDto.getLikes());
-        map.put("dislikes",boardDto.getDislikes());
+        map.put("likes",boardDto.getLikes().getLikes());
+        map.put("dislikes",boardDto.getLikes().getDislikes());
         return map;
     }
 
-    private CommentLike commentLikeEntityBuild(Long commentIdx,String requestIP,String userName)
+    private CommentLikeUserInfo commentLikeEntityBuild(Long commentIdx, String requestIP, String userName)
     {
-        CommentLike commentLike = CommentLike.builder()
+        CommentLikeUserInfo commentLikeUserInfo = CommentLikeUserInfo.builder()
                 .commentIdx(commentIdx)
                 .likedIP(requestIP)
                 .userName(userName)
                 .build();
-        return commentLike;
+        return commentLikeUserInfo;
     }
 
 
@@ -178,7 +178,7 @@ public class LikeService
         String userName = roleService.getUserName(authentication);
         Boolean isSameRecommend;
         String validCheckResult = "통과";
-        CommentLike commentLike;
+        CommentLikeUserInfo commentLikeUserInfo;
         isSameRecommend = checkDupliComment(commentIdx,requestIP,userName);
 
         if(isSameRecommend)
@@ -186,9 +186,9 @@ public class LikeService
             return "이미 추천하였습니다";
         }
 
-        commentLike = commentLikeEntityBuild(commentIdx,requestIP,userName);
+        commentLikeUserInfo = commentLikeEntityBuild(commentIdx,requestIP,userName);
 
-        commentLikeRepository.save(commentLike);
+        commentLikeRepository.save(commentLikeUserInfo);
 
         if(!commentService.updateLikes(commentIdx))
         {
@@ -200,28 +200,28 @@ public class LikeService
 
     private Boolean checkDupliComment(Long commentIdx,String likedIP,String userName)
     {
-        CommentLike resultCommentLike;
+        CommentLikeUserInfo resultCommentLikeUserInfo;
         if(!userName.equals("-"))
         {
-            resultCommentLike = commentLikeRepository.findByCommentIdxAndUserName(commentIdx,userName);
+            resultCommentLikeUserInfo = commentLikeRepository.findByCommentIdxAndUserName(commentIdx,userName);
         }
         else
         {
-            resultCommentLike = commentLikeRepository.findByCommentIdxAndLikedIP(commentIdx,likedIP);
+            resultCommentLikeUserInfo = commentLikeRepository.findByCommentIdxAndLikedIP(commentIdx,likedIP);
         }
 
-        if(resultCommentLike == null)
+        if(resultCommentLikeUserInfo == null)
         {
             return false;
         }
         return true;
     }
 
-    public Map<String, Long> getRecentLikes(Long commentIdx)
+    public Map<String, Long> getRecentCommentLikes(Long commentIdx)
     {
         Comment comment = this.commentService.getCommentByID(commentIdx);
         Map<String,Long> map = new HashMap<String, Long>();
-        map.put("likes",comment.getLikes());
+        map.put("likes",comment.getLikes().getLikes());
         return map;
     }
 
@@ -241,7 +241,7 @@ public class LikeService
 
         for (CommentDto commentDto : tmpCommentDtoList)
         {
-            if(count == 3 || commentDto.getLikes() == 0)
+            if(count == 3 || commentDto.getLikes().getLikes() == 0)
             {
                 break;
             }
