@@ -22,7 +22,7 @@ import java.util.List;
 public class BoardService
 {
     private static final int BLOCK_PAGE_NUM_COUNT = 10;
-    private static final int PAGE_POST_COUNT = 20;
+    private static final int PAGE_POST_COUNT = 10;
 
     private RoleService roleService;
     private BoardRepository boardRepository;
@@ -82,6 +82,7 @@ public class BoardService
     {
         Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
         Double postsTotalCount = Double.valueOf(getBoardCount(gallery));
+        System.out.println(postsTotalCount);
         Integer totalLastPage = (int)(Math.ceil((postsTotalCount/PAGE_POST_COUNT)));
 
         Integer blockLastPageNum = (totalLastPage > curPage + BLOCK_PAGE_NUM_COUNT)
@@ -90,7 +91,16 @@ public class BoardService
 
         curPage = (curPage <= 3) ? 1 : curPage - 2;
 
+        System.out.println(curPage);
+        System.out.println(totalLastPage);
+        System.out.println(blockLastPageNum);
+
+
         for (int val = curPage, idx = 0; val <= blockLastPageNum; val++, idx++) {
+            if(totalLastPage == 1)
+            {
+                break;
+            }
             pageList[idx] = val;
         }
 
@@ -276,9 +286,25 @@ public class BoardService
         return true;
     }
 
+    private Sort likesSort()
+    {
+        return Sort.by(Sort.Direction.DESC, "likes.likes");
+    }
+
     public List<BoardDto> getMostLikelyBoardList()
     {
-        List<Board> boardList = boardRepository.findTop10ByOrderByLikesDesc();
+        Sort sort = likesSort();
+        List<Likes> likesList = likesRepository.findTop10ByIsCommentFalseOrderByLikesDesc();
+        List<Long> contentIdxList = new ArrayList<Long>();
+        for(Likes like: likesList)
+        {
+            if(like.getLikes() != 0)
+            {
+                contentIdxList.add(like.getContentIdx());
+            }
+        }
+
+        List<Board> boardList = boardRepository.findByContentIdxIn(contentIdxList);
         List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
         for(Board board : boardList)
         {

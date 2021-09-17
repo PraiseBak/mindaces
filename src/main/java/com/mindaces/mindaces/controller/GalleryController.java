@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +30,8 @@ public class GalleryController
     private RoleService roleService;
     private LikeService likeService;
 
-    String errorURL = "redirect:/error/galleryMiss";
+    String errorGalleryURL = "redirect:/error/GalleryError";
+    String errorBoardURL = "redirect:/error/BoardError";
 
     public GalleryController(BoardService boardService, GalleryService galleryService, CommentService commentService,RoleService roleService,LikeService likeService)
     {
@@ -43,7 +46,6 @@ public class GalleryController
     public String galleryList(
             Model model)
     {
-
         model.addAttribute("galleryList",galleryService.getGalleryList());
         return "gallery/galleryList";
     }
@@ -52,23 +54,32 @@ public class GalleryController
     public String galleryContentList(
             Model model,
             @RequestParam(required = false,defaultValue = "1") Integer page,
-            @PathVariable(name = "galleryName") String galleryName)
+            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @PathVariable(name = "galleryName") String galleryName
+    )
     {
+
+        List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
+        Integer[] pageList;
         Boolean isGallery = galleryService.isGallery(galleryName);
         if(!isGallery)
         {
-            return errorURL;
+            return errorGalleryURL;
         }
-        List<BoardDto> boardDtoList = boardService.getGalleryPost(galleryName,page);
-        Integer[] pageList = boardService.getPageList(galleryName,page);
 
+        if(!(pagingMode.equals("")|| pagingMode.equals("mostLikedBoard")))
+        {
+            return errorBoardURL;
+        }
+
+        boardDtoList = boardService.getGalleryPost(galleryName,page);
+        pageList = boardService.getPageList(galleryName,page);
         model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
         model.addAttribute("galleryName",galleryName);
         return "gallery/galleryContentList";
+
     }
-
-
 
     //글 내용 보여주기
     @GetMapping(value = "/{galleryName}/{index}")
@@ -89,7 +100,7 @@ public class GalleryController
         isGallery = galleryService.isGallery(galleryName);
         if(!isGallery)
         {
-            return errorURL;
+            return errorGalleryURL;
         }
 
         boardDto = boardService.getBoardByIdxAndGalleryName(galleryName,contentIdx);

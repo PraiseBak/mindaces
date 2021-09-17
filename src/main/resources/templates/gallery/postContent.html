@@ -39,33 +39,24 @@
                         </form>
                     </div>
                 </div>
-                <div class="btns part" style="position: relative">
-                    <div class="modifyBtnsArea float-right">
-                        <div class="modifyBtns">
+                <div class="btns-part float-right">
+                    <div class="modifyBtnsArea row" style="display: block">
+                        <div class="modifyBtns col-sm-0 float-sm-right">
                             <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],modifyURL,[[${board.gallery}]])">수정</button>
                             <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(modifyURL) ">수정</button>
                             <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],deleteURL,[[${board.gallery}]])">삭제</button>
                             <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(deleteURL) ">삭제</button>
                         </div>
                     </div>
-
-                    <div class="inputPasswordArea float-right" id="inputPasswordArea" style="display: none; position: absolute; width: 300px;">
-                        <div class="input-part" sec:authorize="!isAuthenticated()">
+                    <div class="inputPasswordArea row "  sec:authorize="!isAuthenticated()" id="inputPasswordArea" style="display: none; width: 300px; margin-top:10px;">
+                        <div class="input-part col-sm-0 float-sm-right" >
                             <input type="password" placeholder="게시글 비밀번호" class="text-black" id="inputPassword" name="inputPassword" value="">
+                        </div>
+                        <div class="col-sm-0 float-sm-right">
                             <button class="btn btn-primary" th:onclick="getPassword([[${board.contentIdx}]],[[${board.gallery}]])">제출</button>
                             <button class="btn btn-primary btn-" th:onclick="foldBoardPasswordInput('')">취소</button>
                         </div>
-
-                        <style>
-                            .input-part
-                            {
-                                position: absolute;
-                                top: -80px;
-                                left: 990px;
-                            }
-                        </style>
                     </div>
-
                 </div>
 
                 <div style="margin-top: 60px;">
