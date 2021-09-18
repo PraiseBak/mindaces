@@ -16,5 +16,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>
     <T> T findByGalleryAndContentIdx(String gallery,Long contentIdx,Class<T> type);
     Long countBoardByGallery(String gallery);
     List<Board> findByContentIdxIn(List<Long> ids);
+    //List<Board> findTop10ByLikesLikes();
 }
 

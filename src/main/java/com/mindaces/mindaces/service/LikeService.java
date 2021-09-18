@@ -3,6 +3,7 @@ package com.mindaces.mindaces.service;
 import com.mindaces.mindaces.domain.entity.Comment;
 import com.mindaces.mindaces.domain.entity.CommentLikeUserInfo;
 import com.mindaces.mindaces.domain.entity.LikedUserInfo;
+import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.CommentLikeRepository;
 import com.mindaces.mindaces.domain.repository.LikedUserInfoRepository;
 import com.mindaces.mindaces.dto.BoardDto;
@@ -254,5 +255,13 @@ public class LikeService
         }
         return mostLikedCommentDtoList;
     }
+    /*
+    public List<Likes> getMostLikedBoardList()
+    {
+
+    }
+
+     */
+
 
 }

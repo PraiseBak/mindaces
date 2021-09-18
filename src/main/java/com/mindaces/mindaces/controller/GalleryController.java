@@ -58,7 +58,6 @@ public class GalleryController
             @PathVariable(name = "galleryName") String galleryName
     )
     {
-
         List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
         Integer[] pageList;
         Boolean isGallery = galleryService.isGallery(galleryName);
@@ -71,6 +70,17 @@ public class GalleryController
         {
             return errorBoardURL;
         }
+
+        /*
+        if(pagingMode.equals(("mostLikedBoard"))
+        {
+            boardDtoList = boardService.getMostLikelyBoardList(galleryName,page);
+        }
+         */
+
+
+
+
 
         boardDtoList = boardService.getGalleryPost(galleryName,page);
         pageList = boardService.getPageList(galleryName,page);

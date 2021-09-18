@@ -294,6 +294,7 @@ public class BoardService
     public List<BoardDto> getMostLikelyBoardList()
     {
         Sort sort = likesSort();
+        //TODO likes는 likes repository에 있어야하므로 리팩토링 시작
         List<Likes> likesList = likesRepository.findTop10ByIsCommentFalseOrderByLikesDesc();
         List<Long> contentIdxList = new ArrayList<Long>();
         for(Likes like: likesList)
