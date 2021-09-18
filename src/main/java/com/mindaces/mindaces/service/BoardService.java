@@ -5,6 +5,7 @@ import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
+import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.domain.repository.LikesRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import org.springframework.data.domain.Page;
@@ -24,15 +25,21 @@ public class BoardService
     private static final int BLOCK_PAGE_NUM_COUNT = 10;
     private static final int PAGE_POST_COUNT = 10;
 
+    private GalleryService galleryService;
     private RoleService roleService;
     private BoardRepository boardRepository;
     private LikesRepository likesRepository;
+    private CommentService commentService;
 
-    public BoardService(BoardRepository boardRepository,RoleService roleService,LikesRepository likesRepository)
+
+    public BoardService(BoardRepository boardRepository,RoleService roleService,
+                        LikesRepository likesRepository,GalleryService galleryService,CommentService commentService)
     {
+        this.galleryService = galleryService;
         this.roleService = roleService;
         this.boardRepository = boardRepository;
         this.likesRepository = likesRepository;
+        this.commentService = commentService;
     }
 
     @Transactional
@@ -56,33 +63,27 @@ public class BoardService
     {
         List<BoardDto> boardDtoList = new ArrayList<>();
 
-        Page<Board> pageEntity = boardRepository.findByGallery(galleryName, PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
-        List<Board> boardEntity = pageEntity.getContent();
+        Page<Board> pageEntity = boardRepository.findByGallery(galleryName,
+                PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        List<Board> boardList = pageEntity.getContent();
 
-        if(boardEntity.isEmpty())
+        if(boardList.isEmpty())
         {
             return boardDtoList;
         }
 
-        for(Board board : boardEntity)
+        for(Board board : boardList)
         {
             boardDtoList.add(this.convertEntityToDto(board));
         }
         return boardDtoList;
     }
-    //비정상적 동작인 경우에서 자동으로 트랜잭션 기준으로 롤백해줌
-    //없으면 스스로 직접 롤백해줘야함
-    @Transactional
-    public Long getBoardCount(String gallery)
-    {
-        return boardRepository.countBoardByGallery(gallery);
-    }
 
-    public Integer[] getPageList(String gallery,Integer curPage)
+
+    public Integer[] getPageList(String gallery,Integer curPage,Integer count)
     {
         Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
-        Double postsTotalCount = Double.valueOf(getBoardCount(gallery));
-        System.out.println(postsTotalCount);
+        Double postsTotalCount = Double.valueOf(count);
         Integer totalLastPage = (int)(Math.ceil((postsTotalCount/PAGE_POST_COUNT)));
 
         Integer blockLastPageNum = (totalLastPage > curPage + BLOCK_PAGE_NUM_COUNT)
@@ -91,11 +92,6 @@ public class BoardService
 
         curPage = (curPage <= 3) ? 1 : curPage - 2;
 
-        System.out.println(curPage);
-        System.out.println(totalLastPage);
-        System.out.println(blockLastPageNum);
-
-
         for (int val = curPage, idx = 0; val <= blockLastPageNum; val++, idx++) {
             if(totalLastPage == 1)
             {
@@ -103,7 +99,6 @@ public class BoardService
             }
             pageList[idx] = val;
         }
-
         return pageList;
     }
 
@@ -173,12 +168,15 @@ public class BoardService
         return false;
     }
 
+    /*
     public BoardWriteUserMapping getBoardUserCheckMapping(String galleryName, Long contentIdx)
     {
         return boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,BoardWriteUserMapping.class);
     }
 
-    //로그인한 케이스
+     */
+
+    //로그인한 케이스의 게시글 수정 유효성 체크
     public Boolean isBoardModifyAuthValidLoggedUser(Authentication authentication, Long contentIdx, String galleryName)
     {
         BoardWriteUserMapping boardWriteUserMapping = boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx, BoardWriteUserMapping.class);
@@ -198,7 +196,7 @@ public class BoardService
         return false;
     }
 
-    //비로그인한 케이스
+    //비로그인한 케이스의 게시글 유효성 체크
     public Boolean isBoardModifyAuthValidUser(Long contentIdx, String inputPassword,String galleryName)
     {
         BoardWriteUserMapping boardWriteUserMapping = boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx, BoardWriteUserMapping.class);
@@ -210,6 +208,7 @@ public class BoardService
         return false;
     }
 
+    //게시글의 유효성 체크
     public String isBoardWriteValid(BoardDto boardDto, Authentication authentication,String mode)
     {
         try
@@ -257,23 +256,17 @@ public class BoardService
 
     public Boolean updateLikes(String mode,String gallery,Long boardIdx)
     {
-        try
+        Likes likes = this.likesRepository.findByContentIdxAndIsComment(boardIdx,false);
+        if(mode.equals("like"))
         {
-            Likes likes = this.likesRepository.findByContentIdxAndIsComment(boardIdx,false);
-            if(mode.equals("like"))
-            {
-                likes.updateLikes();
-            }
-            else
-            {
-                likes.updateDislikes();
-            }
-            likesRepository.save(likes);
-        }catch (Exception e)
-        {
-            System.out.println(e);
-            return false;
+            likes.updateLike();
         }
+        else
+        {
+            likes.updateDislike();
+        }
+
+        System.out.println(likesRepository.save(likes).getLike());
         return true;
     }
 
@@ -286,29 +279,17 @@ public class BoardService
         return true;
     }
 
-    private Sort likesSort()
-    {
-        return Sort.by(Sort.Direction.DESC, "likes.likes");
-    }
-
+    //전체 갤러리에서 인기글 (메인 컨트롤러에서 사용)
     public List<BoardDto> getMostLikelyBoardList()
     {
-        Sort sort = likesSort();
-        //TODO likes는 likes repository에 있어야하므로 리팩토링 시작
-        List<Likes> likesList = likesRepository.findTop10ByIsCommentFalseOrderByLikesDesc();
-        List<Long> contentIdxList = new ArrayList<Long>();
-        for(Likes like: likesList)
-        {
-            if(like.getLikes() != 0)
-            {
-                contentIdxList.add(like.getContentIdx());
-            }
-        }
-
-        List<Board> boardList = boardRepository.findByContentIdxIn(contentIdxList);
+        List<Board> boardList = boardRepository.findTop10ByOrderByLikesLikeDesc();
         List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
         for(Board board : boardList)
         {
+            if(board.getLikes().getLike() == 0L)
+            {
+                break;
+            }
             if(board.getTitle().length() > 20)
             {
                 board.setTitle(board.getTitle().substring(19) + "...");
@@ -318,6 +299,51 @@ public class BoardService
         return boardDtoList;
     }
 
+
+
+    //해당 갤러리에서의 개념글
+    public List<BoardDto> getMostLikelyBoardListByGallery(String galleryName,Integer page)
+    {
+        List<BoardDto> boardDtoList = new ArrayList<>();
+        //갤러리에 개념글 기준 개추 수록
+        //개추는 최소 10 이상
+        //댓글은 개추 / 3 이어야함
+        //댓글이 총 몇개인지 가져와야함
+
+        Long countComment  = 0L;
+
+        Long recommendStandard = this.galleryService.getRecommendStandard(galleryName);
+        Long countRecommend = 0L;
+        if(recommendStandard < 9L)
+        {
+            recommendStandard = 9L;
+        }
+
+        Page<Board> pageEntity = this.boardRepository.findByGalleryAndLikesLikeGreaterThan(galleryName,
+                PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")),
+                        recommendStandard);
+
+        List<Board> boardList = pageEntity.getContent();
+
+        for(Board board : boardList)
+        {
+            countComment = this.commentService.countByBoardIdx(board.getContentIdx());
+            System.out.println(countComment);
+            System.out.println(recommendStandard / 3);
+            System.out.println();
+            if(countComment >= recommendStandard / 3)
+            {
+                boardDtoList.add(this.convertEntityToDto(board));
+                countRecommend += board.getLikes().getLike();
+            }
+        }
+
+        if(boardDtoList.size() > 3)
+        {
+            this.galleryService.refreshRecommendStandard(galleryName, countRecommend / boardDtoList.size());
+        }
+        return boardDtoList;
+    }
 }
 
 

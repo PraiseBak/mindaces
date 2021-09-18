@@ -10,8 +10,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long>
 {
     List<Comment> getCommentByBoardIdxAndGalleryOrderByCreatedDateAsc(Long boardIdx, String gallery);
-    List<Comment> getCommentByBoardIdxAndGallery(Long boardIdx, String gallery);
-
+    Long countByBoardIdx(Long boardIdx);
 
 
 }

@@ -16,8 +16,8 @@
             </div>
 
             <div class="header">
-                <button class="btn-outline-dark btn" onclick="location.href=''">전체글</button>
-                <button class="btn-outline-dark btn" onclick="location.href='?pagingMode=mostLikedBoard'">개념글</button>
+                <button class="btn-outline-dark btn" th:onclick="|location.href='@{'.'}'|">전체글</button>
+                <button class="btn-outline-dark btn" th:onclick="location.href='?pagingMode=mostLikedBoard'">개념글</button>
             </div>
 
             <table class="table">
@@ -42,7 +42,7 @@
                             <p th:text="${post.user}"></p>
                         </td>
                         <td>
-                            <p th:text="${post.likes?.likes}"></p>
+                            <p th:text="${post.likes?.like}"></p>
                         </td>
                     </tr>
                 </tbody>
@@ -54,17 +54,12 @@
             </div>
             <div class="text-center " style="float:none; margin:0 auto">
             <span th:each="pageNum : ${pageList}" th:inline="text">
-                <button class="btn-lg" th:onclick="|location.href='@{'?page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
+                <button class="btn-lg" th:onclick="|location.href='@{'?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
             </span>
 
             </div>
-
-
         </div>
-
-
     </div>
-
 
 
 

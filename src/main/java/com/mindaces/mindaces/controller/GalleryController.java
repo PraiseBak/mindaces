@@ -53,8 +53,8 @@ public class GalleryController
     @GetMapping(value = "/{galleryName}" )
     public String galleryContentList(
             Model model,
-            @RequestParam(required = false,defaultValue = "1") Integer page,
             @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "1") Integer page,
             @PathVariable(name = "galleryName") String galleryName
     )
     {
@@ -71,24 +71,22 @@ public class GalleryController
             return errorBoardURL;
         }
 
-        /*
-        if(pagingMode.equals(("mostLikedBoard"))
+        if(pagingMode.equals("mostLikedBoard"))
         {
-            boardDtoList = boardService.getMostLikelyBoardList(galleryName,page);
+            boardDtoList = boardService.getMostLikelyBoardListByGallery(galleryName,page);
+            pageList = boardService.getPageList(galleryName,page,  boardDtoList.size());
         }
-         */
-
-
-
-
-
-        boardDtoList = boardService.getGalleryPost(galleryName,page);
-        pageList = boardService.getPageList(galleryName,page);
+        else
+        {
+            boardDtoList = boardService.getGalleryPost(galleryName,page);
+            pageList = boardService.getPageList(galleryName,page,  boardDtoList.size());
+        }
         model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
         model.addAttribute("galleryName",galleryName);
-        return "gallery/galleryContentList";
+        model.addAttribute("pagingMode",pagingMode);
 
+        return "gallery/galleryContentList";
     }
 
     //글 내용 보여주기

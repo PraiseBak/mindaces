@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -69,6 +70,7 @@ public class LikeService
     }
 
 
+    @Transactional
     public String recommand(Map<String, Object> param, HttpServletRequest request,Authentication authentication)
     {
         String gallery = (String) param.get("gallery");
@@ -155,8 +157,8 @@ public class LikeService
     {
         BoardDto boardDto = this.boardService.getBoardByIdxAndGalleryName(galleryName,boardIdx);
         Map<String,Long> map = new HashMap<String, Long>();
-        map.put("likes",boardDto.getLikes().getLikes());
-        map.put("dislikes",boardDto.getLikes().getDislikes());
+        map.put("likes",boardDto.getLikes().getLike());
+        map.put("dislike",boardDto.getLikes().getDislike());
         return map;
     }
 
@@ -174,7 +176,7 @@ public class LikeService
 
     public String commentRecommand(Map<String, Object> param, HttpServletRequest request, Authentication authentication)
     {
-        Long commentIdx = Long.parseLong((String) param.get("commentIdx"));
+        Long commentIdx = Long.parseLong((String) param.get("contentIdx"));
         String requestIP = request.getRemoteAddr();
         String userName = roleService.getUserName(authentication);
         Boolean isSameRecommend;
@@ -222,7 +224,7 @@ public class LikeService
     {
         Comment comment = this.commentService.getCommentByID(commentIdx);
         Map<String,Long> map = new HashMap<String, Long>();
-        map.put("likes",comment.getLikes().getLikes());
+        map.put("likes",comment.getLikes().getLike());
         return map;
     }
 
@@ -242,7 +244,7 @@ public class LikeService
 
         for (CommentDto commentDto : tmpCommentDtoList)
         {
-            if(count == 3 || commentDto.getLikes().getLikes() == 0)
+            if(count == 3 || commentDto.getLikes().getLike() == 0)
             {
                 break;
             }

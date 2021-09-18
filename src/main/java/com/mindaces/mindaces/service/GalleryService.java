@@ -60,6 +60,21 @@ public class GalleryService
         }
         return true;
     }
+
+    public Long getRecommendStandard(String galleryName)
+    {
+        Gallery gallery = this.galleryRepository.findByGalleryName(galleryName);
+        return gallery.getRecommendStandard();
+    }
+
+
+    public void refreshRecommendStandard(String galleryName,Long recommendStandard)
+    {
+        Gallery gallery = this.galleryRepository.findByGalleryName(galleryName);
+        gallery.setRecommendStandard(recommendStandard);
+        this.galleryRepository.save(gallery);
+
+    }
 }
 
 

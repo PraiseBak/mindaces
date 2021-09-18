@@ -227,7 +227,7 @@ public class CommentService
         try
         {
             Likes likes = likesRepository.findByContentIdxAndIsComment(commentIdx,true);
-            likes.updateLikes();
+            likes.updateLike();
             likesRepository.save(likes);
         }
         catch (Exception e)
@@ -243,4 +243,8 @@ public class CommentService
         return commentRepository.getById(commentIdx);
     }
 
+    public Long countByBoardIdx(Long boardIdx)
+    {
+        return this.commentRepository.countByBoardIdx(boardIdx);
+    }
 }

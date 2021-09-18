@@ -8,9 +8,7 @@ import java.util.List;
 
 public interface LikesRepository extends JpaRepository<Likes, LikesID>
 {
-    Likes findByContentIdxAndIsComment(Long boardIdx,boolean isComment);
+    Likes findByContentIdxAndIsComment(Long contentIdx,boolean isComment);
     void deleteByIsCommentAndContentIdx(boolean isComment, Long commentIdx);
-    List<Likes> findTop10ByOrderByLikesDesc();
-    List<Likes> findTop10ByIsCommentFalseOrderByLikesDesc();
 
 }

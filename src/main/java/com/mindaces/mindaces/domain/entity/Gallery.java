@@ -34,6 +34,13 @@ public class Gallery
     @Column(name = "created_date")
     private LocalDateTime galleryCreatedDate;
 
+    @Column(name = "recommend_standard",columnDefinition = "bigint default 0",nullable = false)
+    private Long recommendStandard;
+
+
+
+
+
     @Builder
     public Gallery(Long galleryIdx,String galleryName,String galleryURL,Boolean specialGallery)
     {
@@ -44,10 +51,8 @@ public class Gallery
     }
 
 
-
-
-
-
-
-
+    public void setRecommendStandard(Long recommendStandard)
+    {
+        this.recommendStandard = recommendStandard;
+    }
 }

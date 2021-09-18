@@ -1,12 +1,10 @@
 package com.mindaces.mindaces.domain.entity;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,12 +13,12 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @DynamicInsert
-@Table(name="LIKES")
+@Table(name= "likes")
 @IdClass(LikesID.class)
 public class Likes implements Serializable
 {
-    @Column(name = "is_comment")
     @Id
+    @Column(name = "is_comment")
     private boolean isComment;
 
     //board,comment 둘의 개추들 모두 담음
@@ -28,21 +26,21 @@ public class Likes implements Serializable
     @Column(name = "content_idx",nullable = false)
     private Long contentIdx;
 
-    @Column(columnDefinition = "bigint default 0")
-    private Long likes;
+    @Column(columnDefinition = "bigint default 0",name = "content_like")
+    private Long like;
 
-    @Column(columnDefinition = "bigint default 0")
-    private Long dislikes;
+    @Column(columnDefinition = "bigint default 0",name = "content_dislike")
+    private Long dislike;
 
 
-    public void updateLikes()
+    public void updateLike()
     {
-        this.likes += 1L;
+        this.like += 1L;
     }
 
-    public void updateDislikes()
+    public void updateDislike()
     {
-        this.dislikes += 1L;
+        this.dislike += 1L;
     }
 
     public void setContentIdx(Long contentIdx)
@@ -51,11 +49,11 @@ public class Likes implements Serializable
     }
 
     @Builder
-    public Likes(Long contentIdx,Long likes,Long dislikes,boolean isComment)
+    public Likes(Long contentIdx,Long like,Long dislike,boolean isComment)
     {
         this.contentIdx = contentIdx;
-        this.likes = likes;
-        this.dislikes = dislikes;
+        this.like = like;
+        this.dislike = dislike;
         this.isComment = isComment;
     }
 

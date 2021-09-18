@@ -127,7 +127,7 @@ function sendBoardLikeRequest(mode,galleryName,boardIdx)
 function refreshLikes()
 {
     var likesBtn = document.getElementById("likesBtn");
-    var dislikesBtn = document.getElementById("dislikesBtn");
+    var dislikeBtn = document.getElementById("dislikeBtn");
     var info=
     {
         gallery : galleryName,
@@ -143,6 +143,6 @@ function refreshLikes()
     }).done(function (result)
     {
         likesBtn.innerText = "개추 " + result['likes'];
-        dislikesBtn.innerText = "비추 " + result['dislikes']
+        dislikeBtn.innerText = "비추 " + result['dislike']
     });
 }
