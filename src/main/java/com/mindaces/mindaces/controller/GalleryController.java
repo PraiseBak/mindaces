@@ -81,6 +81,7 @@ public class GalleryController
             boardDtoList = boardService.getGalleryPost(galleryName,page);
             pageList = boardService.getPageList(galleryName,page,  boardDtoList.size());
         }
+
         model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
         model.addAttribute("galleryName",galleryName);

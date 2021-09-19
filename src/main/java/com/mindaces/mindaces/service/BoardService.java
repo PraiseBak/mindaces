@@ -91,7 +91,6 @@ public class BoardService
                 : totalLastPage;
 
         curPage = (curPage <= 3) ? 1 : curPage - 2;
-
         for (int val = curPage, idx = 0; val <= blockLastPageNum; val++, idx++) {
             if(totalLastPage == 1)
             {
@@ -328,9 +327,6 @@ public class BoardService
         for(Board board : boardList)
         {
             countComment = this.commentService.countByBoardIdx(board.getContentIdx());
-            System.out.println(countComment);
-            System.out.println(recommendStandard / 3);
-            System.out.println();
             if(countComment >= recommendStandard / 3)
             {
                 boardDtoList.add(this.convertEntityToDto(board));
