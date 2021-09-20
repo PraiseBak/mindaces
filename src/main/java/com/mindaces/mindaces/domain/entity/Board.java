@@ -7,10 +7,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @Entity
 @DynamicInsert
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "BOARD")
 public class Board extends BaseTimeEntity
 
@@ -42,6 +43,43 @@ public class Board extends BaseTimeEntity
 
     @Column(columnDefinition = "tinyint(1) default 0", name = "is_logged_user",nullable = false)
     private Long isLoggedUser;
+
+    @Builder.Default
+    @Column(name = "is_recommended_board")
+    private Boolean isRecommendedBoard = false;
+
+
+    public void updateLikes(Likes likes)
+    {
+        this.likes = likes;
+    }
+
+    public void updateContent(String content)
+    {
+        this.content = content;
+    }
+
+    public void updateTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public void updatePassword(String password)
+    {
+        this.password = password;
+    }
+
+    public void updateUser(String user)
+    {
+        this.user = user;
+    }
+
+    public void updateIsRecommmendBoard(Boolean isRecommendedBoard)
+    {
+        this.isRecommendedBoard = isRecommendedBoard;
+    }
+
+
 
     @Builder
     public Board(String gallery, String user, Long contentIdx, String title, String content, Likes likes, String password, Long isLoggedUser)

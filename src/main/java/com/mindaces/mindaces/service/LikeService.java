@@ -1,11 +1,9 @@
 package com.mindaces.mindaces.service;
 
-import com.mindaces.mindaces.domain.entity.Comment;
-import com.mindaces.mindaces.domain.entity.CommentLikeUserInfo;
-import com.mindaces.mindaces.domain.entity.LikedUserInfo;
-import com.mindaces.mindaces.domain.entity.Likes;
+import com.mindaces.mindaces.domain.entity.*;
 import com.mindaces.mindaces.domain.repository.CommentLikeRepository;
 import com.mindaces.mindaces.domain.repository.LikedUserInfoRepository;
+import com.mindaces.mindaces.domain.repository.LikesRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.dto.LikeComparator;
@@ -25,9 +23,11 @@ public class LikeService
     private BoardService boardService;
     private GalleryService galleryService;
     private CommentService commentService;
+    private LikesRepository likesRepository;
 
 
-    public LikeService(LikedUserInfoRepository likedUserInfoRepository, RoleService roleService, BoardService boardService, GalleryService galleryService,CommentLikeRepository commentLikeRepository,CommentService commentService)
+    public LikeService(LikedUserInfoRepository likedUserInfoRepository, RoleService roleService, BoardService boardService,
+                       GalleryService galleryService,CommentLikeRepository commentLikeRepository,CommentService commentService,LikesRepository likesRepository)
     {
         this.commentService = commentService;
         this.boardService = boardService;
@@ -35,6 +35,7 @@ public class LikeService
         this.roleService = roleService;
         this.galleryService = galleryService;
         this.commentLikeRepository = commentLikeRepository;
+        this.likesRepository = likesRepository;
     }
 
     public Boolean isRecommendModeOk(String mode)
@@ -73,7 +74,7 @@ public class LikeService
     @Transactional
     public String recommand(Map<String, Object> param, HttpServletRequest request,Authentication authentication)
     {
-        String gallery = (String) param.get("gallery");
+        String galleryName = (String) param.get("gallery");
         String recommendMode = (String) param.get("mode");
         Long boardIdx = Long.parseLong((String) param.get("boardIdx"));
         String requestIP = request.getRemoteAddr();
@@ -81,20 +82,21 @@ public class LikeService
         LikedUserInfo likedUserInfo;
         Boolean isSameRecommend;
         String validCheckResult = "";
+        Board board;
 
-        if(!(validCheckResult = checkRequestParamValid(gallery,recommendMode,boardIdx) ).equals("통과"))
+        if(!(validCheckResult = checkRequestParamValid(galleryName,recommendMode,boardIdx) ).equals("통과"))
         {
             return validCheckResult;
         }
 
         if(userName.equals("-"))
         {
-            isSameRecommend = isSameIPOrUser(gallery,boardIdx,recommendMode,userName,requestIP);
+            isSameRecommend = isSameIPOrUser(galleryName,boardIdx,recommendMode,userName,requestIP);
         }
         else
         {
             requestIP = recommendMode;
-            isSameRecommend = isSameIPOrUser(gallery,boardIdx,recommendMode,userName,null);
+            isSameRecommend = isSameIPOrUser(galleryName,boardIdx,recommendMode,userName,null);
         }
 
         if(isSameRecommend)
@@ -104,21 +106,54 @@ public class LikeService
 
         if(recommendMode.equals("like"))
         {
-            likedUserInfo = new LikedUserInfo(gallery,boardIdx,requestIP,"-",userName);
+            likedUserInfo = new LikedUserInfo(galleryName,boardIdx,requestIP,"-",userName);
         }
         else
         {
-            likedUserInfo = new LikedUserInfo(gallery,boardIdx,"-" ,requestIP,userName);
+            likedUserInfo = new LikedUserInfo(galleryName,boardIdx,"-" ,requestIP,userName);
         }
 
         this.likedUserInfoRepository.save(likedUserInfo);
 
-        if(!boardService.updateLikes(recommendMode,gallery,boardIdx))
+        Likes likes = this.getLikesOfBoard(boardIdx);
+
+        if(!this.updateLikes(recommendMode,likes))
         {
             return "예기지 못한 오류가 발생했습니다";
         }
+
+
+        board = boardService.getGalleryNameAndBoardIdx(galleryName, boardIdx);
+        boardService.getBoardAndUpdateGalleryRecommendInfo(galleryName,boardIdx,board);
+
+        galleryService.updateRecommendStandard(galleryName);
+
+
+
+
+        boardService.updateIsRecommendBoard(galleryName,boardIdx,board);
         return "통과";
     }
+
+
+
+    public Boolean updateLikes(String mode,Likes likes)
+    {
+        if(mode.equals("like"))
+        {
+            likes.updateLike();
+        }
+        else
+        {
+            likes.updateDislike();
+        }
+        updateLikes(likes);
+        return true;
+    }
+
+
+
+
 
     public Boolean isSameIPOrUser(String gallery,Long boardIdx,String recommendMode,String userName,String ip)
     {
@@ -155,7 +190,7 @@ public class LikeService
 
     public Map<String, Long> getRecentCommentLikes(String galleryName, Long boardIdx)
     {
-        BoardDto boardDto = this.boardService.getBoardByIdxAndGalleryName(galleryName,boardIdx);
+        BoardDto boardDto = this.boardService.getBoardDtoByGalleryNameAndContentIdx(galleryName,boardIdx);
         Map<String,Long> map = new HashMap<String, Long>();
         map.put("likes",boardDto.getLikes().getLike());
         map.put("dislike",boardDto.getLikes().getDislike());
@@ -164,12 +199,11 @@ public class LikeService
 
     private CommentLikeUserInfo commentLikeEntityBuild(Long commentIdx, String requestIP, String userName)
     {
-        CommentLikeUserInfo commentLikeUserInfo = CommentLikeUserInfo.builder()
+        return CommentLikeUserInfo.builder()
                 .commentIdx(commentIdx)
                 .likedIP(requestIP)
                 .userName(userName)
                 .build();
-        return commentLikeUserInfo;
     }
 
 
@@ -190,6 +224,8 @@ public class LikeService
         }
 
         commentLikeUserInfo = commentLikeEntityBuild(commentIdx,requestIP,userName);
+
+
 
         commentLikeRepository.save(commentLikeUserInfo);
 
@@ -257,13 +293,16 @@ public class LikeService
         }
         return mostLikedCommentDtoList;
     }
-    /*
-    public List<Likes> getMostLikedBoardList()
-    {
 
+    public Likes getLikesOfBoard(Long boardIdx)
+    {
+        return this.likesRepository.findByContentIdxAndIsComment(boardIdx,false);
     }
 
-     */
+    public void updateLikes(Likes likes)
+    {
+        likesRepository.save(likes);
+    }
 
 
 }

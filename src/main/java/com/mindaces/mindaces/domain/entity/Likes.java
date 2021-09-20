@@ -32,7 +32,6 @@ public class Likes implements Serializable
     @Column(columnDefinition = "bigint default 0",name = "content_dislike")
     private Long dislike;
 
-
     public void updateLike()
     {
         this.like += 1L;

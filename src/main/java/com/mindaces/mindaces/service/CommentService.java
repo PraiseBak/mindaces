@@ -1,5 +1,6 @@
 package com.mindaces.mindaces.service;
 
+import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Comment;
 import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.CommentRepository;
@@ -99,6 +100,7 @@ public class CommentService
     public Boolean addComment(String galleryName, Long contentIdx, Authentication authentication, CommentDto commentDto)
     {
         Boolean isValid = addCommentValidCheck(commentDto);
+        Board board;
         if(isValid)
         {
             commentDto.setIsLogged(0L);
@@ -123,6 +125,7 @@ public class CommentService
             savedComment.setLikes(likes);
             likesRepository.save(likes);
             commentRepository.save(savedComment);
+
             return true;
         }
         return false;
@@ -247,4 +250,5 @@ public class CommentService
     {
         return this.commentRepository.countByBoardIdx(boardIdx);
     }
+
 }

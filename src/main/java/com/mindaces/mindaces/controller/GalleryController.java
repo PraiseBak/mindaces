@@ -5,18 +5,12 @@ import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.service.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 //보여주거나 갤러리에 관련된것만 (board 수정하는건 BoardController)
@@ -74,12 +68,12 @@ public class GalleryController
         if(pagingMode.equals("mostLikedBoard"))
         {
             boardDtoList = boardService.getMostLikelyBoardListByGallery(galleryName,page);
-            pageList = boardService.getPageList(galleryName,page,  boardDtoList.size());
+            pageList = boardService.getPageList(galleryName,page);
         }
         else
         {
             boardDtoList = boardService.getGalleryPost(galleryName,page);
-            pageList = boardService.getPageList(galleryName,page,  boardDtoList.size());
+            pageList = boardService.getPageList(galleryName,page);
         }
 
         model.addAttribute("pageList",pageList);
@@ -112,7 +106,7 @@ public class GalleryController
             return errorGalleryURL;
         }
 
-        boardDto = boardService.getBoardByIdxAndGalleryName(galleryName,contentIdx);
+        boardDto = boardService.getBoardDtoByGalleryNameAndContentIdx(galleryName,contentIdx);
         commentDtoList = commentService.getCommentByContentIdxAndGalleryName(galleryName,contentIdx);
         model.addAttribute("commentList",commentDtoList);
         if(principal != null)

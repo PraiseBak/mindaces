@@ -13,6 +13,11 @@ public class GalleryService
 {
 
     private GalleryRepository galleryRepository;
+    //이 카운트를 넘어가야 평균치로 개념글 기준 잡음
+    private final int renewRecommendeBoardCount = 5;
+    private final int initRecommendStandard = 10;
+
+
 
     public GalleryService(GalleryRepository galleryRepository)
     {
@@ -63,16 +68,53 @@ public class GalleryService
 
     public Long getRecommendStandard(String galleryName)
     {
-        Gallery gallery = this.galleryRepository.findByGalleryName(galleryName);
+        Gallery gallery = this.getGalleryByGalleryName(galleryName);
         return gallery.getRecommendStandard();
     }
 
-
-    public void refreshRecommendStandard(String galleryName,Long recommendStandard)
+    public void updateRecommendInfo(String galleryName,Long likes,Boolean isNewRecommended)
     {
-        Gallery gallery = this.galleryRepository.findByGalleryName(galleryName);
-        gallery.setRecommendStandard(recommendStandard);
+        Gallery gallery = this.getGalleryByGalleryName(galleryName);
+        gallery.addRecommendedLikesSum(likes);
+        if(isNewRecommended)
+        {
+            gallery.updateRecommendBoardCount();
+        }
         this.galleryRepository.save(gallery);
+
+    }
+
+
+    private Gallery getGalleryByGalleryName(String galleryName)
+    {
+        return this.galleryRepository.findByGalleryName(galleryName);
+    }
+
+    public Long getCountRecommendedBoardByGalleryName(String galleryName)
+    {
+        return this.getGalleryByGalleryName(galleryName).getRecommendedBoardCount();
+    }
+
+    public void updateRecommendStandard(String galleryName)
+    {
+        Gallery gallery = this.getGalleryByGalleryName(galleryName);
+        Long recommendedBoardCount = gallery.getRecommendedBoardCount();
+        Long recommendedLikesSum = gallery.getRecommendedLikesSum();
+        Long newRecommendedStandard = recommendedLikesSum / recommendedBoardCount;
+        //10으로 둘까요
+        System.out.println(recommendedBoardCount);
+        System.out.println(renewRecommendeBoardCount);
+
+        if(recommendedBoardCount > this.renewRecommendeBoardCount)
+        {
+            //아마 이런일은 없겠지만 혹시 몰라서
+            if(newRecommendedStandard < initRecommendStandard)
+            {
+                System.out.println("galleryService, newRecommendedStandard 로직 문제있음");
+            }
+            gallery.updateRecommendStandard(newRecommendedStandard);
+            galleryRepository.save(gallery);
+        }
 
     }
 }

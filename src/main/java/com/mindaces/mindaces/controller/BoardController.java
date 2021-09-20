@@ -57,15 +57,15 @@ public class BoardController
             return errorGalleryURL;
         }
 
-        Board board = new Board();
+        BoardDto boardDto = new BoardDto();
         if(roleService.isUser(authentication))
         {
-            board.setUser(authentication.getName());
-            board.setPassword("****");
+            boardDto.setUser(authentication.getName());
+            boardDto.setPassword("****");
         }
 
         model.addAttribute("inputPassword",null);
-        model.addAttribute("board",board);
+        model.addAttribute("board",boardDto);
         return "gallery/postWrite";
     }
 

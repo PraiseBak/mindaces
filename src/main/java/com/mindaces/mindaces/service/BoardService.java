@@ -5,8 +5,6 @@ import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
-import com.mindaces.mindaces.domain.repository.GalleryRepository;
-import com.mindaces.mindaces.domain.repository.LikesRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,18 +25,16 @@ public class BoardService
 
     private GalleryService galleryService;
     private RoleService roleService;
-    private BoardRepository boardRepository;
-    private LikesRepository likesRepository;
     private CommentService commentService;
+    private BoardRepository boardRepository;
 
 
     public BoardService(BoardRepository boardRepository,RoleService roleService,
-                        LikesRepository likesRepository,GalleryService galleryService,CommentService commentService)
+                        GalleryService galleryService,CommentService commentService)
     {
         this.galleryService = galleryService;
         this.roleService = roleService;
         this.boardRepository = boardRepository;
-        this.likesRepository = likesRepository;
         this.commentService = commentService;
     }
 
@@ -48,13 +44,14 @@ public class BoardService
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
         boardDto.setIsLoggedUser(0L);
+
         Board savedBoard= boardRepository.save(boardDto.toEntity());
 
         Likes likes = Likes.builder()
                 .contentIdx(savedBoard.getContentIdx())
                 .isComment(false)
                 .build();
-        savedBoard.setLikes(likes);
+        savedBoard.updateLikes(likes);
         boardRepository.save(savedBoard);
         return 0L;
     }
@@ -80,12 +77,12 @@ public class BoardService
     }
 
 
-    public Integer[] getPageList(String gallery,Integer curPage,Integer count)
+    public Integer[] getPageList(String galleryName,Integer curPage)
     {
+        Long count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
         Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
         Double postsTotalCount = Double.valueOf(count);
         Integer totalLastPage = (int)(Math.ceil((postsTotalCount/PAGE_POST_COUNT)));
-
         Integer blockLastPageNum = (totalLastPage > curPage + BLOCK_PAGE_NUM_COUNT)
                 ? curPage + BLOCK_PAGE_NUM_COUNT
                 : totalLastPage;
@@ -101,8 +98,13 @@ public class BoardService
         return pageList;
     }
 
+    public BoardDto getBoardDtoByGalleryNameAndContentIdx(String galleryName,Long contentIdx)
+    {
+        Board board = this.getGalleryNameAndBoardIdx(galleryName,contentIdx);
+        return convertEntityToDto(board);
+    }
 
-    private BoardDto convertEntityToDto(Board board)
+    public BoardDto convertEntityToDto(Board board)
     {
         return BoardDto.builder()
                 .contentIdx(board.getContentIdx())
@@ -117,14 +119,14 @@ public class BoardService
                 .build();
     }
 
-    public BoardDto getBoardByIdxAndGalleryName(String galleryName, Long contentIdx)
+    public Board getGalleryNameAndBoardIdx(String galleryName, Long contentIdx)
     {
         Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);
         if(board == null)
         {
             return null;
         }
-        return this.convertEntityToDto(board);
+        return board;
     }
 
     public BoardDto getBoardInfoByGalleryAndIdx(String galleryName, Long contentIdx)
@@ -136,8 +138,8 @@ public class BoardService
     public Long updatePost(BoardDto boardDto,String galleryName)
     {
         Board board = (Board) boardRepository.findByGalleryAndContentIdx(galleryName,boardDto.getContentIdx(),Board.class);
-        board.setContent(boardDto.getContent());
-        board.setTitle((boardDto.getTitle()));
+        board.updateContent(boardDto.getContent());
+        board.updateTitle((boardDto.getTitle()));
         return boardRepository.save(board).getContentIdx();
     }
 
@@ -253,22 +255,6 @@ public class BoardService
         }
     }
 
-    public Boolean updateLikes(String mode,String gallery,Long boardIdx)
-    {
-        Likes likes = this.likesRepository.findByContentIdxAndIsComment(boardIdx,false);
-        if(mode.equals("like"))
-        {
-            likes.updateLike();
-        }
-        else
-        {
-            likes.updateDislike();
-        }
-
-        System.out.println(likesRepository.save(likes).getLike());
-        return true;
-    }
-
     public Boolean isThereBoardInGallery(String gallery,Long boardIdx)
     {
         if(boardRepository.findByGalleryAndContentIdx(gallery,boardIdx,Board.class) == null)
@@ -291,7 +277,7 @@ public class BoardService
             }
             if(board.getTitle().length() > 20)
             {
-                board.setTitle(board.getTitle().substring(19) + "...");
+                board.updateTitle(board.getTitle().substring(19) + "...");
             }
             boardDtoList.add(this.convertEntityToDto(board));
         }
@@ -309,37 +295,58 @@ public class BoardService
         //댓글은 개추 / 3 이어야함
         //댓글이 총 몇개인지 가져와야함
 
-        Long countComment  = 0L;
-
-        Long recommendStandard = this.galleryService.getRecommendStandard(galleryName);
-        Long countRecommend = 0L;
-        if(recommendStandard < 9L)
-        {
-            recommendStandard = 9L;
-        }
-
-        Page<Board> pageEntity = this.boardRepository.findByGalleryAndLikesLikeGreaterThan(galleryName,
-                PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")),
-                        recommendStandard);
+        Page<Board> pageEntity = this.boardRepository.findByGalleryAndIsRecommendedBoardIsTrue(galleryName,
+                PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
 
         List<Board> boardList = pageEntity.getContent();
 
         for(Board board : boardList)
         {
-            countComment = this.commentService.countByBoardIdx(board.getContentIdx());
-            if(countComment >= recommendStandard / 3)
-            {
-                boardDtoList.add(this.convertEntityToDto(board));
-                countRecommend += board.getLikes().getLike();
-            }
+            boardDtoList.add(this.convertEntityToDto(board));
         }
 
-        if(boardDtoList.size() > 3)
-        {
-            this.galleryService.refreshRecommendStandard(galleryName, countRecommend / boardDtoList.size());
-        }
         return boardDtoList;
     }
+
+    public void getBoardAndUpdateGalleryRecommendInfo(String galleryName, Long boardIdx,Board board)
+    {
+        if(board.getIsRecommendedBoard())
+        {
+            ////추천누르면 -> 일단 이미 개념글인 애이면 gallery에서 max likes += 1
+            galleryService.updateRecommendInfo(galleryName,1L,false);
+        }
+    }
+
+    public void updateIsRecommendBoard(String galleryName, Long boardIdx,Board board)
+    {
+        Long recommendStandard;
+        Long boardRecommend;
+        Long countComment;
+
+        recommendStandard = this.galleryService.getRecommendStandard(galleryName);
+        //갤러리 개추기준
+
+        boardRecommend = board.getLikes().getLike();
+        //보드 개추
+        countComment = this.commentService.countByBoardIdx(boardIdx);
+        //댓글 몇개인지 체크하여 개추여부 수정
+
+        System.out.println(countComment);
+        System.out.println(recommendStandard);
+        System.out.println(recommendStandard / 3);
+        if(boardRecommend >= recommendStandard && countComment >= recommendStandard / 3)
+        {
+            board.updateIsRecommmendBoard(true);
+            boardRepository.save(board);
+            //처음 개념글 되는애면 gallery에서 count랑 like 갱신해줘야함
+            galleryService.updateRecommendInfo(galleryName,boardRecommend,true);
+        }
+    }
+
+
+
+
+
 }
 
 
