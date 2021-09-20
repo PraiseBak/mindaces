@@ -68,12 +68,14 @@ public class GalleryController
         if(pagingMode.equals("mostLikedBoard"))
         {
             boardDtoList = boardService.getMostLikelyBoardListByGallery(galleryName,page);
-            pageList = boardService.getPageList(galleryName,page);
+            Long count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
+            pageList = boardService.getPageList(galleryName,page,count);
         }
         else
         {
             boardDtoList = boardService.getGalleryPost(galleryName,page);
-            pageList = boardService.getPageList(galleryName,page);
+            Long count = boardService.getCountBoardByGallery(galleryName);
+            pageList = boardService.getPageList(galleryName,page,count);
         }
 
         model.addAttribute("pageList",pageList);

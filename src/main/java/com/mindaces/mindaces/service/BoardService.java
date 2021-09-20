@@ -77,9 +77,8 @@ public class BoardService
     }
 
 
-    public Integer[] getPageList(String galleryName,Integer curPage)
+    public Integer[] getPageList(String galleryName,Integer curPage,Long count)
     {
-        Long count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
         Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
         Double postsTotalCount = Double.valueOf(count);
         Integer totalLastPage = (int)(Math.ceil((postsTotalCount/PAGE_POST_COUNT)));
@@ -331,9 +330,6 @@ public class BoardService
         countComment = this.commentService.countByBoardIdx(boardIdx);
         //댓글 몇개인지 체크하여 개추여부 수정
 
-        System.out.println(countComment);
-        System.out.println(recommendStandard);
-        System.out.println(recommendStandard / 3);
         if(boardRecommend >= recommendStandard && countComment >= recommendStandard / 3)
         {
             board.updateIsRecommmendBoard(true);
@@ -341,12 +337,15 @@ public class BoardService
             //처음 개념글 되는애면 gallery에서 count랑 like 갱신해줘야함
             galleryService.updateRecommendInfo(galleryName,boardRecommend,true);
         }
+
+
     }
 
 
-
-
-
+    public Long getCountBoardByGallery(String galleryName)
+    {
+        return this.boardRepository.countBoardByGallery(galleryName);
+    }
 }
 
 
