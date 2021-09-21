@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -337,8 +338,6 @@ public class BoardService
             //처음 개념글 되는애면 gallery에서 count랑 like 갱신해줘야함
             galleryService.updateRecommendInfo(galleryName,boardRecommend,true);
         }
-
-
     }
 
 
@@ -346,6 +345,41 @@ public class BoardService
     {
         return this.boardRepository.countBoardByGallery(galleryName);
     }
+
+
+    public void addingPagingModel(Model model,String galleryName,int page,String pagingMode)
+    {
+        List<BoardDto> boardDtoList;
+        Long count;
+        Integer[] pageList;
+
+
+        if(pagingMode.equals("mostLikedBoard"))
+        {
+            boardDtoList = getMostLikelyBoardListByGallery(galleryName,page);
+            count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
+            pageList = getPageList(galleryName,page,count);
+        }
+        else
+        {
+            boardDtoList = getGalleryPost(galleryName,page);
+            count = getCountBoardByGallery(galleryName);
+            pageList = getPageList(galleryName,page,count);
+        }
+        model.addAttribute("pageList",pageList);
+        model.addAttribute("postList",boardDtoList);
+
+
+
+
+
+
+    }
+
+
+
+
+
 }
 
 

@@ -52,8 +52,6 @@ public class GalleryController
             @PathVariable(name = "galleryName") String galleryName
     )
     {
-        List<BoardDto> boardDtoList = new ArrayList<BoardDto>();
-        Integer[] pageList;
         Boolean isGallery = galleryService.isGallery(galleryName);
         if(!isGallery)
         {
@@ -65,23 +63,13 @@ public class GalleryController
             return errorBoardURL;
         }
 
-        if(pagingMode.equals("mostLikedBoard"))
-        {
-            boardDtoList = boardService.getMostLikelyBoardListByGallery(galleryName,page);
-            Long count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
-            pageList = boardService.getPageList(galleryName,page,count);
-        }
-        else
-        {
-            boardDtoList = boardService.getGalleryPost(galleryName,page);
-            Long count = boardService.getCountBoardByGallery(galleryName);
-            pageList = boardService.getPageList(galleryName,page,count);
-        }
+        boardService.addingPagingModel(model,galleryName,page,pagingMode);
 
-        model.addAttribute("pageList",pageList);
-        model.addAttribute("postList",boardDtoList);
+
         model.addAttribute("galleryName",galleryName);
         model.addAttribute("pagingMode",pagingMode);
+        model.addAttribute("page",page);
+
 
         return "gallery/galleryContentList";
     }
@@ -90,6 +78,8 @@ public class GalleryController
     @GetMapping(value = "/{galleryName}/{index}")
     public String postContent(
             Model model,
+            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "1") Integer page,
             @PathVariable(name="galleryName") String galleryName,
             @PathVariable(name="index") Long contentIdx,
             Authentication authentication,
@@ -126,12 +116,15 @@ public class GalleryController
             userName = "";
         }
 
-        List<CommentDto> mostLikedCommentList = likeService.getMostLikedCommentList(commentDtoList);
+        boardService.addingPagingModel(model,galleryName,page,pagingMode);
 
+        List<CommentDto> mostLikedCommentList = likeService.getMostLikedCommentList(commentDtoList);
         model.addAttribute("mostLikedCommentList",mostLikedCommentList);
         model.addAttribute("board",boardDto);
         model.addAttribute("userName",userName);
         model.addAttribute("userPassword",userPassword);
+        model.addAttribute("pagingMode",pagingMode);
+
         return "gallery/postContent";
     }
 

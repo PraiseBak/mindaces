@@ -36,7 +36,7 @@
                             <p th:text="${post.contentIdx}"></p>
                         </td>
                         <td>
-                            <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx}}" th:text="${post.title} "></a>
+                            <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="${post.title} "></a>
                         </td>
                         <td>
                             <p th:text="${post.user}"></p>
