@@ -5,59 +5,65 @@
     </head>
 
     <body>
-        <div class="full_area">
+        <div id="body-wrapper">
+            <div id="body-content">
+                <div class="full_area">
 
-            <div class="row" style="margin-top: 35px; margin-left: 17%;">
+                    <div class="row" style="margin-top: 35px; margin-left: 17%;">
 
-                <div class="col-xs-12 col-md-10">
-                    <h2>인기 토픽 ✨</h2>
+                        <div class="col-xs-12 col-md-10">
+                            <h2>인기 토픽 ✨</h2>
+                        </div>
+
+                        <div class="col-xs-12 col-md-10">
+                            <table class="table">
+                                <thead class="thead-light">
+                                <tr class="text-center">
+                                    <th scope="col">갤러리</th>
+                                    <th scope="col">제목</th>
+                                    <th scope="col">작성자</th>
+                                    <th scope="col">추천수</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="text-center" th:each="board : ${mostLikedBoardList}">
+                                    <th scope="row">
+                                        <span th:text="${board.gallery}"></span>
+                                    </th>
+                                    <td>
+                                        <a th:href="|gallery/${board.gallery}/${board.contentIdx}|">
+                                            <span th:text="${board.title}"></span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a th:href="|userInfo/${board.user}|">
+                                            <span th:text="${board.user}"></span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span th:text="${board.likes?.like}"></span>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="side_list" style="margin-left: 3%; background:whitesmoke; border:whitesmoke 5px solid;">
+                            <a th:href="@{/gallery/galleryList}" class="side_link">갤러리 리스트</a><br><br>
+                            <a href="갤러리 리스트농" class="side_link">내 페이지</a><br><br>
+                            <a href="갤러리 리스트농" class="side_link">메인 화면</a><br><br>
+                            <a href="갤러리 리스트농" class="side_link">실시간 엄준식</a><br><br>
+                        </div>
+                    </div>
+
+
                 </div>
-
-                <div class="col-xs-12 col-md-10">
-                    <table class="table">
-                        <thead class="thead-light">
-                        <tr class="text-center">
-                            <th scope="col">갤러리</th>
-                            <th scope="col">제목</th>
-                            <th scope="col">작성자</th>
-                            <th scope="col">추천수</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="text-center" th:each="board : ${mostLikedBoardList}">
-                            <th scope="row">
-                                <span th:text="${board.gallery}"></span>
-                            </th>
-                            <td>
-                                <a th:href="|gallery/${board.gallery}/${board.contentIdx}|">
-                                    <span th:text="${board.title}"></span>
-                                </a>
-                            </td>
-                            <td>
-                                <a th:href="|userInfo/${board.user}|">
-                                    <span th:text="${board.user}"></span>
-                                </a>
-                            </td>
-                            <td>
-                                <span th:text="${board.likes?.like}"></span>
-                            </td>
-
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="side_list" style="margin-left: 3%; background:whitesmoke; border:whitesmoke 5px solid;">
-                    <a th:href="@{/gallery/galleryList}" class="side_link">갤러리 리스트</a><br><br>
-                    <a href="갤러리 리스트농" class="side_link">내 페이지</a><br><br>
-                    <a href="갤러리 리스트농" class="side_link">메인 화면</a><br><br>
-                    <a href="갤러리 리스트농" class="side_link">실시간 엄준식</a><br><br>
+                <div th:replace="fragments/commonFooter :: commonFooter">
                 </div>
             </div>
-
-
         </div>
 
-
     </body>
+
 </html>
 

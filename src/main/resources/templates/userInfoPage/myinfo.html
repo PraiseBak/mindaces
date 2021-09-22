@@ -3,12 +3,15 @@
       xmlns="http://www.w3.org/1999/html">
 <head th:insert="base/head.html">
 </head>
-<body>
-<h1>내정보 확인 페이지입니다.</h1>
-<hr>
-</body>
+    <body>
+        <div id="body-wrapper">
+            <div id="body-content">
+                <h1>내정보 확인 페이지입니다.</h1>
+                <hr>
+                <div th:replace="fragments/commonFooter :: commonFooter">
+                </div>
+            </div>
+        </div>
+    </body>
+
 </html>
-
-<script>
-
-</script>

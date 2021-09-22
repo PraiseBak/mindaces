@@ -66,8 +66,7 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 // 403 예외처리 핸들링
                     //this line has effect when user is authenticated
                     .exceptionHandling()
-                        .accessDeniedPage("/user/denied");
-
+                        .accessDeniedPage("/error/noPermission");
 
         http.csrf()
                             .ignoringAntMatchers("/API/**")

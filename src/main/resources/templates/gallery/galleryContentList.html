@@ -5,64 +5,67 @@
 
 <body>
 
-    <div class="container" style="margin-top:5%">
+    <div id="body-wrapper">
+        <div id="body-content">
+            <div class="container" style="margin-top:5%">
+                <div class="content-part col-sm-12" style="margin-top: 10px; width: 100%">
+                    <div class="gallery-name-part" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
+                        <a href="">
+                            <h2 th:text="|${galleryName} 갤러리|"></h2>
+                        </a>
+                    </div>
 
+                    <div class="header">
+                        <button class="btn-outline-dark btn" th:onclick="location.href='?pagingMode='">전체글</button>
+                        <button class="btn-outline-dark btn" th:onclick="location.href='?pagingMode=mostLikedBoard'">개념글</button>
+                    </div>
 
-        <div class="content-part col-sm-12" style="margin-top: 10px; width: 100%">
-            <div class="gallery-name-part" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
-                <a href="">
-                    <h2 th:text="|${galleryName} 갤러리|"></h2>
-                </a>
+                    <table class="table table-borderless mt-4">
+                        <thead class="thead-dark">
+                        <tr class="text-center table-header">
+                            <th scope="col">인덱스</th>
+                            <th scope="col">제목</th>
+                            <th scope="col">작성자</th>
+                            <th scope="col">추천수</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="post : ${postList}" th:height="50px" class="text-center">
+                                <td>
+                                    <p th:text="${post.contentIdx}"></p>
+                                </td>
+                                <td>
+                                    <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="${post.title} "></a>
+                                </td>
+                                <td>
+                                    <p th:text="${post.user}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${post.likes?.like}"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="">
+                        <button class="btn btn-dark float-right" style="margin-right: 100px"
+                                th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite} + '\''">글쓰기</button>
+                    </div>
+                    <div class="text-center " style="float:none; margin:0 auto">
+                    <span th:each="pageNum : ${pageList}" th:inline="text">
+                        <button class="btn btn-dark" th:onclick="|location.href='@{'?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
+                    </span>
+
+                    </div>
+                </div>
             </div>
 
-            <div class="header">
-                <button class="btn-outline-dark btn" th:onclick="location.href='?pagingMode='">전체글</button>
-                <button class="btn-outline-dark btn" th:onclick="location.href='?pagingMode=mostLikedBoard'">개념글</button>
-            </div>
 
-            <table class="table">
-                <thead class="thead-light">
-                    <tr class="text-center">
-                        <th scope="col">인덱스</th>
-                        <th scope="col">제목</th>
-                        <th scope="col">작성자</th>
-                        <th scope="col">추천수</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr th:each="post : ${postList}" th:height="50px" class="text-center">
-                        <td>
-                            <p th:text="${post.contentIdx}"></p>
-                        </td>
-                        <td>
-                            <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="${post.title} "></a>
-                        </td>
-                        <td>
-                            <p th:text="${post.user}"></p>
-                        </td>
-                        <td>
-                            <p th:text="${post.likes?.like}"></p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="">
-                <button class="btn btn-dark float-right" style="margin-right: 100px"
-                        th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite} + '\''">글쓰기</button>
-            </div>
-            <div class="text-center " style="float:none; margin:0 auto">
-            <span th:each="pageNum : ${pageList}" th:inline="text">
-                <button class="btn-lg" th:onclick="|location.href='@{'?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
-            </span>
-
+            <div th:replace="fragments/commonFooter :: commonFooter">
             </div>
         </div>
     </div>
-
-
-
 
 
 </body>

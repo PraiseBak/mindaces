@@ -3,8 +3,14 @@
 <head th:insert="base/head.html"></head>
 
 <body>
-<h1>비정상적인 접근입니다</h1>
-<h5 th:text="${errorMsg}"></h5>
-<a th:href="@{'/'}">홈으로 이동</a>
+    <div id="body-wrapper">
+        <div id="body-content">
+            <h1>비정상적인 접근입니다</h1>
+            <h5 th:text="${errorMsg}"></h5>
+            <a th:href="@{'/'}">홈으로 이동</a>
+        </div>
+        <div th:replace="fragments/commonFooter :: commonFooter">
+        </div>
+    </div>
 </body>
 </html>
