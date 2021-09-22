@@ -55,6 +55,7 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                     .formLogin()
                     .loginPage("/user/login")
                     .defaultSuccessUrl("/")
+                    .failureUrl("/loginError.html")
                     .permitAll()
                 .and() // 로그아웃 설정
                     .logout()

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
 <head th:insert="base/head.html">
     <meta charset="UTF-8">
     <title>Mindaces</title>
@@ -18,27 +19,69 @@
 <hr>
 
 <div class="row">
-    <div class="col-md-5"></div>
     <div class="col-md-5">
-        <form action="/user/login" method="post">
+
+    </div>
+    <div class="col-md-3">
+        <form action="/user/login" method="post" class="form-input row" >
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <div id="idArea">
-                <input type="text" minlength="2" maxlength="20" name="username" required id="userID" placeholder="사용할 아이디을 입력해주세요(사용자는 이 아이디로 보이게 됩니다)">
-            </div>
-            <div>
-                <input type="password" minlength="8" maxlength="20" required id="userPassword" name="password" placeholder="비밀번호">
+
+            <div class="col-sm-8">
+                <p class="col-sm-12 text-center" th:if="${errorMsg}" th:text="${errorMsg}"></p>
             </div>
 
-            <button type="submit">제출</button>
+            <div class="col-sm-4"></div>
 
+            <div id="idArea" class="col-sm-8">
+                <input class="form-control" type="text" minlength="2" maxlength="20" name="username" required id="userID" placeholder="아이디">
+            </div>
+            <div class="col-sm-4"></div>
+
+            <div class="col-sm-8">
+                <input class="form-control" type="password" minlength="8" maxlength="20" required id="userPassword" name="password" placeholder="비밀번호">
+                <button class="form-control btn btn-dark" style="border:none;">제출</button>
+            </div>
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-8">
+                <!--TODO!-->
+                <button type="button" class="outline-border-none col-sm-6 p-0" style="float: left;">아이디 찾기</button>
+                <button type="button" class="outline-border-none col-sm-6 p-0" style="float: left;">비밀번호 찾기</button>
+            </div>
+
+            <div class="col-sm-4">
+            </div>
         </form>
+
+        <hr class="my-4">
+
+        <div class="row orArea">
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-9">
+                <h1>OR</h1>
+            </div>
+        </div>
+
+        <div class="googleOauthArea">
+            <button class="btn btn-dark btn-lg col-sm-8" style="margin-top: 50px" th:onclick="|location.href='@{/oauth2/authorization/google}'|  ">구글로 로그인</button>
+        </div>
+    </div>
+    <div class="col-md-5">
+    </div>
+
+
+    <style>
+        .outline-border-none
+        {
+            outline: none;
+            border: none;
+        }
+    </style>
 
         <!-- th:onclick="|location.href='@{/oauth2/authorization/google}'| !-->
 
-        <button class="btn-lg" th:onclick="|location.href='@{/oauth2/authorization/google}'|  ">
-            구글로 로그인
-        </button>
-    </div>
+
 
 </div>
 

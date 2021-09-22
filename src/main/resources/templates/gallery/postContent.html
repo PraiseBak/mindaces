@@ -42,10 +42,10 @@
                 <div class="btns-part float-right">
                     <div class="modifyBtnsArea row" style="display: block">
                         <div class="modifyBtns col-sm-0 float-sm-right">
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],modifyURL,[[${board.gallery}]])">수정</button>
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(modifyURL) ">수정</button>
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],deleteURL,[[${board.gallery}]])">삭제</button>
-                            <button class="btn btn-primary" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(deleteURL) ">삭제</button>
+                            <button class="btn btn-dark" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],modifyURL,[[${board.gallery}]])">수정</button>
+                            <button class="btn btn-dark" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(modifyURL) ">수정</button>
+                            <button class="btn btn-dark" id="modifyBtn" sec:authorize="isAuthenticated()" th:onclick="checkBoardUserAjax([[${board.contentIdx}]],deleteURL,[[${board.gallery}]])">삭제</button>
+                            <button class="btn btn-dark" id="modifyBtn" sec:authorize="!isAuthenticated()" th:onclick="foldBoardPasswordInput(deleteURL) ">삭제</button>
                         </div>
                     </div>
                     <div class="inputPasswordArea row "  sec:authorize="!isAuthenticated()" id="inputPasswordArea" style="display: none; width: 300px; margin-top:10px;">
@@ -53,8 +53,8 @@
                             <input type="password" placeholder="게시글 비밀번호" class="text-black" id="inputPassword" name="inputPassword" value="">
                         </div>
                         <div class="col-sm-0 float-sm-right">
-                            <button class="btn btn-primary" th:onclick="getPassword([[${board.contentIdx}]],[[${board.gallery}]])">제출</button>
-                            <button class="btn btn-primary btn-" th:onclick="foldBoardPasswordInput('')">취소</button>
+                            <button class="btn btn-dark" th:onclick="getPassword([[${board.contentIdx}]],[[${board.gallery}]])">제출</button>
+                            <button class="btn btn-dark btn-" th:onclick="foldBoardPasswordInput('')">취소</button>
                         </div>
                     </div>
                 </div>
@@ -112,8 +112,8 @@
                                 <a href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.contentIdx}]],this)" th:text="|👍 ${comment.likes?.like}|"></a>
                             </div>
 
-                            <div class="col-sm-0 form-input btn-primary" id="modifySubmitBtn" style="display: none">
-                                <button class="btn btn-primary" onclick="modifySubmit(this)">제출</button>
+                            <div class="col-sm-0 form-input btn-dark" id="modifySubmitBtn" style="display: none">
+                                <button class="btn btn-dark" onclick="modifySubmit(this)">제출</button>
                             </div>
                         </div>
                     </form>
@@ -129,7 +129,7 @@
                     <textarea minlength="2" maxlength="180" id="commentContent" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>
                 </div>
                 <div class="col-sm-12 form-input" style="margin-bottom: 20px">
-                    <button class="btn btn-primary float-right">제출</button>
+                    <button class="btn btn-dark float-right">제출</button>
                 </div>
             </form>
         </div>
@@ -167,7 +167,7 @@
         </table>
 
         <div class="">
-            <button class="btn btn-primary float-right" style="margin-right: 100px"
+            <button class="btn btn-dark float-right" style="margin-right: 100px"
                     th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite} + '\''">글쓰기</button>
         </div>
         <div class="text-center " style="float:none; margin:0 auto">

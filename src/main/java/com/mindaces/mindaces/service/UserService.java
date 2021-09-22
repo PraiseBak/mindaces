@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService
         if(userEntityWrapper.isEmpty())
         {
             System.out.println("존재하지 않은 유저입니다");
-            throw new UsernameNotFoundException(userID);
+            throw new UsernameNotFoundException(userID + " : 존재하지 않는 유저입니다");
         }
 
         User user = userEntityWrapper.get();

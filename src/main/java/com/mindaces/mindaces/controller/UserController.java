@@ -4,6 +4,7 @@ import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,17 @@ public class UserController
     {
         return "userInfoPage/login";
     }
+
+
+    // Login form with error
+    @RequestMapping("/loginError.html")
+    public String loginError(Model model) {
+        model.addAttribute("errorMsg", "로그인에 실패하였습니다.");
+        return "userInfoPage/login";
+    }
+
+
+
 
     @GetMapping("/user/login/result")
     public String loginResult()
