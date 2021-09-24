@@ -271,10 +271,8 @@ public class LikeService
         List<CommentDto> mostLikedCommentDtoList = new ArrayList<>();
         int count = 0;
 
-        for (CommentDto commentDto : commentDtoList)
-        {
-            tmpCommentDtoList.add(commentDto);
-        }
+        System.out.println(commentDtoList);
+        tmpCommentDtoList.addAll(commentDtoList);
 
         tmpCommentDtoList.sort(new LikeComparator<CommentDto>());
 

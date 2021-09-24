@@ -177,6 +177,10 @@ function modifyInputToggle(commentsTag)
 
 function getCommentSubmitURL(url)
 {
+    fullUrl = window.location.href.split("?");
+    url = fullUrl[0];
+    params = fullUrl[1];
+
     if(url.charAt(url.length-1) == '/')
     {
         url += commentSubmitMode;
@@ -185,6 +189,7 @@ function getCommentSubmitURL(url)
     {
         url += "/" + commentSubmitMode;
     }
+    url += "?" + params;
     return url;
 }
 

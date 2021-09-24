@@ -6,6 +6,7 @@ import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
 import com.mindaces.mindaces.dto.BoardDto;
+import com.mindaces.mindaces.dto.CommentDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,7 +45,6 @@ public class BoardService
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
-        boardDto.setIsLoggedUser(0L);
 
         Board savedBoard= boardRepository.save(boardDto.toEntity());
 
@@ -78,25 +78,38 @@ public class BoardService
     }
 
 
-    public Integer[] getPageList(String galleryName,Integer curPage,Long count)
+
+    public Integer[] getPageList(int curPage,Long count)
     {
+
         Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
         Double postsTotalCount = Double.valueOf(count);
-        Integer totalLastPage = (int)(Math.ceil((postsTotalCount/PAGE_POST_COUNT)));
-        Integer blockLastPageNum = (totalLastPage > curPage + BLOCK_PAGE_NUM_COUNT)
-                ? curPage + BLOCK_PAGE_NUM_COUNT
-                : totalLastPage;
+        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/ PAGE_POST_COUNT)));
+        Integer blockStartPageNum =
+                (curPage <= BLOCK_PAGE_NUM_COUNT / 2)
+                        ? 1
+                        : curPage - BLOCK_PAGE_NUM_COUNT / 2;
+        Integer blockLastPageNum =
+                (totalLastPageNum > blockStartPageNum + BLOCK_PAGE_NUM_COUNT - 1 )
+                        ? blockStartPageNum + BLOCK_PAGE_NUM_COUNT - 1
+                        : totalLastPageNum;
 
-        curPage = (curPage <= 3) ? 1 : curPage - 2;
-        for (int val = curPage, idx = 0; val <= blockLastPageNum; val++, idx++) {
-            if(totalLastPage == 1)
+        System.out.println(postsTotalCount);
+        System.out.println(totalLastPageNum);
+        System.out.println(blockStartPageNum);
+        System.out.println(blockLastPageNum);
+
+
+        for (int val = blockStartPageNum, idx = 0; val <= blockLastPageNum; val++, idx++) {
+            pageList[idx] = val;
+            if(totalLastPageNum == 1)
             {
                 break;
             }
-            pageList[idx] = val;
         }
         return pageList;
     }
+
 
     public BoardDto getBoardDtoByGalleryNameAndContentIdx(String galleryName,Long contentIdx)
     {
@@ -347,38 +360,27 @@ public class BoardService
     }
 
 
-    public void addingPagingModel(Model model,String galleryName,int page,String pagingMode)
+    public void addingPagedBoardToModel(Model model, String galleryName, int page, String pagingMode)
     {
         List<BoardDto> boardDtoList;
         Long count;
         Integer[] pageList;
 
-
         if(pagingMode.equals("mostLikedBoard"))
         {
             boardDtoList = getMostLikelyBoardListByGallery(galleryName,page);
             count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
-            pageList = getPageList(galleryName,page,count);
+            pageList = getPageList(page,count);
         }
         else
         {
             boardDtoList = getGalleryPost(galleryName,page);
             count = getCountBoardByGallery(galleryName);
-            pageList = getPageList(galleryName,page,count);
+            pageList = getPageList(page,count);
         }
         model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
-
-
-
-
-
-
     }
-
-
-
-
 
 }
 

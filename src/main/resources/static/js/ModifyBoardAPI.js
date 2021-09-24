@@ -41,13 +41,11 @@ function checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName)
 
 function checkBoardUserAjax(contentIdx, url, galleryName)
 {
-
     if(!isWriteLoggedBoard)
     {
         alert("권한이 없습니다");
         return;
     }
-
     var boardDto =
     {
         contentIdx: contentIdx,

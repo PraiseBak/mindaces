@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //보여주거나 갤러리에 관련된것만 (board 수정하는건 BoardController)
@@ -63,7 +62,7 @@ public class GalleryController
             return errorBoardURL;
         }
 
-        boardService.addingPagingModel(model,galleryName,page,pagingMode);
+        boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
 
 
         model.addAttribute("galleryName",galleryName);
@@ -80,6 +79,7 @@ public class GalleryController
             Model model,
             @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
+            @RequestParam(required = false,defaultValue = "1") Integer commentPage,
             @PathVariable(name="galleryName") String galleryName,
             @PathVariable(name="index") Long contentIdx,
             Authentication authentication,
@@ -89,6 +89,7 @@ public class GalleryController
         Boolean isGallery;
         BoardDto boardDto;
         List<CommentDto> commentDtoList;
+        List<CommentDto> mostLikedCommentList;
         String userName;
         String userPassword = "****";
 
@@ -99,8 +100,7 @@ public class GalleryController
         }
 
         boardDto = boardService.getBoardDtoByGalleryNameAndContentIdx(galleryName,contentIdx);
-        commentDtoList = commentService.getCommentByContentIdxAndGalleryName(galleryName,contentIdx);
-        model.addAttribute("commentList",commentDtoList);
+//        commentDtoList = commentService.getCommentByContentIdxAndGalleryName(galleryName,contentIdx);
         if(principal != null)
         {
             userName = principal.getAttribute("name");
@@ -116,9 +116,10 @@ public class GalleryController
             userName = "";
         }
 
-        boardService.addingPagingModel(model,galleryName,page,pagingMode);
-
-        List<CommentDto> mostLikedCommentList = likeService.getMostLikedCommentList(commentDtoList);
+        boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
+        commentService.addingPagedCommentToBoModel(model,galleryName,contentIdx,commentPage);
+        mostLikedCommentList = likeService.getMostLikedCommentList((List<CommentDto>) model.getAttribute("commentList"));
+//        model.addAttribute("commentList",commentDtoList);
         model.addAttribute("mostLikedCommentList",mostLikedCommentList);
         model.addAttribute("board",boardDto);
         model.addAttribute("userName",userName);
