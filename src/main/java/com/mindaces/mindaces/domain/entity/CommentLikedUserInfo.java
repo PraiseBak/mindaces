@@ -13,9 +13,9 @@ import javax.persistence.*;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
-@Table(name = "COMMENT_LIKE")
+@Table(name = "COMMENT_LIKED_USER_INFO")
 @NoArgsConstructor
-public class CommentLikeUserInfo
+public class CommentLikedUserInfo
 {
     @Id
     @Column(name = "like_idx")
@@ -28,8 +28,10 @@ public class CommentLikeUserInfo
     @Column(name="user_name",columnDefinition="varchar(45) default '-'")
     public String userName;
 
+
+
     @Builder
-    public CommentLikeUserInfo(Long commentIdx, String likedIP, String userName)
+    public CommentLikedUserInfo(Long commentIdx, String likedIP, String userName)
     {
         this.commentIdx = commentIdx;
         this.likedIP = likedIP;

@@ -21,18 +21,18 @@ public class GalleryController
     private BoardService boardService;
     private GalleryService galleryService;
     private RoleService roleService;
-    private LikeService likeService;
+    private LikesService likesService;
 
     String errorGalleryURL = "redirect:/error/GalleryError";
     String errorBoardURL = "redirect:/error/BoardError";
 
-    public GalleryController(BoardService boardService, GalleryService galleryService, CommentService commentService,RoleService roleService,LikeService likeService)
+    public GalleryController(BoardService boardService, GalleryService galleryService, CommentService commentService, RoleService roleService, LikesService likesService)
     {
         this.commentService = commentService;
         this.boardService = boardService;
         this.galleryService = galleryService;
         this.roleService = roleService;
-        this.likeService = likeService;
+        this.likesService = likesService;
     }
 
     @GetMapping(value = "/galleryList" )
@@ -64,11 +64,9 @@ public class GalleryController
 
         boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
 
-
         model.addAttribute("galleryName",galleryName);
         model.addAttribute("pagingMode",pagingMode);
         model.addAttribute("page",page);
-
 
         return "gallery/galleryContentList";
     }
@@ -118,7 +116,7 @@ public class GalleryController
 
         boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
         commentService.addingPagedCommentToBoModel(model,galleryName,contentIdx,commentPage);
-        mostLikedCommentList = likeService.getMostLikedCommentList((List<CommentDto>) model.getAttribute("commentList"));
+        mostLikedCommentList = likesService.getMostLikedCommentList((List<CommentDto>) model.getAttribute("commentList"));
 //        model.addAttribute("commentList",commentDtoList);
         model.addAttribute("mostLikedCommentList",mostLikedCommentList);
         model.addAttribute("board",boardDto);

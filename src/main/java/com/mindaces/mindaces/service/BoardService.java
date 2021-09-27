@@ -2,6 +2,7 @@ package com.mindaces.mindaces.service;
 
 
 import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.entity.BoardLikedUserInfo;
 import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
@@ -53,6 +54,7 @@ public class BoardService
                 .isComment(false)
                 .build();
         savedBoard.updateLikes(likes);
+
         boardRepository.save(savedBoard);
         return 0L;
     }
@@ -93,11 +95,6 @@ public class BoardService
                 (totalLastPageNum > blockStartPageNum + BLOCK_PAGE_NUM_COUNT - 1 )
                         ? blockStartPageNum + BLOCK_PAGE_NUM_COUNT - 1
                         : totalLastPageNum;
-
-        System.out.println(postsTotalCount);
-        System.out.println(totalLastPageNum);
-        System.out.println(blockStartPageNum);
-        System.out.println(blockLastPageNum);
 
 
         for (int val = blockStartPageNum, idx = 0; val <= blockLastPageNum; val++, idx++) {

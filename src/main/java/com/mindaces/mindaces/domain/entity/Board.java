@@ -5,6 +5,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -14,7 +16,6 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "BOARD")
 public class Board extends BaseTimeEntity
-
 {
 
     //gallery 이름, user 이름으로 foregin key 설정할거임 이거 칼럼에서 추가하는거 있잖아 그거 하자
@@ -48,6 +49,9 @@ public class Board extends BaseTimeEntity
     @Column(name = "is_recommended_board")
     private Boolean isRecommendedBoard = false;
 
+    @OneToMany
+    @JoinColumn(name = "content_idx")
+    private List<BoardLikedUserInfo> boardLikedUserInfoList = new ArrayList<>();
 
     public void updateLikes(Likes likes)
     {

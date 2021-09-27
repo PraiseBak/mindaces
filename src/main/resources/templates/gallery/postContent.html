@@ -178,7 +178,7 @@
 
                 <div class="">
                     <button class="btn btn-dark float-right" style="margin-right: 100px"
-                            th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite} + '\''">글쓰기</button>
+                            th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite + '?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}   } +  '\''">글쓰기</button>
                 </div>
                 <div class="text-center " style="float:none; margin:0 auto">
                     <span th:each="pageNum : ${pageList}" th:inline="text">

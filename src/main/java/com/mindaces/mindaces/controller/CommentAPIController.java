@@ -2,7 +2,7 @@ package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.service.CommentService;
-import com.mindaces.mindaces.service.LikeService;
+import com.mindaces.mindaces.service.LikesService;
 import com.mindaces.mindaces.service.RoleService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,13 +18,13 @@ import java.util.Map;
 @RequestMapping("/API")
 public class CommentAPIController
 {
-    LikeService likeService;
+    LikesService likesService;
     CommentService commentService;
     RoleService roleService;
 
-    CommentAPIController(CommentService commentService, RoleService roleService,LikeService likeService)
+    CommentAPIController(CommentService commentService, RoleService roleService, LikesService likesService)
     {
-        this.likeService = likeService;
+        this.likesService = likesService;
         this.commentService = commentService;
         this.roleService = roleService;
     }
@@ -59,7 +59,7 @@ public class CommentAPIController
     @ResponseBody
     public String recommendCommentRequestAPI(@RequestParam Map<String, Object> map, HttpServletRequest request, Authentication authentication)
     {
-        String result = this.likeService.commentRecommand(map, request,authentication);
+        String result = this.likesService.commentRecommand(map, request,authentication);
         return result;
     }
 
@@ -67,7 +67,7 @@ public class CommentAPIController
     @ResponseBody
     public Map<String,Long> getRecentCommentLikesAPI(@RequestParam(value = "commentIdx") Long commentIdx)
     {
-        return this.likeService.getRecentCommentLikes(commentIdx);
+        return this.likesService.getRecentCommentLikes(commentIdx);
     }
 
 

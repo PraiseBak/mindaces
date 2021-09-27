@@ -2,7 +2,7 @@ package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.service.BoardService;
-import com.mindaces.mindaces.service.LikeService;
+import com.mindaces.mindaces.service.LikesService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +21,13 @@ import java.util.UUID;
 @RequestMapping("/API")
 public class BoardAPIController
 {
-    LikeService likeService;
+    LikesService likesService;
     BoardService boardService;
 
-    BoardAPIController(BoardService boardService, LikeService likeService)
+    BoardAPIController(BoardService boardService, LikesService likesService)
     {
         this.boardService = boardService;
-        this.likeService = likeService;
+        this.likesService = likesService;
     }
 
 
@@ -136,7 +136,7 @@ public class BoardAPIController
     @ResponseBody
     public String recommendRequestAPI(@RequestParam Map<String, Object> map, HttpServletRequest request,Authentication authentication)
     {
-        String result = this.likeService.recommand(map, request,authentication);
+        String result = this.likesService.recommand(map, request,authentication);
         return result;
     }
 
@@ -145,7 +145,7 @@ public class BoardAPIController
     public Map<String,Long> getRecentLikesAPI(@RequestParam(value = "gallery") String gallery, @RequestParam(value = "boardIdx") Long boardIdx)
     {
         Map<String,Long> map = new HashMap<String,Long>();
-        map = likeService.getRecentCommentLikes(gallery,boardIdx);
+        map = likesService.getRecentCommentLikes(gallery,boardIdx);
         return map;
     }
 

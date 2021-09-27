@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.transaction.Transactional;
+
 @Controller
 @RequestMapping(value = "/gallery")
 public class CommentController
@@ -26,7 +28,6 @@ public class CommentController
         this.commentService = commentService;
         this.boardService = boardService;
     }
-
 
     @PostMapping(value = "/{galleryName}/{index}")
     public String commentAdd(
@@ -48,6 +49,7 @@ public class CommentController
         return "redirect:" + contentIdx;
     }
 
+    @Transactional
     @PostMapping(value = "/{galleryName}/{index}/deleteComment")
     public String commentDelete(
             @PathVariable(name="galleryName") String galleryName,
@@ -62,7 +64,7 @@ public class CommentController
         commentService.deleteComment(commentDto,authentication);
         attributes.addAttribute("pagingMode",pagingMode);
         attributes.addAttribute("page",page);
-        return "redirect:./";
+        return "redirect:../" + contentIdx;
     }
 
     @PostMapping(value = "/{galleryName}/{index}/modifyComment")
@@ -80,7 +82,7 @@ public class CommentController
         commentService.modifyComment(commentDto,authentication);
         attributes.addAttribute("pagingMode",pagingMode);
         attributes.addAttribute("page",page);
-        return "redirect:./";
+        return "redirect:../" + contentIdx;
     }
     
 }

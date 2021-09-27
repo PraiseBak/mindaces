@@ -9,6 +9,6 @@ import java.util.List;
 public interface LikesRepository extends JpaRepository<Likes, LikesID>
 {
     Likes findByContentIdxAndIsComment(Long contentIdx,boolean isComment);
-    void deleteByIsCommentAndContentIdx(boolean isComment, Long commentIdx);
+    void deleteByContentIdxAndIsComment(Long contentIdx,boolean isComment);
 
 }

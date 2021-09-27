@@ -1,13 +1,10 @@
 package com.mindaces.mindaces.dto;
 
-import com.mindaces.mindaces.domain.entity.Gallery;
-import com.mindaces.mindaces.domain.entity.LikedUserInfo;
+import com.mindaces.mindaces.domain.entity.BoardLikedUserInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.Column;
 
 
 @Getter
@@ -15,27 +12,27 @@ import javax.persistence.Column;
 @ToString
 @NoArgsConstructor
 
-public class LikedUserInfoDto
+public class BoardLikedUserInfoDto
 {
     public String gallery;
-    public Long boardIdx;
+    public Long contentIdx;
     public String likedIP;
     public String disLikedIP;
     private String userName;
 
 
-    public LikedUserInfo toEntity()
+    public BoardLikedUserInfo toEntity()
     {
 
-        LikedUserInfo linkedUserInfo = LikedUserInfo.builder()
+        BoardLikedUserInfo linkedUserInfo = BoardLikedUserInfo.builder()
                 .gallery(gallery)
-                .boardIdx(boardIdx)
+                .contentIdx(contentIdx)
                 .likedIP(likedIP)
                 .disLikedIP(disLikedIP)
                 .userName(userName)
                 .build();
 
-        return LikedUserInfo.builder().build();
+        return BoardLikedUserInfo.builder().build();
     }
 
 

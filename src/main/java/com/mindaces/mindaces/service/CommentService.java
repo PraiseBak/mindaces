@@ -147,7 +147,7 @@ public class CommentService
             Comment matchComment = getMatchPasswordComment(commentDto);
             if(matchComment != null)
             {
-                likesRepository.deleteByIsCommentAndContentIdx(true,commentDto.getContentIdx());
+                likesRepository.deleteByContentIdxAndIsComment(commentDto.getContentIdx(),true);
                 commentRepository.deleteById(commentDto.getContentIdx());
                 return true;
             }
@@ -157,7 +157,7 @@ public class CommentService
         {
             if(isSameUser(commentDto,authentication))
             {
-                likesRepository.deleteByIsCommentAndContentIdx(true,commentDto.getContentIdx());
+                likesRepository.deleteByContentIdxAndIsComment(commentDto.getContentIdx(),true);
                 commentRepository.deleteById(commentDto.getContentIdx());
                 return true;
             }
@@ -326,5 +326,9 @@ public class CommentService
 
         model.addAttribute("commentList",commentDtoList);
         model.addAttribute("commentPageList",pageList);
+    }
+
+    public void deleteCommentByBoardIdx(Long contentIdx)
+    {
     }
 }

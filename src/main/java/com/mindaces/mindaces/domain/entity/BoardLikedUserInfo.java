@@ -2,7 +2,6 @@ package com.mindaces.mindaces.domain.entity;
 
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -11,29 +10,34 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "liked_user_info")
-public class LikedUserInfo
+@Entity(name = "BOARD_LIKED_USERINFO")
+public class BoardLikedUserInfo
 {
     @Id
-    @Column(name="like_id")
+    @Column(name="board_like_idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long likeIdx;
+    public Long boardLikeIdx;
+
+    @Column(name="content_idx")
+    public Long contentIdx;
+
     @Column(nullable = false)
     public String gallery;
-    @Column(name="board_idx",nullable = false)
-    public Long boardIdx;
+
     @Column(name="liked_ip",columnDefinition="varchar(45) default '-'")
     public String likedIP;
+
     @Column(name="disliked_ip",columnDefinition="varchar(45) default '-'")
     public String disLikedIP;
+
     @Column(name="user_name",columnDefinition="varchar(45) default '-'")
     public String userName;
 
     @Builder
-    public LikedUserInfo(String gallery,Long boardIdx,String likedIP,String disLikedIP,String userName)
+    public BoardLikedUserInfo(String gallery, Long contentIdx, String likedIP, String disLikedIP, String userName)
     {
         this.gallery = gallery;
-        this.boardIdx = boardIdx;
+        this.contentIdx = contentIdx;
         this.likedIP = likedIP;
         this.disLikedIP = disLikedIP;
         this.userName = userName;
