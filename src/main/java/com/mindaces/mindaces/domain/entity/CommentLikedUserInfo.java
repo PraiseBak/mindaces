@@ -21,14 +21,14 @@ public class CommentLikedUserInfo
     @Column(name = "like_idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long likeIdx;
-    @Column(name="comment_idx",nullable = false)
+
+    @Column(name="comment_idx")
     public Long commentIdx;
+
     @Column(name="liked_ip",columnDefinition="varchar(45) default '-'")
     public String likedIP;
     @Column(name="user_name",columnDefinition="varchar(45) default '-'")
     public String userName;
-
-
 
     @Builder
     public CommentLikedUserInfo(Long commentIdx, String likedIP, String userName)

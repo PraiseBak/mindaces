@@ -90,8 +90,8 @@ public class CommentService
 
         return true;
     }
-
-    public Boolean modifyCommendValidCheck(CommentDto commentDto)
+    /*
+    public Boolean modifyCommentValidCheck(CommentDto commentDto)
     {
         String content = commentDto.getContent();
         if(content.length() < 2 || content.getBytes().length > 65535)
@@ -102,6 +102,7 @@ public class CommentService
 
     }
 
+     */
     @Transactional
     public Boolean addComment(String galleryName, Long contentIdx, Authentication authentication, CommentDto commentDto)
     {
@@ -181,7 +182,7 @@ public class CommentService
 
         return null;
     }
-
+    /*
     public void modifyComment(CommentDto commentDto, Authentication authentication)
     {
         if(!modifyCommendValidCheck(commentDto))
@@ -211,6 +212,7 @@ public class CommentService
         }
 
     }
+    */
 
     public Boolean isSameUser(CommentDto commentDto,Authentication authentication)
     {
@@ -330,5 +332,10 @@ public class CommentService
 
     public void deleteCommentByBoardIdx(Long contentIdx)
     {
+    }
+
+    public void saveComment(Comment comment)
+    {
+        this.commentRepository.save(comment);
     }
 }

@@ -49,7 +49,7 @@ public class Board extends BaseTimeEntity
     @Column(name = "is_recommended_board")
     private Boolean isRecommendedBoard = false;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "content_idx")
     private List<BoardLikedUserInfo> boardLikedUserInfoList = new ArrayList<>();
 

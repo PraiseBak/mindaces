@@ -20,26 +20,20 @@ public class BoardController
     CommentService commentService;
     GalleryService galleryService;
     RoleService roleService;
-    BoardLikedUserInfoService boardLikedUserInfoService;
     //TODO commentLikedUserInfo Service
-    CommentLikedUserInfoService commentLikedUserInfoService;
     LikesService likesService;
     String errorGalleryURL = "redirect:/error/galleryMiss";
     String errorWriteURL = "redirect:/error/writeError";
     final String galleryError = "존재하지 않는 갤러리입니다";
 
-    BoardController(BoardService boardService, GalleryService galleryService, RoleService roleService,CommentService commentService,
-                    BoardLikedUserInfoService boardLikedUserInfoService,LikesService likesService)
+    BoardController(BoardService boardService, GalleryService galleryService, RoleService roleService,CommentService commentService,LikesService likesService)
     {
-        this.boardLikedUserInfoService = boardLikedUserInfoService;
         this.likesService = likesService;
         this.boardService = boardService;
         this.galleryService = galleryService;
         this.roleService = roleService;
         this.commentService = commentService;
     }
-
-
 
     @GetMapping(value = "/{galleryName}/postWrite")
     public String postWrite(
@@ -200,7 +194,6 @@ public class BoardController
         {
             commentService.deleteCommentByBoardIdx(contentIdx);
             boardService.deletePost(contentIdx);
-            boardLikedUserInfoService.deleteLikedUserInfoByBoardIdx(contentIdx);
             //TODO deleteCommentLikedUserInfoService
             //CommentLikedUserInfoService.deleteLikedUserInfoByBoardIdx(contentIdx);
             

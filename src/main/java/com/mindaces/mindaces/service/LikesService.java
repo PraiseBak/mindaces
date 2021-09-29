@@ -204,7 +204,7 @@ public class LikesService
     }
 
 
-
+    @Transactional
     public String commentRecommand(Map<String, Object> param, HttpServletRequest request, Authentication authentication)
     {
         Long commentIdx = Long.parseLong((String) param.get("contentIdx"));
@@ -212,6 +212,7 @@ public class LikesService
         String userName = roleService.getUserName(authentication);
         Boolean isSameRecommend;
         String validCheckResult = "통과";
+        Comment comment;
         CommentLikedUserInfo commentLikedUserInfo;
         isSameRecommend = checkDupliComment(commentIdx,requestIP,userName);
 
@@ -221,15 +222,16 @@ public class LikesService
         }
 
         commentLikedUserInfo = commentLikeEntityBuild(commentIdx,requestIP,userName);
-
-
-
         commentLikeRepository.save(commentLikedUserInfo);
 
         if(!commentService.updateLikes(commentIdx))
         {
             return "예기지 못한 오류가 발생했습니다";
         }
+
+        comment = commentService.getCommentByID(commentIdx);
+        comment.getCommentLikedUserInfoList().add(commentLikedUserInfo);
+        commentService.saveComment(comment);
 
         return validCheckResult;
     }

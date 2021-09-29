@@ -21,11 +21,10 @@
 
                         <div class="float-right">
                             <p  th:text="|작성 ${#temporals.format(board.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
-                            <p  th:text="|수정 ${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
+                            <p th:if=" ${#temporals.format(board.createdDate,'yyyy-MM-dd HH:mm:ss')} != ${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}" th:text="|수정 ${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
                         </div>
                         <br>
                         <br>
-
 
                         <div class="" style="margin-top: 15px; border-bottom:1px solid #eee">
                             <span th:text="${board.user}"></span>
@@ -109,9 +108,9 @@
                                         <input hidden th:value="${comment.getContentIdx}" name="contentIdx">
                                         <a href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.contentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
                                         <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 85%">
-                                        <a href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])">수정</a>
-                                        <a href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])" style="font-size: 80%">삭제</a>
-                                        <a href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.contentIdx}]],this)" th:text="|👍 ${comment.likes?.like}|"></a>
+                                        <a hidden href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])">수정</a>
+                                        <a class="btn btn-dark" href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])" style="font-size: 80%">삭제</a>
+                                        <a class="btn btn-dark" href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.contentIdx}]],this)" th:text="|👍 ${comment.likes?.like}|" style="font-size: 80%"></a>
                                     </div>
 
                                     <div class="col-sm-0 form-input btn-dark" id="modifySubmitBtn" style="display: none">

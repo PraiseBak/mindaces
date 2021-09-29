@@ -7,6 +7,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -41,6 +43,10 @@ public class Comment extends BaseTimeEntity
 
     @OneToOne(cascade = CascadeType.ALL)
     private Likes likes;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "comment_idx")
+    private List<CommentLikedUserInfo> commentLikedUserInfoList = new ArrayList<>();
 
     @Builder
     public Comment(Long contentIdx, Long boardIdx, String gallery, String user, String content, String commentPassword, Long isLogged, Likes likes)

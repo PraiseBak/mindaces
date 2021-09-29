@@ -66,7 +66,7 @@ public class CommentController
         attributes.addAttribute("page",page);
         return "redirect:../" + contentIdx;
     }
-
+    /*
     @PostMapping(value = "/{galleryName}/{index}/modifyComment")
     public String commentModify(
             @PathVariable(name="galleryName") String galleryName,
@@ -84,5 +84,6 @@ public class CommentController
         attributes.addAttribute("page",page);
         return "redirect:../" + contentIdx;
     }
+     */
     
 }
