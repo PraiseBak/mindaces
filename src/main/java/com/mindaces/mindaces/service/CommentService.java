@@ -24,15 +24,18 @@ public class CommentService
     private CommentRepository commentRepository;
     private RoleService roleService;
     private LikesRepository likesRepository;
+    private UtilService utilService;
+
     final static int COMMENT_PER_PAGE = 10;
     final static int MAX_PAGE_BUTTON_NUM = 10;
 
 
-    public CommentService(CommentRepository commentRepository,RoleService roleService,LikesRepository likesRepository)
+    public CommentService(CommentRepository commentRepository,RoleService roleService,LikesRepository likesRepository,UtilService utilService)
     {
         this.roleService = roleService;
         this.commentRepository = commentRepository;
         this.likesRepository = likesRepository;
+        this.utilService = utilService;
     }
 
     Sort getSortByCreateDate()
@@ -69,9 +72,10 @@ public class CommentService
 
     public Boolean addCommentValidCheck(CommentDto commentDto)
     {
-        int commentPasswordLen = commentDto.getCommentPassword().length();
-        int userLen = commentDto.getUser().length();
-        String content = commentDto.getContent();
+        System.out.println("TODO 알림같은거 넣어야함 뭐 비밀번호에는 공백이 들어갈수없다 등");
+        int commentPasswordLen = this.utilService.getTrimedStr(commentDto.getCommentPassword()).length();
+        int userLen = this.utilService.getTrimedStr(commentDto.getUser()).length();
+        String content = this.utilService.getTrimedStr(commentDto.getContent());
 
         if(content.length() < 2 || content.getBytes().length > 65535)
         {
@@ -120,6 +124,7 @@ public class CommentService
             commentDto.setBoardIdx(contentIdx);
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             commentDto.setCommentPassword(passwordEncoder.encode(commentDto.getCommentPassword()));
+            commentDto.setContent(utilService.getTrimedStr(commentDto.getContent()));
 
             Comment savedComment = commentRepository.save(commentDto.toEntity());
 
@@ -260,14 +265,11 @@ public class CommentService
     public List<CommentDto> getPagedCommentList(String galleryName, Long boardIdx, int page)
     {
         Page<Comment> pageEntity = commentRepository.findByGalleryAndBoardIdx(galleryName,boardIdx,
-                PageRequest.of(page - 1, COMMENT_PER_PAGE, Sort.by(Sort.Direction.ASC, "createdDate")));
-
+                PageRequest.of(page - 1, COMMENT_PER_PAGE, Sort.by(Sort.Direction.DESC, "createdDate")));
         List<CommentDto> commentDtoList = new ArrayList<>();
-
-
         for(Comment perComment  : pageEntity)
         {
-            commentDtoList.add(entityToDto(perComment));
+            commentDtoList.add(0,entityToDto(perComment));
         }
 
         return commentDtoList;
@@ -289,7 +291,6 @@ public class CommentService
 
     public Integer[] getPageList(int curPage,Long count)
     {
-
         Integer[] pageList = new Integer[MAX_PAGE_BUTTON_NUM];
         Double postsTotalCount = Double.valueOf(count);
         Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/COMMENT_PER_PAGE)));

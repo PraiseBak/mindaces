@@ -29,15 +29,18 @@ public class BoardService
     private RoleService roleService;
     private CommentService commentService;
     private BoardRepository boardRepository;
+    private UtilService utilService;
 
 
     public BoardService(BoardRepository boardRepository,RoleService roleService,
-                        GalleryService galleryService,CommentService commentService)
+                        GalleryService galleryService,CommentService commentService,
+                        UtilService utilService)
     {
         this.galleryService = galleryService;
         this.roleService = roleService;
         this.boardRepository = boardRepository;
         this.commentService = commentService;
+        this.utilService = utilService;
     }
 
     @Transactional
@@ -66,7 +69,6 @@ public class BoardService
     public List<BoardDto> getGalleryPost(String galleryName,Integer page)
     {
         List<BoardDto> boardDtoList = new ArrayList<>();
-
         Page<Board> pageEntity = boardRepository.findByGallery(galleryName,
                 PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
         List<Board> boardList = pageEntity.getContent();
@@ -82,8 +84,6 @@ public class BoardService
         }
         return boardDtoList;
     }
-
-
 
     public Integer[] getPageList(int curPage,Long count)
     {
@@ -153,8 +153,8 @@ public class BoardService
     public Long updatePost(BoardDto boardDto,String galleryName)
     {
         Board board = (Board) boardRepository.findByGalleryAndContentIdx(galleryName,boardDto.getContentIdx(),Board.class);
-        board.updateContent(boardDto.getContent());
-        board.updateTitle((boardDto.getTitle()));
+        board.updateContent(utilService.getTrimedStr(boardDto.getContent()));
+        board.updateTitle(utilService.getTrimedStr(boardDto.getTitle()));
         return boardRepository.save(board).getContentIdx();
     }
 

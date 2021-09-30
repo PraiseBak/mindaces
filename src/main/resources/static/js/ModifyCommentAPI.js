@@ -10,13 +10,20 @@ var originUserVal = null;
 var originCommentVal = null;
 var prevCommentsTag = null;
 
+
+function toggleNestedComment(tag)
+{
+
+
+
+}
+
 //제출할때 댓글 내용 확인
 function checkCommentValid()
 {
-    var user = document.getElementById("arthorName").value;
-    var content = document.getElementById("commentContent").value;
-    var password = document.getElementById("password").value;
-
+    var user = document.getElementById("authorName").value.trim();
+    var content = document.getElementById("commentContent").value.trim();
+    var password = document.getElementById("commentPassword").value.trim();
 
     var data=
     {
@@ -30,6 +37,7 @@ function checkCommentValid()
         type : "POST",
         data : data,
         async : false
+
     }).done(function (result){
         if(result == false)
         {
@@ -41,6 +49,8 @@ function checkCommentValid()
             return true;
         }
     });
+
+
 }
 
 function  setCommentSubmitMode(mode)

@@ -34,6 +34,7 @@ public class CommentAPIController
     public Boolean checkCommentValidAPI(CommentDto commentDto)
     {
         Boolean result = commentService.addCommentValidCheck(commentDto);
+        System.out.println(result);
         return result;
     }
 

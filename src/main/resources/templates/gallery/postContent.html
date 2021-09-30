@@ -107,7 +107,7 @@
                                     <span id="commentModifyUser" th:text="${comment.user}"></span>
                                 </div>
                                 <div class="col-sm-7 form-input" >
-                                    <pre id="commentModifyContent" class="comment-content form-control" th:text="${comment.content}"></pre>
+                                    <pre id="commentModifyContent" class="comment-content form-control" th:text="${comment.content}" th:onclick="toggleNestedReply(this)"></pre>
                                     <span th:text="|작성 ${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
                                 </div>
 
@@ -116,7 +116,7 @@
                                         <input hidden th:value="${comment.getContentIdx}" name="contentIdx">
                                         <a href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.contentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
                                         <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 85%">
-                                        <a hidden href="javascript:;"  style="font-size: 80%" th:onclick="checkCommentUserAndInputToggle(this, 'modifyComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])">수정</a>
+
                                         <a class="btn btn-dark" href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])" style="font-size: 80%">삭제</a>
                                         <a class="btn btn-dark" href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.contentIdx}]],this)" th:text="|👍 ${comment.likes?.like}|" style="font-size: 80%"></a>
                                     </div>
@@ -132,7 +132,7 @@
                     <form method="post" class="write-comment row" onsubmit="return checkCommentValid()">
                         <div class="col-sm-3 form-input" id="writeCommentInfo">
                             <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName} != ''">
-                            <input type="password" id="password" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword} != ''">
+                            <input type="password" id="commentPassword" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword} != ''">
                         </div>
                         <div class="col-sm-9 form-input">
                             <textarea minlength="2" maxlength="180" id="commentContent" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>
