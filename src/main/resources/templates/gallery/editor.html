@@ -31,7 +31,7 @@
 		@decsription
 		등록하기 위한 Form으로 상황에 맞게 수정하여 사용한다. Form 이름은 에디터를 생성할 때 설정값으로 설정한다.
 	-->
-	<form name="tx_editor_form_writeForm" id="tx_editor_form_writeForm" method="post" accept-charset="utf-8" onsubmit="return checkValidBoardWrite()" th:action="!(${board?.content}) ? 'postWrite' : 'postModify/' + ${board?.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}  "  style="margin-top:2%">
+	<form name="tx_editor_form_writeForm" id="tx_editor_form_writeForm" method="post" accept-charset="utf-8" onsubmit="return checkValidBoardWrite()" th:action="!(${board?.content}) ? 'postWrite' : '../postModify/' + ${board?.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}  "  style="margin-top:2%">
 		<div class="row"></div>
 		<div class="form-group row">
 			<input type="hidden" name="hiddenPassword" th:if="${inputPassword}" th:value="${inputPassword}">
@@ -370,6 +370,7 @@
 	function saveContent() {
 		Editor.save(); // 이 함수를 호출하여 글을 등록하면 된다.
 	}
+
 
 	/**
 	 * Editor.save()를 호출한 경우 데이터가 유효한지 검사하기 위해 부르는 콜백함수로

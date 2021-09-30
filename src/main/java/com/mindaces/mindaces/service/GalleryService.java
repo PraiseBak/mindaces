@@ -100,6 +100,11 @@ public class GalleryService
         Gallery gallery = this.getGalleryByGalleryName(galleryName);
         Long recommendedBoardCount = gallery.getRecommendedBoardCount();
         Long recommendedLikesSum = gallery.getRecommendedLikesSum();
+        if(recommendedBoardCount < 10)
+        {
+            return;
+        }
+
         Long newRecommendedStandard = recommendedLikesSum / recommendedBoardCount;
         //10으로 둘까요
         System.out.println(recommendedBoardCount);
@@ -108,10 +113,6 @@ public class GalleryService
         if(recommendedBoardCount > this.renewRecommendeBoardCount)
         {
             //아마 이런일은 없겠지만 혹시 몰라서
-            if(newRecommendedStandard < initRecommendStandard)
-            {
-                System.out.println("galleryService, newRecommendedStandard 로직 문제있음");
-            }
             gallery.updateRecommendStandard(newRecommendedStandard);
             galleryRepository.save(gallery);
         }

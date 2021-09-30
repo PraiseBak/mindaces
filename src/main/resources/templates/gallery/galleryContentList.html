@@ -26,7 +26,9 @@
                             <th scope="col">인덱스</th>
                             <th scope="col">제목</th>
                             <th scope="col">작성자</th>
+                            <th scope="col">조회수</th>
                             <th scope="col">추천수</th>
+
                         </tr>
                         </thead>
 
@@ -36,14 +38,19 @@
                                     <p th:text="${post.contentIdx}"></p>
                                 </td>
                                 <td>
-                                    <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="${post.title} "></a>
+                                    <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="|${post.title} |"></a>
+                                    <p class="float-right" th:text="|[${post.boardInfo.commentCount}]|"></p>
                                 </td>
                                 <td>
                                     <p th:text="${post.user}"></p>
                                 </td>
                                 <td>
+                                    <p th:text="${post.boardInfo?.visitedNum}"></p>
+                                </td>
+                                <td>
                                     <p th:text="${post.likes?.like}"></p>
                                 </td>
+
                             </tr>
                         </tbody>
                     </table>

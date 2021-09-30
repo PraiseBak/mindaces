@@ -1,6 +1,7 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.entity.BoardInfo;
 import com.mindaces.mindaces.domain.entity.Likes;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class BoardDto
     private Long isLoggedUser;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+    private BoardInfo boardInfo;
 
 
     public Board toEntity()
@@ -35,13 +37,14 @@ public class BoardDto
                 .likes(likes)
                 .password(password)
                 .isLoggedUser(isLoggedUser)
+                .boardInfo(boardInfo)
                 .build();
         return board;
     }
 
 
     @Builder
-    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Likes likes,String password,Long isLoggedUser,LocalDateTime createdDate,LocalDateTime modifiedDate)
+    public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Likes likes,String password,Long isLoggedUser,LocalDateTime createdDate,LocalDateTime modifiedDate,BoardInfo boardInfo)
     {
         this.gallery = gallery;
         this.user = user;
@@ -53,6 +56,7 @@ public class BoardDto
         this.isLoggedUser = isLoggedUser;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+        this.boardInfo = boardInfo;
     }
 
 }

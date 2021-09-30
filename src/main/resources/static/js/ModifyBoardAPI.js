@@ -1,4 +1,5 @@
 
+var modifyMode = "modify";
 var modifyBtn = document.getElementById("modifyBtn");
 var deleteBtn = document.getElementById("deleteBtn");
 
@@ -10,6 +11,23 @@ function getPassword(contentIdx, galleryName)
     hiddenPassword.setAttribute("value",inputPassword);
     checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName);
 }
+
+function getAddedParamsURL(url)
+{
+    var fullURL;
+    var params;
+    fullURL = window.location.href.split("?");
+    params = fullURL[1];
+
+    if(url.charAt(url.length-1) != '/')
+    {
+        url += "/"
+    }
+
+    url += "?" + params;
+    return url;
+}
+
 
 function checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName)
 {
@@ -29,6 +47,7 @@ function checkBoardPasswordAjax(inputPassword,contentIdx,url,galleryName)
     }).done(function (result){
         if(result === true)
         {
+            url = getAddedParamsURL(url);
             form.setAttribute("action",url);
             form.submit();
         }

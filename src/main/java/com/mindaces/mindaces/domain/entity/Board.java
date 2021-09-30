@@ -18,7 +18,6 @@ import java.util.List;
 public class Board extends BaseTimeEntity
 {
 
-    //gallery 이름, user 이름으로 foregin key 설정할거임 이거 칼럼에서 추가하는거 있잖아 그거 하자
     @Column(nullable = false, length = 45)
     private String gallery;
 
@@ -45,13 +44,13 @@ public class Board extends BaseTimeEntity
     @Column(columnDefinition = "tinyint(1) default 0", name = "is_logged_user",nullable = false)
     private Long isLoggedUser;
 
-    @Builder.Default
-    @Column(name = "is_recommended_board")
-    private Boolean isRecommendedBoard = false;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "content_idx")
     private List<BoardLikedUserInfo> boardLikedUserInfoList = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private BoardInfo boardInfo;
 
     public void updateLikes(Likes likes)
     {
@@ -78,9 +77,9 @@ public class Board extends BaseTimeEntity
         this.user = user;
     }
 
-    public void updateIsRecommmendBoard(Boolean isRecommendedBoard)
+    public void updateBoardInfo(BoardInfo boardInfo)
     {
-        this.isRecommendedBoard = isRecommendedBoard;
+        this.boardInfo = boardInfo;
     }
 
 
@@ -97,5 +96,4 @@ public class Board extends BaseTimeEntity
         this.password = password;
         this.isLoggedUser = isLoggedUser;
     }
-
 }

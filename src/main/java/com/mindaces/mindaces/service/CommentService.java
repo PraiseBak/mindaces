@@ -107,7 +107,6 @@ public class CommentService
     public Boolean addComment(String galleryName, Long contentIdx, Authentication authentication, CommentDto commentDto)
     {
         Boolean isValid = addCommentValidCheck(commentDto);
-        Board board;
         if(isValid)
         {
             commentDto.setIsLogged(0L);
@@ -132,7 +131,6 @@ public class CommentService
             savedComment.setLikes(likes);
             likesRepository.save(likes);
             commentRepository.save(savedComment);
-
             return true;
         }
         return false;
@@ -262,7 +260,7 @@ public class CommentService
     public List<CommentDto> getPagedCommentList(String galleryName, Long boardIdx, int page)
     {
         Page<Comment> pageEntity = commentRepository.findByGalleryAndBoardIdx(galleryName,boardIdx,
-                PageRequest.of(page - 1, COMMENT_PER_PAGE, Sort.by(Sort.Direction.DESC, "createdDate")));
+                PageRequest.of(page - 1, COMMENT_PER_PAGE, Sort.by(Sort.Direction.ASC, "createdDate")));
 
         List<CommentDto> commentDtoList = new ArrayList<>();
 
@@ -321,7 +319,6 @@ public class CommentService
         Long count;
         Integer[] pageList;
 
-        System.out.println("현재 페이지 = " + page);
         commentDtoList = getPagedCommentList(galleryName,boardIdx,page);
         count = this.commentRepository.countByGalleryAndBoardIdx(galleryName,boardIdx);
         pageList = getPageList(page,count);

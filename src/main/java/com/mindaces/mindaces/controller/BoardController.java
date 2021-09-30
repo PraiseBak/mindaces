@@ -20,7 +20,6 @@ public class BoardController
     CommentService commentService;
     GalleryService galleryService;
     RoleService roleService;
-    //TODO commentLikedUserInfo Service
     LikesService likesService;
     String errorGalleryURL = "redirect:/error/galleryMiss";
     String errorWriteURL = "redirect:/error/writeError";
@@ -113,13 +112,15 @@ public class BoardController
         {
             return errorGalleryURL;
         }
-
         BoardDto boardDto = boardService.getBoardInfoByGalleryAndIdx(galleryName,contentIdx);
         boardDto.setPassword("****");
         model.addAttribute("inputPassword",hiddenPassword);
         model.addAttribute("board",boardDto);
+        model.addAttribute("pagingMode",pagingMode);
+        model.addAttribute("page",page);
         attributes.addAttribute("pagingMode",pagingMode);
         attributes.addAttribute("page",page);
+
         return "gallery/postWrite";
     }
 

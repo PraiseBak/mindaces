@@ -15,9 +15,18 @@
                                 <h2 th:text="|${board.gallery} 갤러리|"></h2>
                             </a>
                         </div>
-                        <h3 class="" style="margin-top:3px;">
-                            <span th:text="${board.title}"></span>
-                        </h3>
+
+                        <div class="contentUpper row"  style="margin-top:3px;">
+                            <h3 class="col-sm-8">
+                                <span th:text="${board.title}"></span>
+                            </h3>
+                            <div class="col">
+                                <p class="float-right" style="color: #9f9f9f" th:text="|추천수 ${board.likes.like}|"></p>
+                                <p class="float-right" style="color: #9f9f9f" th:text="|댓글 ${board.boardInfo.commentCount}|"></p>
+                                <p class="float-right" style="color: #9f9f9f" th:text="|조회수 ${board.boardInfo.visitedNum}|"></p>
+                            </div>
+
+                        </div>
 
                         <div class="float-right">
                             <p  th:text="|작성 ${#temporals.format(board.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
@@ -100,7 +109,6 @@
                                 <div class="col-sm-7 form-input" >
                                     <pre id="commentModifyContent" class="comment-content form-control" th:text="${comment.content}"></pre>
                                     <span th:text="|작성 ${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
-                                    <span th:text="|수정 ${#temporals.format(comment.modifiedDate,'yyyy-MM-dd HH:mm:ss')}|" style="margin-left: 5%; color: #9f9f9f" th:if="${comment.modifiedDate} != ${comment.createdDate}"></span>
                                 </div>
 
                                 <div class="col-sm-2 form-input">
@@ -200,6 +208,10 @@
             word-wrap: break-word;
         }
 
+        p
+        {
+            margin-left: 10px;
+        }
     </style>
 
 

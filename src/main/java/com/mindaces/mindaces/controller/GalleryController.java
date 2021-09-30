@@ -67,7 +67,6 @@ public class GalleryController
         model.addAttribute("galleryName",galleryName);
         model.addAttribute("pagingMode",pagingMode);
         model.addAttribute("page",page);
-
         return "gallery/galleryContentList";
     }
 
@@ -117,6 +116,8 @@ public class GalleryController
         boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
         commentService.addingPagedCommentToBoModel(model,galleryName,contentIdx,commentPage);
         mostLikedCommentList = likesService.getMostLikedCommentList((List<CommentDto>) model.getAttribute("commentList"));
+        boardService.addVisitedNum(contentIdx);
+
 //        model.addAttribute("commentList",commentDtoList);
         model.addAttribute("mostLikedCommentList",mostLikedCommentList);
         model.addAttribute("board",boardDto);

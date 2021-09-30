@@ -2,12 +2,11 @@ package com.mindaces.mindaces.service;
 
 
 import com.mindaces.mindaces.domain.entity.Board;
-import com.mindaces.mindaces.domain.entity.BoardLikedUserInfo;
+import com.mindaces.mindaces.domain.entity.BoardInfo;
 import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
 import com.mindaces.mindaces.dto.BoardDto;
-import com.mindaces.mindaces.dto.CommentDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -53,8 +52,13 @@ public class BoardService
                 .contentIdx(savedBoard.getContentIdx())
                 .isComment(false)
                 .build();
-        savedBoard.updateLikes(likes);
 
+        BoardInfo boardInfo = new BoardInfo();
+        boardInfo.updateGallery(savedBoard.getGallery());
+        boardInfo.updateContentIdx(savedBoard.getContentIdx());
+
+        savedBoard.updateBoardInfo(boardInfo);
+        savedBoard.updateLikes(likes);
         boardRepository.save(savedBoard);
         return 0L;
     }
@@ -126,6 +130,7 @@ public class BoardService
                 .isLoggedUser(board.getIsLoggedUser())
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
+                .boardInfo(board.getBoardInfo())
                 .build();
     }
 
@@ -305,7 +310,7 @@ public class BoardService
         //댓글은 개추 / 3 이어야함
         //댓글이 총 몇개인지 가져와야함
 
-        Page<Board> pageEntity = this.boardRepository.findByGalleryAndIsRecommendedBoardIsTrue(galleryName,
+        Page<Board> pageEntity = this.boardRepository.findByGalleryAndBoardInfoIsRecommendedBoardIsTrue(galleryName,
                 PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
 
         List<Board> boardList = pageEntity.getContent();
@@ -320,7 +325,7 @@ public class BoardService
 
     public void getBoardAndUpdateGalleryRecommendInfo(String galleryName, Long boardIdx,Board board)
     {
-        if(board.getIsRecommendedBoard())
+        if(board.getBoardInfo().getIsRecommendedBoard())
         {
             ////추천누르면 -> 일단 이미 개념글인 애이면 gallery에서 max likes += 1
             galleryService.updateRecommendInfo(galleryName,1L,false);
@@ -343,7 +348,7 @@ public class BoardService
 
         if(boardRecommend >= recommendStandard && countComment >= recommendStandard / 3)
         {
-            board.updateIsRecommmendBoard(true);
+            board.getBoardInfo().updateIsRecommendedBoard();
             boardRepository.save(board);
             //처음 개념글 되는애면 gallery에서 count랑 like 갱신해줘야함
             galleryService.updateRecommendInfo(galleryName,boardRecommend,true);
@@ -377,6 +382,13 @@ public class BoardService
         }
         model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
+    }
+
+    public void addVisitedNum(Long boardIdx)
+    {
+        Board board = this.boardRepository.getById(boardIdx);
+        board.getBoardInfo().updateVisitedNum();
+        this.boardRepository.save(board);
     }
 
 }

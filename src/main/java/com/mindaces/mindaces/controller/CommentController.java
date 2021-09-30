@@ -2,6 +2,7 @@ package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.dto.CommentDto;
+import com.mindaces.mindaces.service.BoardInfoService;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.CommentService;
 import org.springframework.security.core.Authentication;
@@ -22,11 +23,13 @@ public class CommentController
 {
     private CommentService commentService;
     private BoardService boardService;
+    private BoardInfoService boardInfoService;
 
-    CommentController(CommentService commentService,BoardService boardService)
+    CommentController(CommentService commentService,BoardService boardService,BoardInfoService boardInfoService)
     {
         this.commentService = commentService;
         this.boardService = boardService;
+        this.boardInfoService = boardInfoService;
     }
 
     @PostMapping(value = "/{galleryName}/{index}")
@@ -43,6 +46,7 @@ public class CommentController
         Board board;
         commentService.addComment(galleryName,contentIdx,authentication,commentDto);
         board = boardService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
+        boardInfoService.updateCommentCount(board);
         boardService.updateIsRecommendBoard(galleryName,contentIdx,board);
         attributes.addAttribute("pagingMode",pagingMode);
         attributes.addAttribute("page",page);
@@ -61,7 +65,10 @@ public class CommentController
             RedirectAttributes attributes
     )
     {
+        Board board;
+        board = boardService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
         commentService.deleteComment(commentDto,authentication);
+        boardInfoService.updateCommentCount(board);
         attributes.addAttribute("pagingMode",pagingMode);
         attributes.addAttribute("page",page);
         return "redirect:../" + contentIdx;
