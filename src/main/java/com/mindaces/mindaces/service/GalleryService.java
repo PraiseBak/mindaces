@@ -107,8 +107,6 @@ public class GalleryService
 
         Long newRecommendedStandard = recommendedLikesSum / recommendedBoardCount;
         //10으로 둘까요
-        System.out.println(recommendedBoardCount);
-        System.out.println(renewRecommendeBoardCount);
 
         if(recommendedBoardCount > this.renewRecommendeBoardCount)
         {

@@ -114,7 +114,7 @@ public class GalleryController
         }
 
         boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
-        commentService.addingPagedCommentToBoModel(model,galleryName,contentIdx,commentPage);
+        commentService.addingPagedCommentToModel(model,galleryName,contentIdx,commentPage);
         mostLikedCommentList = likesService.getMostLikedCommentList((List<CommentDto>) model.getAttribute("commentList"));
         boardService.addVisitedNum(contentIdx);
 

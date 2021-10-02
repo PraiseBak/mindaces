@@ -68,7 +68,6 @@ public class BoardController
                              @RequestParam(required = false,defaultValue = "1") Integer page)
     {
         //로그인한 유저가 작성한 글의 비밀번호는 ****로 저장됨 어차피 나중에 확인할때 비밀번호 없이 확인할것이라 상관 X
-        //TODO checkValidSignup()
         //존재하지 않는 갤러리라던가 등
         if(!galleryService.isGallery(galleryName))
         {
@@ -195,9 +194,6 @@ public class BoardController
         {
             commentService.deleteCommentByBoardIdx(contentIdx);
             boardService.deletePost(contentIdx);
-            //TODO deleteCommentLikedUserInfoService
-            //CommentLikedUserInfoService.deleteLikedUserInfoByBoardIdx(contentIdx);
-            
         }
         attributes.addAttribute("pagingMode",pagingMode);
         attributes.addAttribute("page",page);

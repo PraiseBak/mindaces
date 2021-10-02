@@ -48,8 +48,16 @@ public class Comment extends BaseTimeEntity
     @JoinColumn(name = "comment_idx")
     private List<CommentLikedUserInfo> commentLikedUserInfoList = new ArrayList<>();
 
+    //TODO 대댓글은 순환참조?
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_comment_idx")
+    private List<Comment> nestedCommentList = new ArrayList<>();
+
+    @Column(name = "parent_comment_idx")
+    private Long parentCommentIdx;
+
     @Builder
-    public Comment(Long contentIdx, Long boardIdx, String gallery, String user, String content, String commentPassword, Long isLogged, Likes likes)
+    public Comment(Long contentIdx, Long boardIdx, String gallery, String user, String content, String commentPassword, Long isLogged, Likes likes,Long parentCommentIdx)
     {
         this.contentIdx = contentIdx;
         this.boardIdx = boardIdx;
@@ -59,17 +67,21 @@ public class Comment extends BaseTimeEntity
         this.commentPassword = commentPassword;
         this.isLogged = isLogged;
         this.likes = likes;
-    }
-
-    public void modifyContent(String content)
-    {
-        this.content = content;
+        this.parentCommentIdx = parentCommentIdx;
     }
 
     public void setLikes(Likes likes)
     {
         this.likes = likes;
     }
+
+    public void addNestedComment(Comment nestedComment)
+    {
+        this.nestedCommentList.add(nestedComment);
+    }
+
+
 }
+
 
 

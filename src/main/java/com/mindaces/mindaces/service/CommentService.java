@@ -1,6 +1,5 @@
 package com.mindaces.mindaces.service;
 
-import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.domain.entity.Comment;
 import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.CommentRepository;
@@ -72,10 +71,18 @@ public class CommentService
 
     public Boolean addCommentValidCheck(CommentDto commentDto)
     {
-        System.out.println("TODO 알림같은거 넣어야함 뭐 비밀번호에는 공백이 들어갈수없다 등");
-        int commentPasswordLen = this.utilService.getTrimedStr(commentDto.getCommentPassword()).length();
-        int userLen = this.utilService.getTrimedStr(commentDto.getUser()).length();
-        String content = this.utilService.getTrimedStr(commentDto.getContent());
+
+        String commentPassword = commentDto.getCommentPassword();
+        String user = commentDto.getUser();
+        String content =commentDto.getContent();
+
+        if(utilService.isLRWhiteSpace(commentPassword) || utilService.isLRWhiteSpace(user))
+        {
+            return false;
+        }
+        int commentPasswordLen = commentPassword.length();
+        int userLen = user.length();
+
 
         if(content.length() < 2 || content.getBytes().length > 65535)
         {
@@ -107,6 +114,18 @@ public class CommentService
     }
 
      */
+
+
+    void updateParentComment(Long parentCommentIdx,Comment nestedComment)
+    {
+        Comment parentComment;
+        parentComment = this.getCommentByID(parentCommentIdx);
+        parentComment.addNestedComment(nestedComment);
+
+    }
+
+
+
     @Transactional
     public Boolean addComment(String galleryName, Long contentIdx, Authentication authentication, CommentDto commentDto)
     {
@@ -124,9 +143,15 @@ public class CommentService
             commentDto.setBoardIdx(contentIdx);
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             commentDto.setCommentPassword(passwordEncoder.encode(commentDto.getCommentPassword()));
-            commentDto.setContent(utilService.getTrimedStr(commentDto.getContent()));
+            commentDto.setContent(commentDto.getContent());
 
             Comment savedComment = commentRepository.save(commentDto.toEntity());
+            /*
+            if(commentDto.getParentCommentIdx() != null)
+            {
+                this.updateParentComment(commentDto.getParentCommentIdx(),savedComment);
+            }
+             */
 
             Likes likes = Likes.builder()
                 .contentIdx(savedComment.getContentIdx())
@@ -134,7 +159,6 @@ public class CommentService
                 .build();
 
             savedComment.setLikes(likes);
-            likesRepository.save(likes);
             commentRepository.save(savedComment);
             return true;
         }
@@ -286,6 +310,8 @@ public class CommentService
                 .modifiedDate(comment.getModifiedDate())
                 .likes(comment.getLikes())
                 .user(comment.getUser())
+                .nestedCommentList(comment.getNestedCommentList())
+                .parentCommentIdx(comment.getParentCommentIdx())
                 .build();
     }
 
@@ -314,7 +340,7 @@ public class CommentService
     }
 
     
-    public void addingPagedCommentToBoModel(Model model, String galleryName, Long boardIdx, int page)
+    public void addingPagedCommentToModel(Model model, String galleryName, Long boardIdx, int page)
     {
         List<CommentDto> commentDtoList;
         Long count;

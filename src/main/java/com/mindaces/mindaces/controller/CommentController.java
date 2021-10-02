@@ -32,6 +32,7 @@ public class CommentController
         this.boardInfoService = boardInfoService;
     }
 
+    @Transactional
     @PostMapping(value = "/{galleryName}/{index}")
     public String commentAdd(
             @PathVariable(name="galleryName") String galleryName,
@@ -44,7 +45,8 @@ public class CommentController
     )
     {
         Board board;
-        commentService.addComment(galleryName,contentIdx,authentication,commentDto);
+        Boolean result;
+        result = commentService.addComment(galleryName,contentIdx,authentication,commentDto);
         board = boardService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
         boardInfoService.updateCommentCount(board);
         boardService.updateIsRecommendBoard(galleryName,contentIdx,board);

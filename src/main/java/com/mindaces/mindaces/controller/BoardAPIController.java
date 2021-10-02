@@ -113,8 +113,7 @@ public class BoardAPIController
                 System.out.println("** originalName : " + originalName + " **");
                 System.out.println("** modifyName : " + modifyName + " **");
             } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("이미지파일업로드 실패 - singleUploadImgAPI");
+                return fileInfo;
             }
 
             // CallBack - Map에 담기

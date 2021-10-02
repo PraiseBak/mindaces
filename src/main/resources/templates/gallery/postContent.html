@@ -8,6 +8,8 @@
     <div id="body-wrapper">
         <div id="body-content">
             <div class="container" style="margin-top:5%">
+
+                <!-- 게시물 부분 -->
                 <div class="info-part">
                     <div class="form-group board-info-part">
                         <div class="gallery-name-part" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
@@ -29,7 +31,7 @@
                         </div>
 
                         <div class="float-right">
-                            <p  th:text="|작성 ${#temporals.format(board.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
+                            <p th:text="|작성 ${#temporals.format(board.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
                             <p th:if=" ${#temporals.format(board.createdDate,'yyyy-MM-dd HH:mm:ss')} != ${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}" th:text="|수정 ${#temporals.format(board.modifiedDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></p>
                         </div>
                         <br>
@@ -81,7 +83,9 @@
                     </div>
                 </div>
 
+                <!-- 댓글부분 -->
                 <div class="comment-part" style="margin-bottom:20px; margin-top:50px; border-top:2px solid #cecece; border-bottom:2px solid #cecece;">
+                    <!-- 개추 댓글 -->
                     <div id="mostLikedComments" style="cursor:pointer; background-color: #d9d9d9; border-bottom:2px solid #cecece;" th:if="${mostLikedCommentList}">
                         <h4>✨ 개추 댓글</h4>
                         <div class="likedComments row" th:each="likedComment : ${mostLikedCommentList}" th:id="'likedComment'+${likedComment.getContentIdx}" th:onclick="|location.href='#commentModifyForm'+${likedComment.getContentIdx}|" >
@@ -98,38 +102,76 @@
                         </div>
                     </div>
                     &nbsp;
-                    <!-- border:3px solid #4d4d4d;  border-radius: 10px; !-->
 
+                    <!--   댓글들    -->
                     <div class="comments" th:each="comment : ${commentList}">
-                        <div class="comment"  style="margin-top: 10px">
-                            <form th:id="'commentModifyForm'+${comment.getContentIdx}" class="row" method="post">
+                        <div th:if="${comment.parentCommentIdx} == null" class="comment"  style="margin-top: 10px">
+
+                            <form th:id="'commentModifyForm'+${comment.contentIdx}" class="row" method="post">
                                 <div class="col-sm-3 form-input">
                                     <span id="commentModifyUser" th:text="${comment.user}"></span>
                                 </div>
-                                <div class="col-sm-7 form-input" >
-                                    <pre id="commentModifyContent" class="comment-content form-control" th:text="${comment.content}" th:onclick="toggleNestedReply(this)"></pre>
+                                <div class="col-sm-7 form-input">
+                                    <pre id="commentModifyContent" style="overflow:hidden; height: auto" class="comment-content form-control" th:text="${comment.content}" th:onclick="toggleNestedComment([[${comment.contentIdx}]])"></pre>
                                     <span th:text="|작성 ${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
                                 </div>
-
+                                <!-- 수정과 삭제버튼 (수정기능은 삭제됨) -->
                                 <div class="col-sm-2 form-input">
                                     <div class="modifyAndDeleteBtns">
                                         <input hidden th:value="${comment.getContentIdx}" name="contentIdx">
-                                        <a href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.contentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; float: right">✔</a>
-                                        <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 85%">
-
                                         <a class="btn btn-dark" href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${comment.contentIdx}]],[[${comment.isLogged}]],[[${comment.user}]])" style="font-size: 80%">삭제</a>
                                         <a class="btn btn-dark" href="javascript:;" th:onclick="commentLikeDupliCheck([[${comment.contentIdx}]],this)" th:text="|👍 ${comment.likes?.like}|" style="font-size: 80%"></a>
-                                    </div>
-
-                                    <div class="col-sm-0 form-input btn-dark" id="modifySubmitBtn" style="display: none">
-                                        <button class="btn btn-dark" onclick="modifySubmit(this)">제출</button>
+                                        <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 160px;">
+                                        <a class="btn btn-dark" href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${comment.contentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; ">✔</a>
                                     </div>
                                 </div>
                             </form>
+
+                            <!-- 댓글의 대댓글들 !-->
+
+                            <div class="nestedComments" th:each="nestedComment : ${comment.nestedCommentList}">
+                                <form th:id="'commentModifyForm'+${nestedComment.getContentIdx}" class="row" method="post">
+                                    <div class="col-sm-1 form-input" id="writeCommentInfo">&nbsp &nbsp &nbsp &nbsp ㄴ</div>
+
+                                    <div class="col-sm-2 form-input">
+                                        <span id="commentModifyUser" th:text="${nestedComment.user}"></span>
+                                    </div>
+                                    <div class="col-sm-7 form-input">
+                                        <pre id="commentModifyContent" class="comment-content form-control" th:text="${nestedComment.content}" th:onclick="toggleNestedComment([[${nestedComment.contentIdx}]])"></pre>
+                                        <span th:text="|작성 ${#temporals.format(nestedComment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
+
+                                    </div>
+                                    <div class="col-sm-2 form-input">
+                                        <div class="modifyAndDeleteBtns">
+                                            <input hidden th:value="${nestedComment.contentIdx}" name="contentIdx">
+                                            <a class="btn btn-dark" href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${nestedComment.contentIdx}]],[[${nestedComment.isLogged}]],[[${nestedComment.user}]])" style="font-size: 80%">삭제</a>
+                                            <a class="btn btn-dark" href="javascript:;" th:onclick="commentLikeDupliCheck([[${nestedComment.contentIdx}]],this)" th:text="|👍 ${nestedComment.likes?.like}|" style="font-size: 80%"></a>
+                                            <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 160px;">
+                                            <a class="btn btn-dark" href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${nestedComment.contentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; ">✔</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- 대댓글 작성 -->
+                            <form class="col-sm-12 row form-input" method="post" onsubmit="return checkCommentValid(this)" th:id="|toggleInput${comment.getContentIdx}|" style="display: none">
+                                <div class="col-sm-1 form-input" id="writeCommentInfo">&nbsp &nbsp &nbsp &nbsp ㄴ</div>
+                                <input type="hidden" name="parentCommentIdx" th:value="${comment.contentIdx}">
+                                <div class="col-sm-3 form-input" id="writeCommentInfo">
+                                    <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName} != ''">
+                                    <input type="password" id="commentPassword" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword} != ''">
+                                </div>
+                                <div class="col-sm-8 form-input">
+                                    <textarea minlength="2" maxlength="180" id="commentContent" name="content" class="form-control" rows="4" cols="50" style="resize: none;" placeholder="코멘트"></textarea>
+                                    <button class="btn btn-dark float-right mt-3">제출</button>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
 
-                    <form method="post" class="write-comment row" onsubmit="return checkCommentValid()">
+                    <!--   댓글 작성    -->
+                    <form method="post" class="write-comment row" onsubmit="return checkCommentValid(this)">
                         <div class="col-sm-3 form-input" id="writeCommentInfo">
                             <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName} != ''">
                             <input type="password" id="commentPassword" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword} != ''">
@@ -142,6 +184,8 @@
                         </div>
                     </form>
 
+
+                    <!-- 댓글 페이징 -->
                     <div class="text-center mb-4" style="float:none;">
                         <span th:each="pageNum : ${commentPageList}" th:inline="text">
                             <button class="btn btn-dark" th:onclick="| location.href='@{'?pagingMode=' + ${pagingMode}  + '&commentPage=' + ${pageNum}}  ' |" th:if="${pageNum}">[[${pageNum}]]</button>
@@ -149,12 +193,14 @@
                     </div>
                 </div>
 
+
+                <!-- 게시물 표시 모드 -->
                 <div class="header">
                     <button class="btn-outline-dark btn" th:onclick="|location.href='@{'./' + '?pagingMode='}'|">전체글</button>
                     <button class="btn-outline-dark btn" th:onclick="|location.href='@{'./' + '?pagingMode=mostLikedBoard'}'|">개념글</button>
                 </div>
 
-
+                <!-- 게시물 테이블 -->
                 <table class="table table-borderless mt-4" style="table-layout: fixed;">
                     <thead class="thead-dark">
                     <tr class="text-center table-header">
@@ -183,10 +229,13 @@
                     </tbody>
                 </table>
 
+                <!-- 새 글쓰기 -->
                 <div class="">
                     <button class="btn btn-dark float-right" style="margin-right: 100px"
                             th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite + '?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}   } +  '\''">글쓰기</button>
                 </div>
+
+                <!-- 게시물 페이징 -->
                 <div class="text-center " style="float:none; margin:0 auto">
                     <span th:each="pageNum : ${pageList}" th:inline="text">
                         <button class="btn btn-dark" th:onclick="|location.href='@{'./' + '?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
@@ -194,8 +243,10 @@
 
                 </div>
 
+                <!-- footer -->
                 <div th:replace="fragments/commonFooter :: commonFooter">
                 </div>
+
             </div>
         </div>
     </div>

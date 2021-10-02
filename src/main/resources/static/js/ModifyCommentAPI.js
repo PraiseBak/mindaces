@@ -9,22 +9,44 @@ var inputEnableUserTag = "<input type=\"text\" name=\"user\" minlength=\"2\" max
 var originUserVal = null;
 var originCommentVal = null;
 var prevCommentsTag = null;
+var prevNestedCommentInput = null;
 
-
-function toggleNestedComment(tag)
+function toggleNestedComment(contentIdx)
 {
+    form = document.getElementById("toggleInput" + contentIdx);
 
+
+    if(prevNestedCommentInput !== null)
+    {
+        if(form !== prevNestedCommentInput)
+        {
+            prevNestedCommentInput.style.display="none";
+        }
+
+    }
+
+    prevNestedCommentInput = form;
+
+
+    if(form.style.display == "")
+    {
+        form.style.display="none";
+    }
+    else
+    {
+        form.style.display="";
+    }
 
 
 }
 
 //제출할때 댓글 내용 확인
-function checkCommentValid()
+function checkCommentValid(curTag)
 {
-    var user = document.getElementById("authorName").value.trim();
-    var content = document.getElementById("commentContent").value.trim();
-    var password = document.getElementById("commentPassword").value.trim();
-
+    var user = curTag.querySelector("#authorName").value;
+    var content = curTag.querySelector("#commentContent").value;
+    var password = curTag.querySelector("#commentPassword").value;
+    var flag = false;
     var data=
     {
         user : user,
@@ -42,13 +64,14 @@ function checkCommentValid()
         if(result == false)
         {
             alert("유효하지 않은 댓글입니다");
-            return false;
+            return flag;
         }
         else
         {
-            return true;
+            flag = true;
         }
     });
+    return flag;
 
 
 }
@@ -61,6 +84,7 @@ function  setCommentSubmitMode(mode)
 //수정,삭제시에 비밀번호 입력하는 창 보이게하는 유무
 function toggleCommentPasswordInputPassword(aTag)
 {
+
     var inputArea = aTag.parentNode.querySelector("#inputCommentPassword");
     var checkBtn = aTag.parentNode.querySelector("#checkBtn");
     if(inputArea.style.display === "none")
@@ -72,8 +96,8 @@ function toggleCommentPasswordInputPassword(aTag)
         }
         prevInputTag = inputArea;
         prevCheckTag = checkBtn;
-        inputArea.style.display = "block";
-        checkBtn.style.display = "block";
+        inputArea.style.display = "inline-block";
+        checkBtn.style.display = "inline-block";
     }
     else
     {

@@ -49,8 +49,9 @@ public class BoardService
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
 
-        Board savedBoard= boardRepository.save(boardDto.toEntity());
+        boardDto.setTitle(utilService.getTrimedStr(boardDto.getTitle()));
 
+        Board savedBoard= boardRepository.save(boardDto.toEntity());
         Likes likes = Likes.builder()
                 .contentIdx(savedBoard.getContentIdx())
                 .isComment(false)
@@ -153,8 +154,8 @@ public class BoardService
     public Long updatePost(BoardDto boardDto,String galleryName)
     {
         Board board = (Board) boardRepository.findByGalleryAndContentIdx(galleryName,boardDto.getContentIdx(),Board.class);
-        board.updateContent(utilService.getTrimedStr(boardDto.getContent()));
-        board.updateTitle(utilService.getTrimedStr(boardDto.getTitle()));
+        board.updateContent(boardDto.getContent());
+        board.updateTitle(boardDto.getTitle());
         return boardRepository.save(board).getContentIdx();
     }
 
@@ -237,6 +238,16 @@ public class BoardService
             Boolean isWriteMode = mode.equals("write");
             String result = "통과";
 
+            if(utilService.isLRWhiteSpace(author))
+            {
+                return "닉네임의 앞 뒤에는 공백이 올 수 없습니다";
+            }
+
+            if(utilService.isThereWhiteSpace(password))
+            {
+                return "비밀번호에는 공백이 올 수 없습니다";
+            }
+
             if(title.length() < 2 || title.length() > 20)
             {
                 result = "제목이 2자 미만이거나 20자 초과합니다";
@@ -244,7 +255,11 @@ public class BoardService
 
             if(content.length() < 2 || content.getBytes().length > 65535)
             {
-                result = "내용이 2자 미만이거나 65535byte를 초과합니다" + "\n현재 byte : " + Integer.toString(content.getBytes().length);
+                result = "내용이 2자 미만이거나 65535byte를 초과합니다";
+                if(content.getBytes().length > 65535)
+                {
+                    result += "\n현재 byte : " + content.getBytes().length;
+                }
             }
 
             if(!isUser && isWriteMode)
