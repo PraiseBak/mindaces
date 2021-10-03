@@ -2,6 +2,7 @@ package com.mindaces.mindaces.domain.repository;
 
 import com.mindaces.mindaces.domain.entity.Board;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,7 +17,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>
     //List<Board> findByContentIdxIn(List<Long> ids);
     List<Board> findTop10ByOrderByLikesLikeDesc();
     Page<Board> findByGalleryAndBoardInfoIsRecommendedBoardIsTrue(String gallery, Pageable pageable);
-
-
+    Long countBoardByUserAndIsLoggedUser(String user,Long isLoggedUser);
+    Page<Board> findByUserAndBoardInfoIsRecommendedBoardIsTrue(String user, Pageable pageable);
+    Long countBoardByUser(String user);
+    Page<Board> findByUser(String user, Pageable pageable);
 }
 

@@ -159,6 +159,7 @@ function refreshLikes()
         async : false
     }).done(function (result)
     {
+        document.getElementById("contentUpperLikes").innerText = "추천수 " + result['likes'];
         likesBtn.innerText = "개추 " + result['likes'];
         dislikeBtn.innerText = "비추 " + result['dislike']
     });

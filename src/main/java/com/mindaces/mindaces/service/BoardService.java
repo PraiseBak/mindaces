@@ -67,11 +67,22 @@ public class BoardService
         return 0L;
     }
 
-    public List<BoardDto> getGalleryPost(String galleryName,Integer page)
+    public List<BoardDto> getPostByFindObj(String findObj, Integer page, String mode)
     {
         List<BoardDto> boardDtoList = new ArrayList<>();
-        Page<Board> pageEntity = boardRepository.findByGallery(galleryName,
-                PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        Page<Board> pageEntity;
+
+        if(mode.equals("mypage"))
+        {
+            pageEntity = boardRepository.findByUser(findObj,
+                    PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+        else
+        {
+            pageEntity = boardRepository.findByGallery(findObj,
+                    PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+
         List<Board> boardList = pageEntity.getContent();
 
         if(boardList.isEmpty())
@@ -317,7 +328,7 @@ public class BoardService
 
 
     //해당 갤러리에서의 개념글
-    public List<BoardDto> getMostLikelyBoardListByGallery(String galleryName,Integer page)
+    public List<BoardDto> getMostLikelyBoardListByFindObj(String findObj,Integer page,String mode)
     {
         List<BoardDto> boardDtoList = new ArrayList<>();
         //갤러리에 개념글 기준 개추 수록
@@ -325,8 +336,18 @@ public class BoardService
         //댓글은 개추 / 3 이어야함
         //댓글이 총 몇개인지 가져와야함
 
-        Page<Board> pageEntity = this.boardRepository.findByGalleryAndBoardInfoIsRecommendedBoardIsTrue(galleryName,
-                PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        Page<Board> pageEntity;
+        if(mode.equals("mypage"))
+        {
+            pageEntity = this.boardRepository.findByUserAndBoardInfoIsRecommendedBoardIsTrue(findObj,
+                    PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+        else
+        {
+            pageEntity = this.boardRepository.findByGalleryAndBoardInfoIsRecommendedBoardIsTrue(findObj,
+                    PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+
 
         List<Board> boardList = pageEntity.getContent();
 
@@ -376,6 +397,44 @@ public class BoardService
         return this.boardRepository.countBoardByGallery(galleryName);
     }
 
+    //유저가 작성한 글 가져오기
+    public void addingPagedBoardToModelByWritedUser(Model model,int page,String pagingMode,String username)
+    {
+        List<BoardDto> boardDtoList;
+        Long count;
+        Integer[] pageList;
+
+        //유저가 작성한 글 중 개념글인 글들만 가져오기
+        if(pagingMode.equals("mostLikedBoard"))
+        {
+            boardDtoList = getMostLikelyBoardListByFindObj(username,page,"mypage");
+            count = getCountRecommendedBoardByUsername(username);
+            pageList = getPageList(page,count);
+        }
+        //유저가 작성한 전체 글
+        else
+        {
+            boardDtoList = getPostByFindObj(username,page,"mypage");
+            count = getCountBoardByUsername(username);
+            pageList = getPageList(page,count);
+        }
+
+        model.addAttribute("postList",boardDtoList);
+        model.addAttribute("pageList",pageList);
+    }
+
+    private Long getCountBoardByUsername(String username)
+    {
+        return this.boardRepository.countBoardByUser(username);
+    }
+
+    private Long getCountRecommendedBoardByUsername(String username)
+    {
+        return this.boardRepository.countBoardByUserAndIsLoggedUser(username,1L);
+    }
+
+
+
 
     public void addingPagedBoardToModel(Model model, String galleryName, int page, String pagingMode)
     {
@@ -385,13 +444,13 @@ public class BoardService
 
         if(pagingMode.equals("mostLikedBoard"))
         {
-            boardDtoList = getMostLikelyBoardListByGallery(galleryName,page);
+            boardDtoList = getMostLikelyBoardListByFindObj(galleryName,page, "board");
             count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
             pageList = getPageList(page,count);
         }
         else
         {
-            boardDtoList = getGalleryPost(galleryName,page);
+            boardDtoList = getPostByFindObj(galleryName,page,"board");
             count = getCountBoardByGallery(galleryName);
             pageList = getPageList(page,count);
         }

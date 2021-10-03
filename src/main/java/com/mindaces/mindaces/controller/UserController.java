@@ -1,13 +1,12 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.UserDto;
+import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @AllArgsConstructor
@@ -15,6 +14,8 @@ public class UserController
 {
 
     private UserService userService;
+    private BoardService boardService;
+
 
     @GetMapping("/user/signup")
     public String userSignUp()
@@ -47,9 +48,6 @@ public class UserController
         return "userInfoPage/login";
     }
 
-
-
-
     @GetMapping("/user/login/result")
     public String loginResult()
     {
@@ -71,7 +69,7 @@ public class UserController
     @GetMapping("/user/myinfo")
     public String userInfo()
     {
-        return "userInfoPage/myinfo";
+        return "mypage";
     }
 
     @GetMapping("/admin")
@@ -84,8 +82,22 @@ public class UserController
     public String beforeSignup()
     {
         return "userInfoPage/selectSignup";
-
     }
+
+    @GetMapping("/user/{username}")
+    public String mypage(
+            @PathVariable(name="username") String username,
+            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "1") Integer page,
+            Model model
+    )
+    {
+        boardService.addingPagedBoardToModelByWritedUser(model,page,pagingMode,username);
+
+        return "userInfoPage/mypage";
+    }
+
+
 
 
 }

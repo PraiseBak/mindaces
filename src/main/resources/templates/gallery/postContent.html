@@ -23,7 +23,7 @@
                                 <span th:text="${board.title}"></span>
                             </h3>
                             <div class="col">
-                                <p class="float-right" style="color: #9f9f9f" th:text="|추천수 ${board.likes.like}|"></p>
+                                <p class="float-right" id="contentUpperLikes" style="color: #9f9f9f" th:text="|추천수 ${board.likes.like}|"></p>
                                 <p class="float-right" style="color: #9f9f9f" th:text="|댓글 ${board.boardInfo.commentCount}|"></p>
                                 <p class="float-right" style="color: #9f9f9f" th:text="|조회수 ${board.boardInfo.visitedNum}|"></p>
                             </div>
@@ -38,7 +38,8 @@
                         <br>
 
                         <div class="" style="margin-top: 15px; border-bottom:1px solid #eee">
-                            <span th:text="${board.user}"></span>
+                            <p th:if="${board.isLoggedUser} == 0" th:text="|${board.user}|"></p>
+                            <a th:href="@{'/user/' + ${board.user}}" th:if="${board.isLoggedUser} == 1" th:text="|${board.user}  😎|"></a>
                         </div>
 
                         <input id="isRoleUser" sec:authorize="isAuthenticated()" type="text" hidden value="true">
@@ -200,33 +201,11 @@
                     <button class="btn-outline-dark btn" th:onclick="|location.href='@{'./' + '?pagingMode=mostLikedBoard'}'|">개념글</button>
                 </div>
 
-                <!-- 게시물 테이블 -->
-                <table class="table table-borderless mt-4" style="table-layout: fixed;">
-                    <thead class="thead-dark">
-                    <tr class="text-center table-header">
-                        <th scope="col">인덱스</th>
-                        <th scope="col">제목</th>
-                        <th scope="col">작성자</th>
-                        <th scope="col">추천수</th>
-                    </tr>
-                    </thead>
 
-                    <tbody>
-                    <tr th:each="post : ${postList}" th:height="50px" class="text-center">
-                        <td>
-                            <p th:text="${post.contentIdx}"></p>
-                        </td>
-                        <td>
-                            <a rel="keep-params" th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx}}" th:text="${post.title} "></a>
-                        </td>
-                        <td>
-                            <p th:text="${post.user}"></p>
-                        </td>
-                        <td>
-                            <p th:text="${post.likes?.like}"></p>
-                        </td>
-                    </tr>
-                    </tbody>
+
+                <!-- 게시물 테이블 -->
+                <table th:replace="fragments/commonBoard">
+
                 </table>
 
                 <!-- 새 글쓰기 -->
@@ -237,19 +216,18 @@
 
                 <!-- 게시물 페이징 -->
                 <div class="text-center " style="float:none; margin:0 auto">
-                    <span th:each="pageNum : ${pageList}" th:inline="text">
-                        <button class="btn btn-dark" th:onclick="|location.href='@{'./' + '?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
-                    </span>
-
-                </div>
-
-                <!-- footer -->
-                <div th:replace="fragments/commonFooter :: commonFooter">
+                    <span th:replace="fragments/commonBoardPaging"></span>
                 </div>
 
             </div>
         </div>
+
+        <!-- footer -->
+        <div th:replace="fragments/commonFooter :: commonFooter">
+        </div>
+
     </div>
+
 
     <style>
         .comment-content

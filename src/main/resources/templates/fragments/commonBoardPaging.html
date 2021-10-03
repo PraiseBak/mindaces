@@ -1,0 +1,3 @@
+<span th:each="pageNum : ${pageList}" th:inline="text" th:fragment="commonBoardPaging">
+    <button class="btn btn-dark" th:onclick="|location.href='@{'?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}}'|" th:if="${pageNum}">[[${pageNum}]]</button>
+</span>

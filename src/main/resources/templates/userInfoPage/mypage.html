@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head th:insert="base/head.html">
+</head>
+    <body>
+        <div id="body-wrapper">
+            <div id="body-content">
+                <div class="container-fluid row">
+                    <div id="showingContentBtns" class="col-sm-2 text-center">
+                        <ul style="list-style: none; ">
+                            <div>
+                                <a class="showingContentBtn btn">개념글</a>
+                                <a class="showingContentBtn mt-2 btn">글</a>
+                                <a class="showingContentBtn mt-2 btn">개념글</a>
+                            </div>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="content-part col-sm-8" style=" width: 100%">
+                        <table th:replace="fragments/showingGalleryBoard">
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 게시물 페이징 -->
+                <div class="text-center " style="float:none; margin:0 auto">
+                    <span th:replace="fragments/commonBoardPaging"></span>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+        <div th:replace="fragments/commonFooter :: commonFooter">
+        </div>
+
+    </body>
+
+
+
+
+<style>
+    .showingContentBtn
+    {
+        width: 150px;
+        height: 45px;
+        border: 1px #ccc solid;
+    }
+
+</style>
+
+
+</html>

@@ -301,6 +301,9 @@
 		</div>
 
 	</form>
+
+	<div th:replace="fragments/commonFooter :: commonFooter">
+	</div>
 </div>
 <!-- 에디터 끝 -->
 <script type="text/javascript">
@@ -331,7 +334,7 @@
 			},
 
 			capacity: {
-				maximum: 5*1024*1024
+				maximum: 10*1024*1024
 			}
 		},
 		canvas: {
@@ -425,7 +428,7 @@
             // existStage는 현재 본문에 존재하는지 여부
             if (images[i].existStage) {
                 // data는 팝업에서 execAttach 등을 통해 넘긴 데이터
-                alert('attachment information - image[' + i + '] \r\n' + JSON.stringify(images[i].data));
+                //alert('attachment information - image[' + i + '] \r\n' + JSON.stringify(images[i].data));
                 input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = 'attach_image';
