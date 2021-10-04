@@ -192,7 +192,7 @@ public class BoardController
 
         if(result)
         {
-            commentService.deleteCommentByBoardIdx(contentIdx);
+            commentService.deleteCommentByBoardIdxAndGalleryName(contentIdx,galleryName);
             boardService.deletePost(contentIdx);
         }
         attributes.addAttribute("pagingMode",pagingMode);

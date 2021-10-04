@@ -11,19 +11,23 @@
 <body>
 <div class="navbar navbar-dark bg-dark shadow-sm mb-3 row">
     <div class="col"></div>
-    <div class="container d-flex justify-content-between col-sm-8">
+    <div class="container d-flex justify-content-between col-sm-7">
         <a href="/" class="navbar-brand d-flex align-items-center">
             <strong>Mindaces</strong>
         </a>
     </div>
 
-    <nav class="nav-bar col-sm-2">
+    <nav class="nav-bar col-sm-4">
         <div class='container'>
             <nav class="nav">
                 <a class="nav-link" th:href="@{/user/selectSignup}" sec:authorize="isAnonymous()">회원가입</a>
                 <a class="nav-link" th:href="@{/user/login}"  sec:authorize="isAnonymous()">로그인</a>
                 <a id="logout" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
-                <a id="mypage" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{'/user/' + ${#authorization.getAuthentication().getName()}}">내 페이지</a>
+                <a id="mypage" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{'/user/' + ${#authorization.getAuthentication().getName()} + '/board'}">내 페이지</a>
+                <form method="post" class="form-inline" th:action="@{'/user/findUser'}">
+                    <input class="form-control mr-sm-2" name="searchUsername" id="searchUsername"  type="search" placeholder="유저 검색">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
             </nav>
         </div>
     </nav>
@@ -35,6 +39,32 @@
     {
         color:#FFFFFF80;
     }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        height: 100%;
+    }
+
+    #body-wrapper
+    {
+        min-height: 100%;
+        position: relative;
+        padding-bottom: 100px; /* footer height */
+    }
+
+    footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        color: white;
+        background-color: #333333;
+    }
+
 </style>
 
 </body>
@@ -45,32 +75,7 @@
 
 </html>
 
-<style>
-    html, body
-    {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-    }
-    #body-wrapper
-    {
-        min-height: 100%;
-        position: relative;
-    }
-    #body-content
-    {
-        margin-top: 100px;
-        padding-bottom: 1px;
-    }
-    footer
-    {
-        width: 100%;
-        height: 1px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-    }
-</style>
+
 
 
 

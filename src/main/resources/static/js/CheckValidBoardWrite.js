@@ -11,6 +11,15 @@ function checkValidBoardWrite(content)
     {
         password = "";
     }
+    else
+    {
+        if(password.length == 0)
+        {
+            alert("비밀번호가 공백입니다");
+            return flag;
+        }
+
+    }
     var board=
     {
         title : inputTitle,

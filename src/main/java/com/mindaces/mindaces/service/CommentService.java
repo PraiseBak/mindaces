@@ -286,16 +286,27 @@ public class CommentService
         return this.commentRepository.countByBoardIdx(boardIdx);
     }
 
-    public List<CommentDto> getPagedCommentList(String galleryName, Long boardIdx, int page)
+    public List<CommentDto> getPagedCommentList(String galleryName, Long boardIdx, String username, int page)
     {
-        Page<Comment> pageEntity = commentRepository.findByGalleryAndBoardIdx(galleryName,boardIdx,
-                PageRequest.of(page - 1, COMMENT_PER_PAGE, Sort.by(Sort.Direction.DESC, "createdDate")));
-        List<CommentDto> commentDtoList = new ArrayList<>();
+        Page<Comment> pageEntity;
+
+        if(galleryName != null)
+        {
+            pageEntity = commentRepository.findByGalleryAndBoardIdx(galleryName,boardIdx,
+                    PageRequest.of(page - 1, COMMENT_PER_PAGE, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+        else
+        {
+            pageEntity = commentRepository.findByUserAndIsLogged(username,1L,
+                    PageRequest.of(page - 1, COMMENT_PER_PAGE, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+
+        List<CommentDto>
+                commentDtoList = new ArrayList<>();
         for(Comment perComment  : pageEntity)
         {
             commentDtoList.add(0,entityToDto(perComment));
         }
-
         return commentDtoList;
     }
 
@@ -346,7 +357,7 @@ public class CommentService
         Long count;
         Integer[] pageList;
 
-        commentDtoList = getPagedCommentList(galleryName,boardIdx,page);
+        commentDtoList = getPagedCommentList(galleryName,boardIdx,null,page);
         count = this.commentRepository.countByGalleryAndBoardIdx(galleryName,boardIdx);
         pageList = getPageList(page,count);
 
@@ -354,12 +365,27 @@ public class CommentService
         model.addAttribute("commentPageList",pageList);
     }
 
-    public void deleteCommentByBoardIdx(Long contentIdx)
+    public void addingPagedCommentToModelByWritedUser(Model model, int page, String username)
     {
+        List<CommentDto> commentDtoList;
+        Long count;
+        Integer[] pageList;
+
+        commentDtoList = getPagedCommentList(null,null,username,page);
+        count = this.commentRepository.countByUserAndIsLogged(username,1L);
+        pageList = getPageList(page,count);
+
+        model.addAttribute("commentList",commentDtoList);
+        model.addAttribute("commentPageList",pageList);
     }
 
     public void saveComment(Comment comment)
     {
         this.commentRepository.save(comment);
+    }
+
+    public void deleteCommentByBoardIdxAndGalleryName(Long contentIdx,String galleryName)
+    {
+        this.commentRepository.deleteByBoardIdxAndGallery(contentIdx,galleryName);
     }
 }

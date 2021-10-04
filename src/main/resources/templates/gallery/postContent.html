@@ -110,7 +110,9 @@
 
                             <form th:id="'commentModifyForm'+${comment.contentIdx}" class="row" method="post">
                                 <div class="col-sm-3 form-input">
-                                    <span id="commentModifyUser" th:text="${comment.user}"></span>
+
+                                    <p id="commentModifyUser" th:if="${comment.isLogged} != 1" th:text="|${comment.user}"></p>
+                                    <a id="commentModifyUser" th:if="${comment.isLogged} == 1" th:text="|${comment.user} 😎|" th:href="@{'/user/' + ${comment.user}}" ></a>
                                 </div>
                                 <div class="col-sm-7 form-input">
                                     <pre id="commentModifyContent" style="overflow:hidden; height: auto" class="comment-content form-control" th:text="${comment.content}" th:onclick="toggleNestedComment([[${comment.contentIdx}]])"></pre>
@@ -129,7 +131,6 @@
                             </form>
 
                             <!-- 댓글의 대댓글들 !-->
-
                             <div class="nestedComments" th:each="nestedComment : ${comment.nestedCommentList}">
                                 <form th:id="'commentModifyForm'+${nestedComment.getContentIdx}" class="row" method="post">
                                     <div class="col-sm-1 form-input" id="writeCommentInfo">&nbsp &nbsp &nbsp &nbsp ㄴ</div>
@@ -194,7 +195,6 @@
                     </div>
                 </div>
 
-
                 <!-- 게시물 표시 모드 -->
                 <div class="header">
                     <button class="btn-outline-dark btn" th:onclick="|location.href='@{'./' + '?pagingMode='}'|">전체글</button>
@@ -214,17 +214,24 @@
                             th:onclick="'location.href=\''+ @{'/gallery/' + ${galleryName} + '/' + postWrite + '?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}   } +  '\''">글쓰기</button>
                 </div>
 
+
                 <!-- 게시물 페이징 -->
-                <div class="text-center " style="float:none; margin:0 auto">
+                <div class="text-center" style="float:none; margin:0 auto">
                     <span th:replace="fragments/commonBoardPaging"></span>
                 </div>
+
+                <!-- 게시물 검색 -->
+                <div class="boardSearchArea">
+                    <div th:replace="fragments/commonBoardSearch"></div>
+                </div>
+
 
             </div>
         </div>
 
         <!-- footer -->
-        <div th:replace="fragments/commonFooter :: commonFooter">
-        </div>
+        <footer th:replace="fragments/commonFooter :: commonFooter">
+        </footer>
 
     </div>
 
@@ -256,6 +263,8 @@
             window.location.href = dest;
         }, 100);
     });
+
+
 
     var galleryName = [[${board.gallery}]];
     var boardIdx = [[${board.contentIdx}]];

@@ -2,20 +2,22 @@ package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.BoardService;
+import com.mindaces.mindaces.service.CommentService;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @AllArgsConstructor
 public class UserController
 {
-
     private UserService userService;
     private BoardService boardService;
-
+    private CommentService commentService;
 
     @GetMapping("/user/signup")
     public String userSignUp()
@@ -84,20 +86,71 @@ public class UserController
         return "userInfoPage/selectSignup";
     }
 
-    @GetMapping("/user/{username}")
-    public String mypage(
+    @GetMapping(value = {"/user/{username}","/user/{username}/board"})
+    public String boardWroteByUser(
             @PathVariable(name="username") String username,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             Model model
     )
     {
-        boardService.addingPagedBoardToModelByWritedUser(model,page,pagingMode,username);
+        Long result = userService.findUserID(username);
+        if(result != -1L)
+        {
+            boardService.addingPagedBoardToModelByWritedUser(model,page,"board",username);
+            model.addAttribute("selectedMode","Board");
+            model.addAttribute("username",username);
+       }
+        model.addAttribute("pagingMode","");
+        model.addAttribute("page",page);
 
-        return "userInfoPage/mypage";
+        return "userInfopage/userWroteContent";
     }
 
+    @GetMapping("/user/{username}/recommendedBoard")
+    public String recommendedBoardWroteByUser(
+            @PathVariable(name="username") String username,
+            @RequestParam(required = false,defaultValue = "1") Integer page,
+            Model model
+    )
+    {
+        Long result = userService.findUserID(username);
+        if(result != -1L)
+        {
+            boardService.addingPagedBoardToModelByWritedUser(model,page,"mostLikedBoard",username);
+            model.addAttribute("selectedMode","LikedBoard");
+            model.addAttribute("username",username);
 
+        }
+        model.addAttribute("pagingMode","");
+        model.addAttribute("page",page);
+        return "userInfopage/userWroteContent";
+    }
 
+    @GetMapping("/user/{username}/comment")
+    public String commentWroteByUser(
+            @PathVariable(name="username") String username,
+            @RequestParam(required = false,defaultValue = "1") Integer page,
+            Model model
+    )
+    {
+        Long result = userService.findUserID(username);
+        if(result != -1L)
+        {
+            commentService.addingPagedCommentToModelByWritedUser(model,page,username);
+            model.addAttribute("selectedMode","Comment");
+            model.addAttribute("username",username);
+        }
+
+        model.addAttribute("pagingMode","");
+        model.addAttribute("page",page);
+        return "userInfopage/userWroteContent";
+    }
+
+    @PostMapping("/user/findUser")
+    public String findUser(HttpServletRequest request)
+    {
+        String searchUsername = request.getParameter("searchUsername");
+        return "redirect:/user/" + searchUsername;
+    }
 
 }

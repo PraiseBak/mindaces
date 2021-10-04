@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="base/head.html">
+</head>
+    <body>
+        <div id="body-wrapper">
+            <div id="body-content">
+
+                <div class="text-center" th:if="${selectedMode == null}">
+                    <h2 class="text-center" th:text="|존재하지 않는 유저입니다|"></h2>
+                </div>
+
+                <div id="userWroteContents" th:if="${selectedMode != null}">
+                    <div id="userInfoUpside" class="text-center mb-lg-5">
+                        <h2 class="text-center" th:text="|${username} 님의 보드입니다|"></h2>
+                    </div>
+
+                    <div class="container-fluid row">
+                        <div id="showingContentBtns" class="col-sm-2 text-center">
+                            <ul style="list-style: none; ">
+                                <div>
+                                    <!--컨트롤러에서 받아온 mode 로 강조표시-->
+                                    <a class="showingContentBtn btn" id="showingBoardBtn" th:href="@{'/user/' + ${username} + '/board'}">게시물</a>
+                                    <a class="showingContentBtn mt-2 btn" id="showingLikedBoardBtn" th:href="@{'/user/' + ${username} + '/recommendedBoard'}">개념글</a>
+                                    <a class="showingContentBtn mt-2 btn" id="showingCommentBtn" th:href="@{'/user/' + ${username} + '/comment'}">댓글</a>
+                                </div>
+                            </ul>
+                        </div>
+
+
+                        <div class="content-part col-sm-8" style=" width: 100%" th:if="${postList != null}">
+                            <p th:if="${postList?.empty}" class="text-center">작성한 게시물이 없습니다</p>
+
+                            <table th:replace="fragments/showingGalleryBoard">
+                            </table>
+                        </div>
+                        <!--   댓글들    -->
+
+                        <div class="col-sm-8">
+                            <p th:if="${commentList?.empty}" class="text-center">작성한 댓글이 없습니다</p>
+
+                            <div class="comment" style="margin-top: 10px" th:each="comment : ${commentList}">
+
+                                <div class="form-input">
+                                    <pre id="commentModifyContent" style="overflow:hidden; height: auto" class="comment-content form-control" th:text="${comment.content}"></pre>
+                                    <span th:text="|${comment.gallery} 갤러리|" style="color: #9f9f9f"></span>
+                                    <span th:text="|작성 ${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <!-- 댓글 페이징 -->
+                    <div class="text-center mb-4" style="float:none;">
+
+
+                    <span th:each="pageNum : ${commentPageList}" th:inline="text">
+                         <button class="btn btn-dark" th:onclick="| location.href='@{'?pagingMode=' + ${pagingMode}  + '&amp;page=' + ${pageNum}}  ' |" th:if="${pageNum}">[[${pageNum}]]</button>
+                    </span>
+                    </div>
+
+                    <!-- 게시물 페이징 -->
+                    <div class="text-center " style="float:none; margin:0 auto">
+                        <span th:replace="fragments/commonBoardPaging"></span>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+            <div th:replace="fragments/commonFooter :: commonFooter">
+            </div>
+
+        </div>
+
+
+
+
+    </body>
+
+
+
+
+<style>
+    .showingContentBtn
+    {
+        width: 150px;
+        height: 45px;
+        border: 1px #ccc solid;
+    }
+</style>
+
+
+
+
+<script th:inline="javascript">
+    var mode = [[${selectedMode}]];
+
+    $(document).ready(function ()
+    {
+        var btn = document.getElementById("showing" + mode + "Btn");
+        btn.style.color = "white";
+        btn.style.backgroundColor = "#333333";
+
+
+
+
+    });
+
+</script>
+
+
+
+</html>

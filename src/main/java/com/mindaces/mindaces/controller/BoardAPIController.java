@@ -56,11 +56,15 @@ public class BoardAPIController
     public String checkBoardValidWrite(BoardDto boardDto, Authentication authentication)
     {
         String mode = "write";
+        String result = "";
+
         if(boardDto.getPassword().length() == 0)
         {
             mode = "modify";
         }
-        return boardService.isBoardWriteValid(boardDto,authentication,mode);
+        System.out.println("농딩동");
+        result = boardService.isBoardWriteValid(boardDto,authentication,mode);
+        return result;
     }
 
     @PostMapping("/singleUploadImgAPI")

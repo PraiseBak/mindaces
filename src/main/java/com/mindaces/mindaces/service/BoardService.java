@@ -7,6 +7,7 @@ import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.BoardWriteUserMapping;
 import com.mindaces.mindaces.domain.repository.BoardRepository;
 import com.mindaces.mindaces.dto.BoardDto;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BoardService
 {
     private static final int BLOCK_PAGE_NUM_COUNT = 10;
@@ -30,18 +32,6 @@ public class BoardService
     private CommentService commentService;
     private BoardRepository boardRepository;
     private UtilService utilService;
-
-
-    public BoardService(BoardRepository boardRepository,RoleService roleService,
-                        GalleryService galleryService,CommentService commentService,
-                        UtilService utilService)
-    {
-        this.galleryService = galleryService;
-        this.roleService = roleService;
-        this.boardRepository = boardRepository;
-        this.commentService = commentService;
-        this.utilService = utilService;
-    }
 
     @Transactional
     public Long savePost(BoardDto boardDto)
@@ -277,7 +267,7 @@ public class BoardService
             {
                 if(author.length() < 2 || author.length() > 20)
                 {
-                    result = "글작성자가 2자 미만이거나 20자 초과합니다";
+                    result = "글쓴이가 2자 미만이거나 20자 초과합니다";
                 }
             }
 
@@ -425,12 +415,12 @@ public class BoardService
 
     private Long getCountBoardByUsername(String username)
     {
-        return this.boardRepository.countBoardByUser(username);
+        return this.boardRepository.countBoardByUserAndIsLoggedUser(username,1L);
     }
 
     private Long getCountRecommendedBoardByUsername(String username)
     {
-        return this.boardRepository.countBoardByUserAndIsLoggedUser(username,1L);
+        return this.boardRepository.countBoardByUserAndBoardInfoIsRecommendedBoardIsTrueAndIsLoggedUser(username,1L);
     }
 
 
@@ -465,6 +455,59 @@ public class BoardService
         this.boardRepository.save(board);
     }
 
+
+
+
+    //해당 갤러리에서의 개념글
+    public List<BoardDto> getBoardListBySearchKeyword(String keyword,String searchMode,Integer page,Boolean isRecommendedBoardMode)
+    {
+        List<BoardDto> boardDtoList = new ArrayList<>();
+        Page<Board> pageEntity;
+        if(searchMode.equals("title"))
+        {
+            pageEntity = this.boardRepository.findByTitleContainingAndBoardInfoIsRecommendedBoard(keyword,isRecommendedBoardMode,
+                    PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+        else
+        {
+            pageEntity = this.boardRepository.findByContentContainingAndBoardInfoIsRecommendedBoard(keyword,isRecommendedBoardMode,
+                    PageRequest.of(page - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+        }
+
+        List<Board> boardList = pageEntity.getContent();
+
+        for(Board board : boardList)
+        {
+            boardDtoList.add(this.convertEntityToDto(board));
+        }
+
+        return boardDtoList;
+    }
+
+    public Long getCountBoardByKeyword(String keyword,String searchMode)
+    {
+        if(searchMode.equals("title"))
+        {
+            return this.boardRepository.countBoardByTitleContaining(keyword);
+        }
+        return this.boardRepository.countBoardByContentContaining(keyword);
+    }
+
+
+    public void addingPagedBoardToModelByKeyword(Model model, String keyword, String searchMode,Integer page, String pagingMode)
+    {
+        List<BoardDto> boardDtoList;
+        Long count;
+        Integer[] pageList;
+        Boolean isRecommendedBoardMode = pagingMode.equals("mostLikedBoard");
+
+        boardDtoList = getBoardListBySearchKeyword(keyword,searchMode,page, isRecommendedBoardMode);
+        count = getCountBoardByKeyword(keyword,searchMode);
+        pageList = getPageList(page,count);
+
+        model.addAttribute("pageList",pageList);
+        model.addAttribute("postList",boardDtoList);
+    }
 }
 
 

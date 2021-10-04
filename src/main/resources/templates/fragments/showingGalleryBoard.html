@@ -1,4 +1,5 @@
-<table class="table table-borderless" style="table-layout: fixed; font-size: 90%" th:fragment="commonBoard">
+
+<table class="table table-borderless" style="table-layout: fixed; font-size: 90%" th:fragment="commonBoard" th:if="${postList!=null and  not postList.empty} ">
     <thead class="thead-dark">
     <tr class="text-center table-header">
         <th style="width: 70px;" scope="col">갤러리</th>
@@ -21,7 +22,7 @@
             <p th:text="${post.contentIdx}"></p>
         </td>
         <td>
-            <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="|${post.title} |"> </a>
+            <a th:href="@{'/gallery/' + ${post.gallery} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="|${post.title} |"> </a>
             <p style="display: inline" th:text="|[${post.boardInfo.commentCount}]|"></p>
         </td>
         <td>

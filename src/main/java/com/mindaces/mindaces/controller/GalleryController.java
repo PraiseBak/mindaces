@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping(value = "/gallery")
 public class GalleryController
 {
+    private UserService userService;
     private CommentService commentService;
     private BoardService boardService;
     private GalleryService galleryService;
@@ -70,6 +71,51 @@ public class GalleryController
         return "gallery/galleryContentList";
     }
 
+    @PostMapping(value = "/{galleryName}/search" )
+    public String gallerySearch(
+            Model model,
+            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "1") Integer page,
+            @PathVariable(name = "galleryName") String galleryName,
+            @RequestParam("searchKeyword") String searchKeyword,
+            @RequestParam("searchMode") String searchMode
+    )
+    {
+        Boolean isGallery = galleryService.isGallery(galleryName);
+        if(!isGallery)
+        {
+            return errorGalleryURL;
+        }
+
+        if(!(pagingMode.equals("")|| pagingMode.equals("mostLikedBoard")))
+        {
+            return errorBoardURL;
+        }
+
+        boardService.addingPagedBoardToModelByKeyword(model,searchKeyword,searchMode,page,pagingMode);
+        model.addAttribute("galleryName",galleryName);
+        model.addAttribute("pagingMode",pagingMode);
+        model.addAttribute("page",page);
+        return "gallery/galleryContentList";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //글 내용 보여주기
     @GetMapping(value = "/{galleryName}/{index}")
     public String postContent(
@@ -97,7 +143,6 @@ public class GalleryController
         }
 
         boardDto = boardService.getBoardDtoByGalleryNameAndContentIdx(galleryName,contentIdx);
-//        commentDtoList = commentService.getCommentByContentIdxAndGalleryName(galleryName,contentIdx);
         if(principal != null)
         {
             userName = principal.getAttribute("name");
@@ -118,15 +163,17 @@ public class GalleryController
         mostLikedCommentList = likesService.getMostLikedCommentList((List<CommentDto>) model.getAttribute("commentList"));
         boardService.addVisitedNum(contentIdx);
 
-//        model.addAttribute("commentList",commentDtoList);
         model.addAttribute("mostLikedCommentList",mostLikedCommentList);
         model.addAttribute("board",boardDto);
         model.addAttribute("userName",userName);
         model.addAttribute("userPassword",userPassword);
         model.addAttribute("pagingMode",pagingMode);
+        model.addAttribute("page",page);
 
         return "gallery/postContent";
     }
+
+
 
 
 }

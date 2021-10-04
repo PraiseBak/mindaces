@@ -81,6 +81,7 @@ public class UserService implements UserDetailsService
         return 1L;
     }
 
+
     public Long findUserEmail(String userEmail)
     {
         Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);

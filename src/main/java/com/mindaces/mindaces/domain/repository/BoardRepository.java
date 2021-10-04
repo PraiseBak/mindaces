@@ -19,7 +19,12 @@ public interface BoardRepository extends JpaRepository<Board, Long>
     Page<Board> findByGalleryAndBoardInfoIsRecommendedBoardIsTrue(String gallery, Pageable pageable);
     Long countBoardByUserAndIsLoggedUser(String user,Long isLoggedUser);
     Page<Board> findByUserAndBoardInfoIsRecommendedBoardIsTrue(String user, Pageable pageable);
-    Long countBoardByUser(String user);
     Page<Board> findByUser(String user, Pageable pageable);
+    Long countBoardByUserAndBoardInfoIsRecommendedBoardIsTrueAndIsLoggedUser(String user,Long isLoggedUser);
+    Page<Board> findByTitleContainingAndBoardInfoIsRecommendedBoard(String title, Boolean isRecommendedBoard, Pageable pageable);
+    Page<Board> findByContentContainingAndBoardInfoIsRecommendedBoard(String conetnt, Boolean isRecommendedBoard, Pageable pageable);
+    Long countBoardByTitleContaining(String title);
+    Long countBoardByContentContaining(String content);
+
 }
 
