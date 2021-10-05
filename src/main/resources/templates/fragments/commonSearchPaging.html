@@ -1,0 +1,9 @@
+
+<form method="post" id="pagingForm">
+    <input hidden th:if="${searchMode != null}" th:value="${searchMode}" name="searchMode">
+    <input hidden th:if="${searchKeyword != null}"  th:value="${searchKeyword}" name="searchKeyword">
+    <span th:each="pageNum : ${pageList}" th:inline="text" th:fragment="commonBoardPaging">
+        <button class="btn btn-dark" th:onclick="|window.location.href='?pagingMode=&page=${pageNum}'|" th:if="${pageNum}">[[${pageNum}]]</button>
+    </span>
+</form>
+

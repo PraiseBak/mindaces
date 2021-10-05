@@ -71,7 +71,7 @@ public class GalleryController
         return "gallery/galleryContentList";
     }
 
-    @PostMapping(value = "/{galleryName}/search" )
+    @RequestMapping(value = "/{galleryName}/search",method = {RequestMethod.GET,RequestMethod.POST})
     public String gallerySearch(
             Model model,
             @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
@@ -96,25 +96,11 @@ public class GalleryController
         model.addAttribute("galleryName",galleryName);
         model.addAttribute("pagingMode",pagingMode);
         model.addAttribute("page",page);
+        model.addAttribute("searchKeyword",searchKeyword);
+        model.addAttribute("searchMode",searchMode);
+
         return "gallery/galleryContentList";
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //글 내용 보여주기
     @GetMapping(value = "/{galleryName}/{index}")

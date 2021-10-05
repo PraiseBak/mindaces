@@ -16,8 +16,8 @@
                     </div>
 
                     <div class="header">
-                        <button class="btn-outline-dark btn" th:onclick="location.href='?pagingMode='">전체글</button>
-                        <button class="btn-outline-dark btn" th:onclick="location.href='?pagingMode=mostLikedBoard'">개념글</button>
+                        <button class="btn-outline-dark btn" th:onclick="|window.location.href='?pagingMode=&page=${page}'|" >전체글</button>
+                        <button class="btn-outline-dark btn" th:onclick="|window.location.href='?pagingMode=mostLikedBoard&page=${page}'|">개념글</button>
                     </div>
 
                     <table th:replace="fragments/commonBoard">
@@ -30,7 +30,7 @@
 
 
                     <div class="text-center " style="float:none; margin:0 auto">
-                    <span th:replace="fragments/commonBoardPaging"></span>
+                    <span th:replace="fragments/commonSearchPaging"></span>
                     </div>
                 </div>
             </div>
