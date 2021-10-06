@@ -39,7 +39,7 @@ public class CommentController
             @PathVariable(name="index") Long contentIdx,
             CommentDto commentDto,
             Authentication authentication,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             RedirectAttributes attributes
     )
@@ -62,7 +62,7 @@ public class CommentController
             @PathVariable(name="index") Long contentIdx,
             CommentDto commentDto,
             Authentication authentication,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             RedirectAttributes attributes
     )
@@ -82,7 +82,7 @@ public class CommentController
             @PathVariable(name="index") Long contentIdx,
             CommentDto commentDto,
             Authentication authentication,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             RedirectAttributes attributes
 

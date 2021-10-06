@@ -100,7 +100,7 @@ public class UserController
             model.addAttribute("selectedMode","Board");
             model.addAttribute("username",username);
        }
-        model.addAttribute("pagingMode","");
+        model.addAttribute("pagingMode","board");
         model.addAttribute("page",page);
 
         return "userInfopage/userWroteContent";
@@ -121,7 +121,7 @@ public class UserController
             model.addAttribute("username",username);
 
         }
-        model.addAttribute("pagingMode","");
+        model.addAttribute("pagingMode","board");
         model.addAttribute("page",page);
         return "userInfopage/userWroteContent";
     }
@@ -141,7 +141,7 @@ public class UserController
             model.addAttribute("username",username);
         }
 
-        model.addAttribute("pagingMode","");
+        model.addAttribute("pagingMode","board");
         model.addAttribute("page",page);
         return "userInfopage/userWroteContent";
     }

@@ -64,7 +64,7 @@ public class BoardController
                              BoardDto boardDto,
                              Authentication authentication,
                              RedirectAttributes attributes,
-                             @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+                             @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
                              @RequestParam(required = false,defaultValue = "1") Integer page)
     {
         //로그인한 유저가 작성한 글의 비밀번호는 ****로 저장됨 어차피 나중에 확인할때 비밀번호 없이 확인할것이라 상관 X
@@ -102,7 +102,7 @@ public class BoardController
             @PathVariable(name = "index") Long contentIdx,
             Model model,
             String hiddenPassword,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             RedirectAttributes attributes
     )
@@ -131,7 +131,7 @@ public class BoardController
             BoardDto boardDto,
             Authentication authentication,
             RedirectAttributes redirectAttributes,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page
 
     )
@@ -173,7 +173,7 @@ public class BoardController
             @PathVariable(name = "index") Long contentIdx,
             String hiddenPassword,
             Authentication authentication,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             RedirectAttributes attributes
     )

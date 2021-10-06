@@ -185,7 +185,7 @@ public class LikesService
     }
 
 
-    public Map<String, Long> getRecentCommentLikes(String galleryName, Long boardIdx)
+    public Map<String, Long> getRecentBoardLikes(String galleryName, Long boardIdx)
     {
         BoardDto boardDto = this.boardService.getBoardDtoByGalleryNameAndContentIdx(galleryName,boardIdx);
         Map<String,Long> map = new HashMap<String, Long>();

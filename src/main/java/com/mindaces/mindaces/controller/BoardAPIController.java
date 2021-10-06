@@ -149,7 +149,7 @@ public class BoardAPIController
     public Map<String,Long> getRecentLikesAPI(@RequestParam(value = "gallery") String gallery, @RequestParam(value = "boardIdx") Long boardIdx)
     {
         Map<String,Long> map = new HashMap<String,Long>();
-        map = likesService.getRecentCommentLikes(gallery,boardIdx);
+        map = likesService.getRecentBoardLikes(gallery,boardIdx);
         return map;
     }
 

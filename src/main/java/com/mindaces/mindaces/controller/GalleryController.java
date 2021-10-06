@@ -47,7 +47,7 @@ public class GalleryController
     @GetMapping(value = "/{galleryName}" )
     public String galleryContentList(
             Model model,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             @PathVariable(name = "galleryName") String galleryName
     )
@@ -58,7 +58,7 @@ public class GalleryController
             return errorGalleryURL;
         }
 
-        if(!(pagingMode.equals("")|| pagingMode.equals("mostLikedBoard")))
+        if(!(pagingMode.equals("board") || pagingMode.equals("mostLikedBoard")))
         {
             return errorBoardURL;
         }
@@ -71,12 +71,12 @@ public class GalleryController
         return "gallery/galleryContentList";
     }
 
-    @RequestMapping(value = "/{galleryName}/search",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/{galleryName}/search/{pagingMode}/{page}",method = {RequestMethod.GET,RequestMethod.POST})
     public String gallerySearch(
             Model model,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
-            @RequestParam(required = false,defaultValue = "1") Integer page,
             @PathVariable(name = "galleryName") String galleryName,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
+            @PathVariable(name = "page") Integer page,
             @RequestParam("searchKeyword") String searchKeyword,
             @RequestParam("searchMode") String searchMode
     )
@@ -87,7 +87,7 @@ public class GalleryController
             return errorGalleryURL;
         }
 
-        if(!(pagingMode.equals("")|| pagingMode.equals("mostLikedBoard")))
+        if(! (pagingMode.equals("board") || pagingMode.equals("mostLikedBoard")))
         {
             return errorBoardURL;
         }
@@ -98,7 +98,6 @@ public class GalleryController
         model.addAttribute("page",page);
         model.addAttribute("searchKeyword",searchKeyword);
         model.addAttribute("searchMode",searchMode);
-
         return "gallery/galleryContentList";
     }
 
@@ -106,7 +105,7 @@ public class GalleryController
     @GetMapping(value = "/{galleryName}/{index}")
     public String postContent(
             Model model,
-            @RequestParam(required = false,defaultValue = "",value = "pagingMode") String pagingMode,
+            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
             @RequestParam(required = false,defaultValue = "1") Integer commentPage,
             @PathVariable(name="galleryName") String galleryName,
@@ -123,6 +122,7 @@ public class GalleryController
         String userPassword = "****";
 
         isGallery = galleryService.isGallery(galleryName);
+        System.out.println(isGallery);
         if(!isGallery)
         {
             return errorGalleryURL;

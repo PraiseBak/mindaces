@@ -1,9 +1,26 @@
 
-<form method="post" id="pagingForm">
-    <input hidden th:if="${searchMode != null}" th:value="${searchMode}" name="searchMode">
-    <input hidden th:if="${searchKeyword != null}"  th:value="${searchKeyword}" name="searchKeyword">
-    <span th:each="pageNum : ${pageList}" th:inline="text" th:fragment="commonBoardPaging">
-        <button class="btn btn-dark" th:onclick="|window.location.href='?pagingMode=&page=${pageNum}'|" th:if="${pageNum}">[[${pageNum}]]</button>
-    </span>
-</form>
+<div id="commonSearchPagingArea" th:fragment="commonSearchPaging">
 
+    <form method="post" id="pagingForm" th:action="@{'/gallery/' + ${galleryName} + '/search/' + ${pagingMode} + '/'}">
+        <input hidden th:if="${searchMode != null}" th:value="${searchMode}" name="searchMode">
+        <input hidden th:if="${searchKeyword != null}"  th:value="${searchKeyword}" name="searchKeyword">
+
+        <span th:each="pageNum : ${pageList}">
+            <button type="button" th:if="${pageNum != null}" class="btn btn-dark" th:onclick="formActionUpdate([[${pageNum}]])">[[${pageNum}]]</button>
+        </span>
+    </form>
+
+
+    <script>
+        function formActionUpdate(pageNum)
+        {
+            var form = document.getElementById("pagingForm");
+            form.action += pageNum;
+            form.submit();
+        }
+    </script>
+
+
+
+
+</div>

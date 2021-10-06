@@ -75,10 +75,16 @@ public class GalleryService
     public void updateRecommendInfo(String galleryName,Long likes,Boolean isNewRecommended)
     {
         Gallery gallery = this.getGalleryByGalleryName(galleryName);
-        gallery.addRecommendedLikesSum(likes);
+        System.out.println(isNewRecommended);
+        System.out.println(gallery.getRecommendedLikesSum());
         if(isNewRecommended)
         {
+            gallery.addRecommendedLikesSum(likes);
             gallery.updateRecommendBoardCount();
+        }
+        else
+        {
+            gallery.addRecommendedLikesSum(1L);
         }
         this.galleryRepository.save(gallery);
 
@@ -106,11 +112,9 @@ public class GalleryService
         }
 
         Long newRecommendedStandard = recommendedLikesSum / recommendedBoardCount;
-        //10으로 둘까요
 
         if(recommendedBoardCount > this.renewRecommendeBoardCount)
         {
-            //아마 이런일은 없겠지만 혹시 몰라서
             gallery.updateRecommendStandard(newRecommendedStandard);
             galleryRepository.save(gallery);
         }

@@ -374,10 +374,10 @@ public class BoardService
 
         if(boardRecommend >= recommendStandard && countComment >= recommendStandard / 3)
         {
-            board.getBoardInfo().updateIsRecommendedBoard();
             boardRepository.save(board);
             //처음 개념글 되는애면 gallery에서 count랑 like 갱신해줘야함
-            galleryService.updateRecommendInfo(galleryName,boardRecommend,true);
+            galleryService.updateRecommendInfo(galleryName,boardRecommend,!(board.getBoardInfo().getIsRecommendedBoard()));
+            board.getBoardInfo().updateIsRecommendedBoard();
         }
     }
 
