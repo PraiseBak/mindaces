@@ -37,8 +37,12 @@ public class ValidCheck
 
     public boolean isValidID(String id)
     {
-        //닉네임은 한글, 영문, 숫자만 가능하며 2-10자리 가능.
-        String regex = "^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{1,10}$";
+        if(id.length() < 2 || id.length() > 20)
+        {
+            return false;
+        }
+        //닉네임은 한글, 영문, 숫자만 가능하며 2-20자리 가능.
+        String regex = "^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣])+$";
         return Pattern.matches(regex,id);
     }
 
@@ -46,7 +50,13 @@ public class ValidCheck
     {
         //'숫자', '문자' 무조건 1개 이상, '최소 8자에서 최대 20자' 허용 \
         // (특수문자는 정의된 특수문자만 사용 가능)
-        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{8,20}$";
+
+        if(password.length() < 8 || password.length() > 20)
+        {
+            return false;
+        }
+
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]+$";
         return Pattern.matches(regex,password);
     }
 

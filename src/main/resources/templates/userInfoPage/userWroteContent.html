@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:insert="base/head.html">
 </head>
@@ -17,7 +17,7 @@
                     </div>
 
                     <div class="container-fluid row">
-                        <div id="showingContentBtns" class="col-sm-2 text-center">
+                        <div id="showingContentBtns" class="col-md-2 text-center">
                             <ul style="list-style: none; ">
                                 <div>
                                     <!--컨트롤러에서 받아온 mode 로 강조표시-->
@@ -29,25 +29,45 @@
                         </div>
 
 
-                        <div class="content-part col-sm-8" style=" width: 100%" th:if="${postList != null}">
+                        <div class="content-part col-md-8" th:if="${postList != null}">
                             <p th:if="${postList?.empty}" class="text-center">작성한 게시물이 없습니다</p>
-
                             <table th:replace="fragments/showingGalleryBoard">
                             </table>
                         </div>
+
                         <!--   댓글들    -->
-
-                        <div class="col-sm-8">
+                        <div class="col-md-8 text-center" th:if="${commentList != null}">
                             <p th:if="${commentList?.empty}" class="text-center">작성한 댓글이 없습니다</p>
-
-                            <div class="comment" style="margin-top: 10px" th:each="comment : ${commentList}">
-
+                            <div class="comment" style="margin-top: 10px" th:each="comment,index : ${commentList}">
                                 <div class="form-input">
-                                    <pre id="commentModifyContent" style="overflow:hidden; height: auto" class="comment-content form-control" th:text="${comment.content}"></pre>
-                                    <span th:text="|${comment.gallery} 갤러리|" style="color: #9f9f9f"></span>
-                                    <span th:text="|작성 ${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
+                                    <a th:href="@{'/gallery/' + ${comment.gallery} + '/' + ${comment.boardIdx} + '?pagingMode=&page=1'}">
+                                        <span id="commentWroteContentTitle" th:text="|게시물 제목 = ${contentTitleList[index.index]}|"></span>
+                                        <pre id="commentModifyContent" style="overflow:hidden; height: auto" class="comment-content form-control mt-2" th:text="${comment.content}"></pre>
+                                        <span th:text="|${comment.gallery} 갤러리|" style="color: #9f9f9f"></span>
+                                        <span th:text="|작성 ${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm:ss')}|" style="color: #9f9f9f"></span>
+                                    </a>
                                 </div>
                             </div>
+                        </div>
+
+
+                        <div id="modiftUserInfoArea" class="col-md-2 text-center">
+                            <!-- 패널 타이틀2 -->
+                            <div class="panel panel-default" sec:authorize="isAuthenticated()" th:if="${#authorization.getAuthentication().getName()} == ${username}">
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        <span>유저 정보 수정</span>
+                                    </h3>
+                                </div>
+                                <!-- 사이드바 메뉴목록2 -->
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <a th:href="@{/user/${username}/changePassword}">비밀번호 변경</a>
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
 
 
@@ -55,16 +75,14 @@
 
                     <!-- 댓글 페이징 -->
                     <div class="text-center mb-4" style="float:none;">
-
-
-                    <span th:each="pageNum : ${commentPageList}" th:inline="text">
-                         <button class="btn btn-dark" th:onclick="| location.href='@{'?pagingMode=' + ${pagingMode}  + '&amp;page=' + ${pageNum}}  ' |" th:if="${pageNum}">[[${pageNum}]]</button>
-                    </span>
+                        <span th:each="pageNum : ${commentPageList}" th:inline="text">
+                             <button class="btn btn-dark" th:onclick="| location.href='@{'?pagingMode=' + ${pagingMode}  + '&amp;page=' + ${pageNum}}  ' |" th:if="${pageNum}">[[${pageNum}]]</button>
+                        </span>
                     </div>
 
                     <!-- 게시물 페이징 -->
                     <div class="text-center " style="float:none; margin:0 auto">
-                        <span th:replace="fragments/commonBoardPaging"></span>
+                        <span th:replace="fragments/commonBoardPaging :: commonBoardPaging (false)"></span>
                     </div>
 
                 </div>

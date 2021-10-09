@@ -1,7 +1,9 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.BoardDto;
+import com.mindaces.mindaces.service.BoardSearchService;
 import com.mindaces.mindaces.service.BoardService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
@@ -15,23 +17,21 @@ import java.util.Enumeration;
 import java.util.List;
 
 @Controller
+@AllArgsConstructor
 public class MainController
 {
     private BoardService boardService;
     private HttpSession httpSession;
+    private BoardSearchService boardSearchService;
 
-
-    public MainController(BoardService boardService,HttpSession httpSession)
-    {
-        this.httpSession = httpSession;
-        this.boardService = boardService;
-    }
 
     @GetMapping("/")
     public String main(Model model)
     {
-        List<BoardDto> boardDtoList = boardService.getMostLikelyBoardList();
-        model.addAttribute("mostLikedBoardList",boardDtoList);
+        List<BoardDto> boardDtoList = boardSearchService.getMostLikelyBoardList();
+        model.addAttribute("postList",boardDtoList);
+        model.addAttribute("pagingMode","");
+        model.addAttribute("page",1);
         return "main/main";
     }
 

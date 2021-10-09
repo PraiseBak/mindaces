@@ -16,14 +16,13 @@
             <p th:text="${post.contentIdx}"></p>
         </td>
         <td>
+            <p style="display: inline" th:if="${post.boardInfo.isRecommendedBoard}"   th:text="|🍀|"></p>
             <a th:href="@{'/gallery/' + ${galleryName} + '/' +${post.contentIdx} + '?pagingMode=' + ${pagingMode} + '&page=' + ${page}}" th:text="|${post.title} |"> </a>
             <p style="display: inline" th:text="|[${post.boardInfo.commentCount}]|"></p>
         </td>
         <td>
-
             <p th:if="${post.isLoggedUser} == 0" th:text="|${post.user}|"></p>
             <a th:href="@{'/user/' + ${post.user}}" th:if="${post.isLoggedUser} == 1" th:text="|${post.user} &nbsp 😎|"></a>
-
 
         </td>
         <td>

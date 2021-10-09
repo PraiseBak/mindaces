@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,7 +35,7 @@ public class UserService implements UserDetailsService
         boolean isValid = validCheck.isSignupValid(inputID,userDto.getUserPassword(),userDto.getUserEmail());
 
         //중복확인으로 체크하긴 하지만 혹시모르니 더블 체크
-        if(userRepository.findByUserID(inputID).isPresent() || !isValid || userRepository.findByUserID(userDto.getUserEmail()).isPresent())
+        if(userRepository.findByUserID(inputID) != null || !isValid || userRepository.findByUserID(userDto.getUserEmail()) != null)
         {
             return (long) -1;
         }
@@ -49,14 +50,14 @@ public class UserService implements UserDetailsService
     public UserDetails loadUserByUsername(String userID) throws UsernameNotFoundException
     {
         //Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);
-        Optional<User> userEntityWrapper = userRepository.findByUserID(userID);
-        if(userEntityWrapper.isEmpty())
+        User userEntityWrapper = userRepository.findByUserID(userID);
+        UserDetails userDetails;
+        if(userEntityWrapper == null)
         {
             System.out.println("존재하지 않은 유저입니다");
             throw new UsernameNotFoundException(userID + " : 존재하지 않는 유저입니다");
         }
 
-        User user = userEntityWrapper.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         if(("praisebak@naver.com").equals(userID))
@@ -67,14 +68,16 @@ public class UserService implements UserDetailsService
         {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
         }
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUserID(), user.getUserPassword(), authorities);
+
+        userDetails = new org.springframework.security.core.userdetails.User(userEntityWrapper.getUserID(), userEntityWrapper.getUserPassword(), authorities);
         return userDetails;
     }
 
     public Long findUserID(String userID)
     {
-        Optional<User> userEntityWrapper = userRepository.findByUserID(userID);
-        if(userEntityWrapper.isEmpty())
+        User userEntity;
+        userEntity = userRepository.findByUserID(userID);
+        if(userEntity == null)
         {
             return -1L;
         }
@@ -84,13 +87,29 @@ public class UserService implements UserDetailsService
 
     public Long findUserEmail(String userEmail)
     {
-        Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);
-        if(userEntityWrapper.isEmpty())
+        User userEntityWrapper = userRepository.findByUserEmail(userEmail);
+        if(userEntityWrapper == null)
         {
             return -1L;
         }
         return 1L;
     }
 
+    public Boolean isExistingEmailAndID(UserDto userDto)
+    {
+        String userEmail;
+        String userID;
+        userEmail = userDto.getUserEmail();
+        userID = userDto.getUserID();
+        return this.userRepository.existsByUserEmailAndUserID(userEmail,userID);
+    }
 
+    @Transactional
+    public void changePassword(UserDto userDto,String password)
+    {
+        User user;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user = this.userRepository.findByUserID(userDto.getUserID());
+        user.setUserPassword(passwordEncoder.encode(password));
+    }
 }

@@ -22,7 +22,7 @@ public class SignUpAPIController
     {
         Long isDuplicateUser = 0L;
         String msg = "중복된";
-        String idOrEmail = "닉네임입니다";
+        String idOrEmail = "아이디입니다";
         if(userDto.getUserID() == null)
         {
             idOrEmail = "이메일입니다";
@@ -37,10 +37,6 @@ public class SignUpAPIController
             msg = "사용가능한";
         }
         model.addAttribute("msg",msg + " " + idOrEmail);
-        if(idOrEmail.equals("이메일입니다"))
-        {
-            return "userInfoPage/signup :: #resultArea";
-        }
-        return "userInfoPage/signup :: #alarmArea";
+        return "userInfoPage/signup :: #resultArea";
     }
 }

@@ -3,13 +3,36 @@ var userPassword = document.querySelector("#userPassword");
 var userEmail = document.querySelector("#userEmail");
 var submitBtn = document.querySelector("#submitBtn");
 
-userEmail.onblur = function (e) {
+userPassword.addEventListener("blur",displayValidatePassword,true);
+userEmail.addEventListener("blur",displayValidateEmail,true);
+userID.addEventListener("blur",displayValidateID,true);
+
+function displayAllValidateResult() {
+    if (!isValidID) {
+        displayValidateID();
+    }
+    else if (!isValidPassword)
+    {
+        displayValidatePassword();
+    }
+    else if (!isValidEmail)
+    {
+        displayValidateEmail();
+    }
+    if (isValidID && isValidPassword && isValidEmail)
+    {
+        $("#resultArea").text("가입 가능한 정보입니다");
+    }
+}
+
+function displayValidateEmail()
+{
     var data = $("#userEmail").val();
     isValidEmail = false;
     if (data.length < 4 || data.length > 40) {
         $("#resultArea").text("유효하지 않은 이메일입니다");
     }
-    if (checkValidateEmail(data) === false)
+    else if (checkValidateEmail(data) === false)
     {
         $("#resultArea").text("유효하지 않은 이메일입니다");
     }
@@ -18,12 +41,15 @@ userEmail.onblur = function (e) {
         checkDuplicateUserEmail(data);
         if(isValidEmail === true)
         {
-            $("#resultArea").text("");
+            displayAllValidateResult();
         }
     }
 }
 
-userPassword.onblur = function (e) {
+
+
+function displayValidatePassword()
+{
     var data = $("#userPassword").val();
     isValidPassword = false;
     if (data.length < 8 || data.length > 20) {
@@ -36,21 +62,28 @@ userPassword.onblur = function (e) {
     {
         $("#resultArea").text("");
         isValidPassword = true;
+        displayAllValidateResult();
+
     }
 
 }
 
-userID.onblur = function (e) {
+function displayValidateID()
+{
     var data = $("#userID").val();
     isValidID = false;
-    if (data.length < 2 || data.length > 10) {
-        $("#alarmArea").text("입력은 최소 2자 최대 10자만 가능합니다");
+    if (data.length < 2 || data.length > 20) {
+        $("#resultArea").text("입력은 최소 2자 최대 10자만 가능합니다");
     } else if (checkValidateID(data) === false) {
-        $("#alarmArea").text("닉네임은 한글, 영문, 숫자만 가능합니다");
+        $("#resultArea").text("닉네임은 한글, 영문, 숫자만 가능합니다");
     }
     else
     {
         checkDuplicateUserID(data);
+        if (isValidID === true)
+        {
+            displayAllValidateResult();
+        }
     }
 }
 

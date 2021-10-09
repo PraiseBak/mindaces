@@ -20,6 +20,7 @@
 
                         <div class="contentUpper row"  style="margin-top:3px;">
                             <h3 class="col-sm-8">
+                                <p style="display: inline" th:if="${board.boardInfo.isRecommendedBoard}"   th:text="|🍀|"></p>
                                 <span th:text="${board.title}"></span>
                             </h3>
                             <div class="col">
@@ -217,7 +218,7 @@
 
                 <!-- 게시물 페이징 -->
                 <div class="text-center" style="float:none; margin:0 auto">
-                    <span th:replace="fragments/commonBoardPaging"></span>
+                    <span th:replace="fragments/commonBoardPaging :: commonBoardPaging (true)"></span>
                 </div>
 
                 <!-- 게시물 검색 -->
@@ -255,7 +256,6 @@
     //파라미터 유지
     $("a[rel~='keep-params']").click(function(e) {
         e.preventDefault();
-
         var params = window.location.search,
             dest = $(this).attr('href') + params;
         // in my experience, a short timeout has helped overcome browser bugs

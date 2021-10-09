@@ -3,8 +3,10 @@ package com.mindaces.mindaces.controller;
 import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.service.BoardInfoService;
+import com.mindaces.mindaces.service.BoardSearchService;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.CommentService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,19 +20,14 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.transaction.Transactional;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping(value = "/gallery")
 public class CommentController
 {
     private CommentService commentService;
     private BoardService boardService;
     private BoardInfoService boardInfoService;
-
-    CommentController(CommentService commentService,BoardService boardService,BoardInfoService boardInfoService)
-    {
-        this.commentService = commentService;
-        this.boardService = boardService;
-        this.boardInfoService = boardInfoService;
-    }
+    private BoardSearchService boardSearchService;
 
     @Transactional
     @PostMapping(value = "/{galleryName}/{index}")
@@ -47,7 +44,7 @@ public class CommentController
         Board board;
         Boolean result;
         result = commentService.addComment(galleryName,contentIdx,authentication,commentDto);
-        board = boardService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
+        board = boardSearchService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
         boardInfoService.updateCommentCount(board);
         boardService.updateIsRecommendBoard(galleryName,contentIdx,board);
         attributes.addAttribute("pagingMode",pagingMode);
@@ -68,7 +65,7 @@ public class CommentController
     )
     {
         Board board;
-        board = boardService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
+        board = boardSearchService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
         commentService.deleteComment(commentDto,authentication);
         boardInfoService.updateCommentCount(board);
         attributes.addAttribute("pagingMode",pagingMode);

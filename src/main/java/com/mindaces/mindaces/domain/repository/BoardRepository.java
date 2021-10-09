@@ -21,10 +21,47 @@ public interface BoardRepository extends JpaRepository<Board, Long>
     Page<Board> findByUserAndBoardInfoIsRecommendedBoardIsTrue(String user, Pageable pageable);
     Page<Board> findByUser(String user, Pageable pageable);
     Long countBoardByUserAndBoardInfoIsRecommendedBoardIsTrueAndIsLoggedUser(String user,Long isLoggedUser);
-    Page<Board> findByTitleContainingAndBoardInfoIsRecommendedBoard(String title, Boolean isRecommendedBoard, Pageable pageable);
-    Page<Board> findByContentContainingAndBoardInfoIsRecommendedBoard(String conetnt, Boolean isRecommendedBoard, Pageable pageable);
+
+    //title,gallery를 포함하는 [전체] 게시물들
+    Page<Board> findByTitleContainingAndGallery(String title, Pageable pageable,String gallery);
+    //title,gallery를 포함하는 [개념글] 게시물들
+    Page<Board> findByTitleContainingAndGalleryAndBoardInfoIsRecommendedBoardIsTrue(String title,Pageable pageable,String gallery);
+    //title를 포함하는 [전체] 게시물들
+    Page<Board> findByTitleContaining(String title, Pageable pageable);
+    //title를 포함하는 [개념글] 게시물들
+    Page<Board> findByTitleContainingAndBoardInfoIsRecommendedBoardIsTrue(String title,Pageable pageable);
+    //content,gallery를 포함하는 [전체] 게시물들
+    Page<Board> findByContentContainingAndGallery(String content, Pageable pageable,String gallery);
+    //content,gallery를 포함하는 내용 [개념글] 게시물들
+    Page<Board> findByContentContainingAndGalleryAndBoardInfoIsRecommendedBoardIsTrue(String content, Pageable pageable,String gallery);
+    //content를 포함하는 [전체] 게시물들
+    Page<Board> findByContentContaining(String content, Pageable pageable);
+    //content를 포함하는 [개념글] 게시물들
+    Page<Board> findByContentContainingAndBoardInfoIsRecommendedBoardIsTrue(String content, Pageable pageable);
+
+    //title,gallery를 포함한 [전체] 게시물들
+    Long countBoardByTitleContainingAndGallery(String title,String gallery);
+    //title,gallery를 포함한 [개념글] 게시물들
+    Long countBoardByTitleContainingAndGalleryAndBoardInfoIsRecommendedBoardIsTrue(String title,String gallery);
+    //title를 포함한 [전체] 게시물들
     Long countBoardByTitleContaining(String title);
+    //title를 포함한 [개념글] 게시물들
+    Long countBoardByTitleContainingAndBoardInfoIsRecommendedBoardIsTrue(String title);
+    //content,gallery를 포함한 [전체] 게시물들
+    Long countBoardByContentContainingAndGallery(String content,String gallery);
+    //content,gallery를 포함한 [개념글] 게시물들
+    Long countBoardByContentContainingAndGalleryAndBoardInfoIsRecommendedBoardIsTrue(String content,String gallery);
+    //content를 포함한 [전체] 게시물들
     Long countBoardByContentContaining(String content);
+    //content를 포함한 [개념글] 게시물들
+    Long countBoardByContentContainingAndBoardInfoIsRecommendedBoardIsTrue(String content);
+
+
+
+
+
+
+
 
 }
 

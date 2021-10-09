@@ -12,3 +12,17 @@
     margin-top: 20px;
 }
 
+.col-center
+{
+    float: none;
+    margin:0 auto;
+    width: 30%;
+}
+
+
+.row-center
+{
+    float: none;
+    margin:100 auto;
+}
+

@@ -5,6 +5,7 @@ import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.GalleryDto;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,8 +76,6 @@ public class GalleryService
     public void updateRecommendInfo(String galleryName,Long likes,Boolean isNewRecommended)
     {
         Gallery gallery = this.getGalleryByGalleryName(galleryName);
-        System.out.println(isNewRecommended);
-        System.out.println(gallery.getRecommendedLikesSum());
         if(isNewRecommended)
         {
             gallery.addRecommendedLikesSum(likes);
@@ -86,8 +85,6 @@ public class GalleryService
         {
             gallery.addRecommendedLikesSum(1L);
         }
-        this.galleryRepository.save(gallery);
-
     }
 
 

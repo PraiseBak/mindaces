@@ -5,6 +5,7 @@ import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.CommentRepository;
 import com.mindaces.mindaces.domain.repository.LikesRepository;
 import com.mindaces.mindaces.dto.CommentDto;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,24 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CommentService
 {
     private CommentRepository commentRepository;
     private RoleService roleService;
     private LikesRepository likesRepository;
     private UtilService utilService;
+    private BoardSearchService boardSearchService;
 
     final static int COMMENT_PER_PAGE = 10;
     final static int MAX_PAGE_BUTTON_NUM = 10;
-
-
-    public CommentService(CommentRepository commentRepository,RoleService roleService,LikesRepository likesRepository,UtilService utilService)
-    {
-        this.roleService = roleService;
-        this.commentRepository = commentRepository;
-        this.likesRepository = likesRepository;
-        this.utilService = utilService;
-    }
 
     Sort getSortByCreateDate()
     {
@@ -323,6 +317,7 @@ public class CommentService
                 .user(comment.getUser())
                 .nestedCommentList(comment.getNestedCommentList())
                 .parentCommentIdx(comment.getParentCommentIdx())
+                .boardIdx(comment.getBoardIdx())
                 .build();
     }
 
@@ -370,11 +365,18 @@ public class CommentService
         List<CommentDto> commentDtoList;
         Long count;
         Integer[] pageList;
+        List<String> contentTitleList = new ArrayList<>();
 
         commentDtoList = getPagedCommentList(null,null,username,page);
         count = this.commentRepository.countByUserAndIsLogged(username,1L);
         pageList = getPageList(page,count);
 
+        for(CommentDto comment : commentDtoList)
+        {
+            contentTitleList.add(boardSearchService.getBoardTitleByBoardIdxAndGallery(comment.getBoardIdx(),comment.getGallery()));
+        }
+
+        model.addAttribute("contentTitleList",contentTitleList);
         model.addAttribute("commentList",commentDtoList);
         model.addAttribute("commentPageList",pageList);
     }

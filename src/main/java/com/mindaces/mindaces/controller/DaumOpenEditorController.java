@@ -16,7 +16,4 @@ public class DaumOpenEditorController
         return "gallery/image";
     }
 
-
-
-
 }

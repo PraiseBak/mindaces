@@ -3,6 +3,7 @@ package com.mindaces.mindaces.controller;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.service.*;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -14,6 +15,7 @@ import java.util.List;
 
 //보여주거나 갤러리에 관련된것만 (board 수정하는건 BoardController)
 @Controller
+@AllArgsConstructor
 @RequestMapping(value = "/gallery")
 public class GalleryController
 {
@@ -23,18 +25,11 @@ public class GalleryController
     private GalleryService galleryService;
     private RoleService roleService;
     private LikesService likesService;
+    private BoardSearchService boardSearchService;
 
-    String errorGalleryURL = "redirect:/error/GalleryError";
-    String errorBoardURL = "redirect:/error/BoardError";
+    final String errorGalleryURL = "redirect:/error/GalleryError";
+    final String errorBoardURL = "redirect:/error/BoardError";
 
-    public GalleryController(BoardService boardService, GalleryService galleryService, CommentService commentService, RoleService roleService, LikesService likesService)
-    {
-        this.commentService = commentService;
-        this.boardService = boardService;
-        this.galleryService = galleryService;
-        this.roleService = roleService;
-        this.likesService = likesService;
-    }
 
     @GetMapping(value = "/galleryList" )
     public String galleryList(
@@ -63,7 +58,7 @@ public class GalleryController
             return errorBoardURL;
         }
 
-        boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
+        boardSearchService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
 
         model.addAttribute("galleryName",galleryName);
         model.addAttribute("pagingMode",pagingMode);
@@ -71,14 +66,15 @@ public class GalleryController
         return "gallery/galleryContentList";
     }
 
-    @RequestMapping(value = "/{galleryName}/search/{pagingMode}/{page}",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/{galleryName}/search/{pagingMode}/{page}",method = {RequestMethod.GET})
     public String gallerySearch(
             Model model,
             @PathVariable(name = "galleryName") String galleryName,
-            @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
+            @PathVariable(name = "pagingMode") String pagingMode,
             @PathVariable(name = "page") Integer page,
             @RequestParam("searchKeyword") String searchKeyword,
-            @RequestParam("searchMode") String searchMode
+            @RequestParam("searchMode") String searchMode,
+            @RequestParam(value = "searchGalleryKeyword",required = false) String searchGalleryKeyword
     )
     {
         Boolean isGallery = galleryService.isGallery(galleryName);
@@ -92,12 +88,18 @@ public class GalleryController
             return errorBoardURL;
         }
 
-        boardService.addingPagedBoardToModelByKeyword(model,searchKeyword,searchMode,page,pagingMode);
+        if(searchGalleryKeyword != null && searchGalleryKeyword.equals(""))
+        {
+            searchGalleryKeyword = null;
+        }
+
+        boardSearchService.addingPagedBoardToModelByKeyword(model,searchKeyword,searchMode,page,pagingMode,searchGalleryKeyword);
         model.addAttribute("galleryName",galleryName);
         model.addAttribute("pagingMode",pagingMode);
         model.addAttribute("page",page);
         model.addAttribute("searchKeyword",searchKeyword);
         model.addAttribute("searchMode",searchMode);
+        model.addAttribute("searchGalleryKeyword",searchGalleryKeyword);
         return "gallery/galleryContentList";
     }
 
@@ -122,13 +124,12 @@ public class GalleryController
         String userPassword = "****";
 
         isGallery = galleryService.isGallery(galleryName);
-        System.out.println(isGallery);
         if(!isGallery)
         {
             return errorGalleryURL;
         }
 
-        boardDto = boardService.getBoardDtoByGalleryNameAndContentIdx(galleryName,contentIdx);
+        boardDto = boardSearchService.getBoardDtoByGalleryAndIdx(galleryName,contentIdx);
         if(principal != null)
         {
             userName = principal.getAttribute("name");
@@ -144,7 +145,7 @@ public class GalleryController
             userName = "";
         }
 
-        boardService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
+        boardSearchService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
         commentService.addingPagedCommentToModel(model,galleryName,contentIdx,commentPage);
         mostLikedCommentList = likesService.getMostLikedCommentList((List<CommentDto>) model.getAttribute("commentList"));
         boardService.addVisitedNum(contentIdx);

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+<head th:insert="base/head.html">
+</head>
+<body>
+<div id="body-wrapper">
+    <div id="body-content">
+        <div class="text-center">
+            <h2 th:text="|비밀번호 찾기|">
+            </h2>
+        </div>
+        <hr>
+
+        <div class="row">
+            <div id="findPasswordFormInputArea" class="col-sm-12">
+
+                <div class="text-center mt-2 col-sm-12">
+                    <p>입력한 이메일로 임시 비밀번호가 전송되며 기존 비밀번호는 초기화됩니다</p>
+                </div>
+
+
+                <div id="findUserPasswordFormArea" class="col-center" >
+                    <input class="form-control" type="text" minlength="2" maxlength="20" name="username" required id="userID" placeholder="가입시 입력했던 아이디를 입력하세요">
+                    <input class="form-control" type="text" minlength="4" maxlength="40" name="userEmail" required id="userEmail" placeholder="가입시 입력했던 이메일을 입력하세요">
+                    <button class="form-control btn btn-dark" onclick="checkEmailAPI()" style="border:none;">제출</button>
+                </div>
+
+                <div class="col-center text-center mt-2">
+                    <h5 id="resultArea">
+                    </h5>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/commonFooter :: commonFooter">
+</div>
+
+
+<script src="/js/sendEmailAPI.js"></script>
+
+
+</html>
+
+
+
+

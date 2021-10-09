@@ -7,6 +7,7 @@ import com.mindaces.mindaces.domain.repository.LikesRepository;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.dto.CommentDto;
 import com.mindaces.mindaces.dto.LikeComparator;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class LikesService
 {
     private CommentLikeRepository commentLikeRepository;
@@ -24,19 +26,8 @@ public class LikesService
     private GalleryService galleryService;
     private CommentService commentService;
     private LikesRepository likesRepository;
+    private BoardSearchService boardSearchService;
 
-
-    public LikesService(BoardLikedUserInfoRepository boardLikedUserInfoRepository, RoleService roleService, BoardService boardService,
-                        GalleryService galleryService, CommentLikeRepository commentLikeRepository, CommentService commentService, LikesRepository likesRepository)
-    {
-        this.commentService = commentService;
-        this.boardService = boardService;
-        this.boardLikedUserInfoRepository = boardLikedUserInfoRepository;
-        this.roleService = roleService;
-        this.galleryService = galleryService;
-        this.commentLikeRepository = commentLikeRepository;
-        this.likesRepository = likesRepository;
-    }
 
     public Boolean isRecommendModeOk(String mode)
     {
@@ -69,7 +60,6 @@ public class LikesService
         }
         return "통과";
     }
-
 
     @Transactional
     public String recommand(Map<String, Object> param, HttpServletRequest request,Authentication authentication)
@@ -112,23 +102,25 @@ public class LikesService
         {
             boardLikedUserInfo = new BoardLikedUserInfo(galleryName,boardIdx,"-" ,requestIP,userName);
         }
-
-
         this.boardLikedUserInfoRepository.save(boardLikedUserInfo);
-
         Likes likes = this.getLikesOfBoard(boardIdx);
+        likes.updateLike();
 
+        /*
+        //board Likes에 개추 + 1
         if(!this.updateLikes(recommendMode,likes))
         {
             return "예기지 못한 오류가 발생했습니다";
         }
+         */
 
-
-        board = boardService.getGalleryNameAndBoardIdx(galleryName, boardIdx);
+        board = boardSearchService.getGalleryNameAndBoardIdx(galleryName, boardIdx);
         board.getBoardLikedUserInfoList().add(boardLikedUserInfo);
-        boardService.getBoardAndUpdateGalleryRecommendInfo(galleryName,boardIdx,board);
-        galleryService.updateRecommendStandard(galleryName);
-        boardService.updateIsRecommendBoard(galleryName,boardIdx,board);
+        if(recommendMode.equals("like"))
+        {
+            boardService.updateIsRecommendBoard(galleryName,boardIdx,board);
+            galleryService.updateRecommendStandard(galleryName);
+        }
         return "통과";
     }
 
@@ -187,7 +179,7 @@ public class LikesService
 
     public Map<String, Long> getRecentBoardLikes(String galleryName, Long boardIdx)
     {
-        BoardDto boardDto = this.boardService.getBoardDtoByGalleryNameAndContentIdx(galleryName,boardIdx);
+        BoardDto boardDto = this.boardSearchService.getBoardDtoByGalleryAndIdx(galleryName,boardIdx);
         Map<String,Long> map = new HashMap<String, Long>();
         map.put("likes",boardDto.getLikes().getLike());
         map.put("dislike",boardDto.getLikes().getDislike());

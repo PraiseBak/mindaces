@@ -1,5 +1,8 @@
-<span th:each="pageNum : ${pageList}" th:inline="text" th:fragment="commonBoardPaging">
-    <button class="btn btn-dark" th:if="${pageNum}"
-        th:onclick="'location.href=\''+ @{'?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}} + '\''">[[${pageNum}]]</button>
+<span th:each="pageNum : ${pageList}" th:inline="text" th:fragment="commonBoardPaging (isPostContent)">
+    <button class="btn btn-dark" th:if="${pageNum != null && isPostContent}"
+             th:onclick="'location.href=\''+ @{'./?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}} + '\''">[[${pageNum}]]</button>
+
+    <button class="btn btn-dark" th:if="${pageNum != null && !isPostContent}"
+            th:onclick="'location.href=\''+ @{'?pagingMode=' + ${pagingMode} + '&page=' + ${pageNum}} + '\''">[[${pageNum}]]</button>
 </span>
 

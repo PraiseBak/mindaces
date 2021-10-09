@@ -1,9 +1,10 @@
 
 <div id="commonSearchPagingArea" th:fragment="commonSearchPaging">
 
-    <form method="post" id="pagingForm" th:action="@{'/gallery/' + ${galleryName} + '/search/' + ${pagingMode} + '/'}">
+    <form method="get" id="pagingForm" th:action="@{'/gallery/' + ${galleryName} + '/search/' + ${pagingMode} + '/'}">
         <input hidden th:if="${searchMode != null}" th:value="${searchMode}" name="searchMode">
         <input hidden th:if="${searchKeyword != null}"  th:value="${searchKeyword}" name="searchKeyword">
+        <input hidden th:if="${searchGalleryKeyword != null}"  th:value="${searchGalleryKeyword}" name="searchGalleryKeyword">
 
         <span th:each="pageNum : ${pageList}">
             <button type="button" th:if="${pageNum != null}" class="btn btn-dark" th:onclick="formActionUpdate([[${pageNum}]])">[[${pageNum}]]</button>

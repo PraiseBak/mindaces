@@ -1,10 +1,12 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.UserDto;
+import com.mindaces.mindaces.service.BoardSearchService;
 import com.mindaces.mindaces.service.BoardService;
 import com.mindaces.mindaces.service.CommentService;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Request;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ public class UserController
     private UserService userService;
     private BoardService boardService;
     private CommentService commentService;
+    private BoardSearchService boardSearchService;
 
     @GetMapping("/user/signup")
     public String userSignUp()
@@ -94,9 +97,10 @@ public class UserController
     )
     {
         Long result = userService.findUserID(username);
+
         if(result != -1L)
         {
-            boardService.addingPagedBoardToModelByWritedUser(model,page,"board",username);
+            boardSearchService.addingPagedBoardToModelByWritedUser(model,page,"board",username);
             model.addAttribute("selectedMode","Board");
             model.addAttribute("username",username);
        }
@@ -116,7 +120,7 @@ public class UserController
         Long result = userService.findUserID(username);
         if(result != -1L)
         {
-            boardService.addingPagedBoardToModelByWritedUser(model,page,"mostLikedBoard",username);
+            boardSearchService.addingPagedBoardToModelByWritedUser(model,page,"mostLikedBoard",username);
             model.addAttribute("selectedMode","LikedBoard");
             model.addAttribute("username",username);
 
@@ -134,6 +138,7 @@ public class UserController
     )
     {
         Long result = userService.findUserID(username);
+
         if(result != -1L)
         {
             commentService.addingPagedCommentToModelByWritedUser(model,page,username);
@@ -146,11 +151,32 @@ public class UserController
         return "userInfopage/userWroteContent";
     }
 
-    @PostMapping("/user/findUser")
+    @PostMapping("/user/findUserWroteContent")
     public String findUser(HttpServletRequest request)
     {
         String searchUsername = request.getParameter("searchUsername");
         return "redirect:/user/" + searchUsername;
     }
+
+    @GetMapping("/user/userInfo/findPassword")
+    public String findUserInfo()
+    {
+        return "userInfopage/findUserInfo";
+    }
+
+    @PostMapping("/user/userInfo/findPassword")
+    public String findUserIDResult(
+            Model model,
+            HttpServletRequest request
+    )
+    {
+        String userEmail;
+        String resultUserID;
+        userEmail = (String) request.getAttribute("userEmail");
+        return "userInfopage/findUserInfoResult";
+    }
+
+
+
 
 }

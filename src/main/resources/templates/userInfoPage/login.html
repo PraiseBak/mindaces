@@ -44,9 +44,8 @@
                         </div>
                         <div class="col-sm-4">
                         </div>
-                        <div class="col-sm-8">
-                            <button type="button" class="outline-border-none col-sm-6 p-0" style="float: left;">아이디 찾기</button>
-                            <button type="button" class="outline-border-none col-sm-6 p-0" style="float: left;">비밀번호 찾기</button>
+                        <div class="col-sm-8 text-center mt-1">
+                            <button type="button" th:onclick="|window.location.href = '@{/user/userInfo/findPassword}'|" class="form-control btn btn-dark" >비밀번호 찾기</button>
                         </div>
 
                         <div class="col-sm-4">

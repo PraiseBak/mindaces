@@ -1,9 +1,9 @@
 package com.mindaces.mindaces.controller;
 
 
-import com.mindaces.mindaces.domain.entity.CommentLikedUserInfo;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.service.*;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/gallery")
+@AllArgsConstructor
 //Board를 직접적으로 수정하게 되는 페이지에 대한 컨트롤러
 public class BoardController
 {
@@ -21,18 +22,11 @@ public class BoardController
     GalleryService galleryService;
     RoleService roleService;
     LikesService likesService;
-    String errorGalleryURL = "redirect:/error/galleryMiss";
-    String errorWriteURL = "redirect:/error/writeError";
+    BoardSearchService boardSearchService;
+    final String errorGalleryURL = "redirect:/error/galleryMiss";
+    final String errorWriteURL = "redirect:/error/writeError";
     final String galleryError = "존재하지 않는 갤러리입니다";
 
-    BoardController(BoardService boardService, GalleryService galleryService, RoleService roleService,CommentService commentService,LikesService likesService)
-    {
-        this.likesService = likesService;
-        this.boardService = boardService;
-        this.galleryService = galleryService;
-        this.roleService = roleService;
-        this.commentService = commentService;
-    }
 
     @GetMapping(value = "/{galleryName}/postWrite")
     public String postWrite(
@@ -111,7 +105,7 @@ public class BoardController
         {
             return errorGalleryURL;
         }
-        BoardDto boardDto = boardService.getBoardInfoByGalleryAndIdx(galleryName,contentIdx);
+        BoardDto boardDto = boardSearchService.getBoardDtoByGalleryAndIdx(galleryName,contentIdx);
         boardDto.setPassword("****");
         model.addAttribute("inputPassword",hiddenPassword);
         model.addAttribute("board",boardDto);
