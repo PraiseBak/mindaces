@@ -54,7 +54,6 @@
                         <div id="modiftUserInfoArea" class="col-md-2 text-center">
                             <!-- 패널 타이틀2 -->
                             <div class="panel panel-default" sec:authorize="isAuthenticated()" th:if="${#authorization.getAuthentication().getName()} == ${username}">
-
                                 <div class="panel-heading">
                                     <h3 class="panel-title">
                                         <span>유저 정보 수정</span>
@@ -63,7 +62,7 @@
                                 <!-- 사이드바 메뉴목록2 -->
                                 <ul class="list-group">
                                     <li class="list-group-item">
-                                        <a th:href="@{/user/${username}/changePassword}">비밀번호 변경</a>
+                                        <a th:href="@{'/user/'+${username} + '/changePassword'}">비밀번호 변경</a>
                                     </li>
                                 </ul>
                             </div>

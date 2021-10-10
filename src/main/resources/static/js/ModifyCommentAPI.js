@@ -267,7 +267,7 @@ function checkCommentUserAJAX(commentIdx,childTag)
 }
 
 
-function checkCommentUserAndInputToggle(aTag, mode, commentIdx,commentIsLogged,userName)
+function checkCommentUserAndInputToggle(aTag, mode, commentIdx,commentIsLogged,username)
 {
 
     if(commentIsLogged != isUser())
@@ -278,7 +278,7 @@ function checkCommentUserAndInputToggle(aTag, mode, commentIdx,commentIsLogged,u
     setCommentSubmitMode(mode);
     if(isUser() === 1)
     {
-        if(userName != loggedUserName)
+        if(username != loggedUsername)
         {
             alert("권한이 없습니다");
             return;

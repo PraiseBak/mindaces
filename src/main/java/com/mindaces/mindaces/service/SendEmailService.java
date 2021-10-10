@@ -1,6 +1,5 @@
 package com.mindaces.mindaces.service;
 
-import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.MailDto;
 import com.mindaces.mindaces.dto.UserDto;
 import lombok.AllArgsConstructor;
@@ -68,7 +67,7 @@ public class SendEmailService
         message.setSubject(mailDto.getTitle());
         message.setText(mailDto.getMailContent());
         mailSender.send(message);
-        userService.changePassword(userDto,randomPassword);
+        userService.changeAsRandomPassword(userDto,randomPassword);
 
 
         return true;

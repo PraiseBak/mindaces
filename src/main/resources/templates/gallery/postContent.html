@@ -161,7 +161,7 @@
                                 <div class="col-sm-1 form-input" id="writeCommentInfo">&nbsp &nbsp &nbsp &nbsp ㄴ</div>
                                 <input type="hidden" name="parentCommentIdx" th:value="${comment.contentIdx}">
                                 <div class="col-sm-3 form-input" id="writeCommentInfo">
-                                    <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName} != ''">
+                                    <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${username}" th:readonly="${username} != ''">
                                     <input type="password" id="commentPassword" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword} != ''">
                                 </div>
                                 <div class="col-sm-8 form-input">
@@ -176,7 +176,7 @@
                     <!--   댓글 작성    -->
                     <form method="post" class="write-comment row" onsubmit="return checkCommentValid(this)">
                         <div class="col-sm-3 form-input" id="writeCommentInfo">
-                            <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${userName}" th:readonly="${userName} != ''">
+                            <input type="text" id="authorName" name="user" minlength="2" maxlength="20" placeholder="글쓴이" class="form-control" th:value="${username}" th:readonly="${username} != ''">
                             <input type="password" id="commentPassword" name="commentPassword" minlength="4" maxlength="20" placeholder="비밀번호" class="form-control form-input" th:value="${userPassword}" th:readonly="${userPassword} != ''">
                         </div>
                         <div class="col-sm-9 form-input">
@@ -271,7 +271,7 @@
     var redirectURL = "";
     var isRoleUserVal = $('#isRoleUser').val();
     var isWriteLoggedBoard = [[${board.isLoggedUser}]] == 1;
-    var loggedUserName = [[${userName}]];
+    var loggedUsername = [[${username}]];
 </script>
 <script th:src="@{/js/ModifyCommentAPI.js}"></script>
 <script th:src="@{/js/ModifyBoardAPI.js}"></script>

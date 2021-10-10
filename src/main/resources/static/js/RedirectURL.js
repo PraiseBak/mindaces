@@ -1,5 +1,5 @@
 window.onload=function(){
-    var title = $(document).find("title");
+    var title = $("#title").find("title");
     var url = window.location.href.split('?');
     var params = '?' + url[1];
     var url = url[0];

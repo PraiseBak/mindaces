@@ -26,7 +26,7 @@
 
                 <div class="col-md-3">
 
-                    <form th:action="@{/user/signup}" onsubmit="return checkValidSignup()" method="POST">
+                    <form th:action="@{/user/signup}" onsubmit="return checkValidUserInfo()" method="POST">
 
                         <div class="col-sm-8" id="idArea">
                             <input class="form-control" type="text" minlength="2" maxlength="20" name="userID" id="userID" required  placeholder="아이디">
@@ -67,8 +67,18 @@
         </div>
     </div>
 </body>
-</html>
-<script src="/js/SignUpAPI.js" defer></script>
-<script src="/js/CheckValidSignup.js" defer></script>
 
+<script src="/js/SignUpAPI.js" defer></script>
+<script src="/js/CheckValidUserInfo.js" defer></script>
+<script>
+    $(document).ready(function () {
+
+        addBlurCheckEvent("signup","-");
+    });
+
+</script>
+
+
+
+</html>
 

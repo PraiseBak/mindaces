@@ -62,7 +62,6 @@ public class BoardAPIController
         {
             mode = "modify";
         }
-        System.out.println("농딩동");
         result = boardService.isBoardWriteValid(boardDto,authentication,mode);
         return result;
     }

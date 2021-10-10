@@ -7,7 +7,7 @@ public interface BoardLikedUserInfoRepository extends JpaRepository<BoardLikedUs
 {
     BoardLikedUserInfo findByGalleryAndContentIdxAndDisLikedIP(String gallery, Long boardIdx, String ip);
     BoardLikedUserInfo findByGalleryAndContentIdxAndLikedIP(String gallery, Long boardIdx, String ip);
-    BoardLikedUserInfo findByGalleryAndContentIdxAndUserNameAndLikedIP(String gallery, Long boardIdx, String userName, String ip);
-    BoardLikedUserInfo findByGalleryAndContentIdxAndUserNameAndDisLikedIP(String gallery, Long boardIdx, String userName, String ip);
+    BoardLikedUserInfo findByGalleryAndContentIdxAndUsernameAndLikedIP(String gallery, Long boardIdx, String username, String ip);
+    BoardLikedUserInfo findByGalleryAndContentIdxAndUsernameAndDisLikedIP(String gallery, Long boardIdx, String username, String ip);
     void deleteByContentIdx(Long boardIdx);
 }

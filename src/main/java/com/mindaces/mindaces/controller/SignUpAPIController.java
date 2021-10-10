@@ -20,6 +20,7 @@ public class SignUpAPIController
     @PostMapping("/sendIDAPI")
     public String idCheck(Model model, UserDto userDto)
     {
+
         Long isDuplicateUser = 0L;
         String msg = "중복된";
         String idOrEmail = "아이디입니다";

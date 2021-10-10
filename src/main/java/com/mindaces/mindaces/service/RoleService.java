@@ -19,7 +19,7 @@ public class RoleService
         return false;
     }
 
-    public String getUserName(Authentication authentication)
+    public String getUsername(Authentication authentication)
     {
         if(authentication != null)
         {
@@ -32,5 +32,16 @@ public class RoleService
     }
 
 
+    public Boolean isSameUser(Authentication authentication, String objUsername)
+    {
+        String curUsername;
+        curUsername = getUsername(authentication);
+        if(objUsername.equals(curUsername))
+        {
+            return true;
+        }
+        return false;
 
+
+    }
 }

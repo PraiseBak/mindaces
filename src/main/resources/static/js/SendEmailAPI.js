@@ -41,8 +41,4 @@ function sendEmailAPI(userDto)
         url : "/API/sendEmail",
         type : "POST"
     });
-
-
-
-
 }

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CommentLikeRepository extends JpaRepository<CommentLikedUserInfo,Long>
 {
     CommentLikedUserInfo findByCommentIdxAndLikedIP(Long commentIdx, String likedIP);
-    CommentLikedUserInfo findByCommentIdxAndUserName(Long commentIdx, String userName);
+    CommentLikedUserInfo findByCommentIdxAndUsername(Long commentIdx, String username);
 }

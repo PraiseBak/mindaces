@@ -31,16 +31,16 @@ public class BoardLikedUserInfo
     public String disLikedIP;
 
     @Column(name="user_name",columnDefinition="varchar(45) default '-'")
-    public String userName;
+    public String username;
 
     @Builder
-    public BoardLikedUserInfo(String gallery, Long contentIdx, String likedIP, String disLikedIP, String userName)
+    public BoardLikedUserInfo(String gallery, Long contentIdx, String likedIP, String disLikedIP, String username)
     {
         this.gallery = gallery;
         this.contentIdx = contentIdx;
         this.likedIP = likedIP;
         this.disLikedIP = disLikedIP;
-        this.userName = userName;
+        this.username = username;
     }
 
 }

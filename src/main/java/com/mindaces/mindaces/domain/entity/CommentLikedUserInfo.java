@@ -28,14 +28,14 @@ public class CommentLikedUserInfo
     @Column(name="liked_ip",columnDefinition="varchar(45) default '-'")
     public String likedIP;
     @Column(name="user_name",columnDefinition="varchar(45) default '-'")
-    public String userName;
+    public String username;
 
     @Builder
-    public CommentLikedUserInfo(Long commentIdx, String likedIP, String userName)
+    public CommentLikedUserInfo(Long commentIdx, String likedIP, String username)
     {
         this.commentIdx = commentIdx;
         this.likedIP = likedIP;
-        this.userName = userName;
+        this.username = username;
     }
 
 

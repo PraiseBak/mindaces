@@ -120,7 +120,7 @@ public class GalleryController
         BoardDto boardDto;
         List<CommentDto> commentDtoList;
         List<CommentDto> mostLikedCommentList;
-        String userName;
+        String username;
         String userPassword = "****";
 
         isGallery = galleryService.isGallery(galleryName);
@@ -132,17 +132,17 @@ public class GalleryController
         boardDto = boardSearchService.getBoardDtoByGalleryAndIdx(galleryName,contentIdx);
         if(principal != null)
         {
-            userName = principal.getAttribute("name");
+            username = principal.getAttribute("name");
         }
         else
         {
-            userName = roleService.getUserName(authentication);
+            username = roleService.getUsername(authentication);
         }
 
-        if(userName.equals("-"))
+        if(username.equals("-"))
         {
             userPassword = "";
-            userName = "";
+            username = "";
         }
 
         boardSearchService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
@@ -152,7 +152,7 @@ public class GalleryController
 
         model.addAttribute("mostLikedCommentList",mostLikedCommentList);
         model.addAttribute("board",boardDto);
-        model.addAttribute("userName",userName);
+        model.addAttribute("username",username);
         model.addAttribute("userPassword",userPassword);
         model.addAttribute("pagingMode",pagingMode);
         model.addAttribute("page",page);

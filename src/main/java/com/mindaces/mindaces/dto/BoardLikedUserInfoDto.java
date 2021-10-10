@@ -18,7 +18,7 @@ public class BoardLikedUserInfoDto
     public Long contentIdx;
     public String likedIP;
     public String disLikedIP;
-    private String userName;
+    private String username;
 
 
     public BoardLikedUserInfo toEntity()
@@ -29,7 +29,7 @@ public class BoardLikedUserInfoDto
                 .contentIdx(contentIdx)
                 .likedIP(likedIP)
                 .disLikedIP(disLikedIP)
-                .userName(userName)
+                .username(username)
                 .build();
 
         return BoardLikedUserInfo.builder().build();

@@ -6,14 +6,12 @@ import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,6 +24,8 @@ import java.util.*;
 public class UserService implements UserDetailsService
 {
     private UserRepository userRepository;
+
+
     @Transactional
     public Long joinUser(UserDto userDto)
     {
@@ -105,11 +105,43 @@ public class UserService implements UserDetailsService
     }
 
     @Transactional
-    public void changePassword(UserDto userDto,String password)
+    public void changeAsRandomPassword(UserDto userDto, String password)
     {
         User user;
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user = this.userRepository.findByUserID(userDto.getUserID());
         user.setUserPassword(passwordEncoder.encode(password));
     }
+
+    @Transactional
+    public Boolean changePassword(String originPassword, String newPasswordOne, String newPasswordTwo,String username)
+    {
+        User user;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        ValidCheck validCheck = new ValidCheck();
+
+
+        //중복 체크 (동일해야함)
+        if(!newPasswordOne.equals(newPasswordTwo))
+        {
+            return false;
+        }
+        user = this.userRepository.findByUserID(username);
+
+        //기존 패스워드와 동일한지
+        if(!passwordEncoder.matches(originPassword,user.getUserPassword()))
+        {
+            return false;
+        }
+
+        //바꿀 패스워드가 규칙에 맞는지
+        if(!validCheck.isValidPassword(newPasswordOne))
+        {
+            return false;
+        }
+
+        user.setUserPassword(passwordEncoder.encode(newPasswordOne));
+        return true;
+    }
+
 }

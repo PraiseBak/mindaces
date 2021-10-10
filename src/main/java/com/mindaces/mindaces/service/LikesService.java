@@ -68,7 +68,7 @@ public class LikesService
         String recommendMode = (String) param.get("mode");
         Long boardIdx = Long.parseLong((String) param.get("boardIdx"));
         String requestIP = request.getRemoteAddr();
-        String userName = roleService.getUserName(authentication);
+        String username = roleService.getUsername(authentication);
         BoardLikedUserInfo boardLikedUserInfo;
         Boolean isSameRecommend;
         String validCheckResult = "";
@@ -79,14 +79,14 @@ public class LikesService
             return validCheckResult;
         }
 
-        if(userName.equals("-"))
+        if(username.equals("-"))
         {
-            isSameRecommend = isSameIPOrUser(galleryName,boardIdx,recommendMode,userName,requestIP);
+            isSameRecommend = isSameIPOrUser(galleryName,boardIdx,recommendMode,username,requestIP);
         }
         else
         {
             requestIP = recommendMode;
-            isSameRecommend = isSameIPOrUser(galleryName,boardIdx,recommendMode,userName,null);
+            isSameRecommend = isSameIPOrUser(galleryName,boardIdx,recommendMode,username,null);
         }
 
         if(isSameRecommend)
@@ -96,11 +96,11 @@ public class LikesService
 
         if(recommendMode.equals("like"))
         {
-            boardLikedUserInfo = new BoardLikedUserInfo(galleryName,boardIdx,requestIP,"-",userName);
+            boardLikedUserInfo = new BoardLikedUserInfo(galleryName,boardIdx,requestIP,"-",username);
         }
         else
         {
-            boardLikedUserInfo = new BoardLikedUserInfo(galleryName,boardIdx,"-" ,requestIP,userName);
+            boardLikedUserInfo = new BoardLikedUserInfo(galleryName,boardIdx,"-" ,requestIP,username);
         }
         this.boardLikedUserInfoRepository.save(boardLikedUserInfo);
         Likes likes = this.getLikesOfBoard(boardIdx);
@@ -144,14 +144,14 @@ public class LikesService
 
 
 
-    public Boolean isSameIPOrUser(String gallery,Long boardIdx,String recommendMode,String userName,String ip)
+    public Boolean isSameIPOrUser(String gallery,Long boardIdx,String recommendMode,String username,String ip)
     {
         BoardLikedUserInfo boardLikedUserInfo;
         if(recommendMode.equals("like"))
         {
             if(ip == null)
             {
-                boardLikedUserInfo = this.boardLikedUserInfoRepository.findByGalleryAndContentIdxAndUserNameAndLikedIP(gallery,boardIdx,userName,"like");
+                boardLikedUserInfo = this.boardLikedUserInfoRepository.findByGalleryAndContentIdxAndUsernameAndLikedIP(gallery,boardIdx,username,"like");
             }
             else
             {
@@ -162,7 +162,7 @@ public class LikesService
         {
             if(ip == null)
             {
-                boardLikedUserInfo = this.boardLikedUserInfoRepository.findByGalleryAndContentIdxAndUserNameAndDisLikedIP(gallery,boardIdx,userName,"dislike");
+                boardLikedUserInfo = this.boardLikedUserInfoRepository.findByGalleryAndContentIdxAndUsernameAndDisLikedIP(gallery,boardIdx,username,"dislike");
             }
             else
             {
@@ -186,12 +186,12 @@ public class LikesService
         return map;
     }
 
-    private CommentLikedUserInfo commentLikeEntityBuild(Long commentIdx, String requestIP, String userName)
+    private CommentLikedUserInfo commentLikeEntityBuild(Long commentIdx, String requestIP, String username)
     {
         return CommentLikedUserInfo.builder()
                 .commentIdx(commentIdx)
                 .likedIP(requestIP)
-                .userName(userName)
+                .username(username)
                 .build();
     }
 
@@ -201,19 +201,19 @@ public class LikesService
     {
         Long commentIdx = Long.parseLong((String) param.get("contentIdx"));
         String requestIP = request.getRemoteAddr();
-        String userName = roleService.getUserName(authentication);
+        String username = roleService.getUsername(authentication);
         Boolean isSameRecommend;
         String validCheckResult = "통과";
         Comment comment;
         CommentLikedUserInfo commentLikedUserInfo;
-        isSameRecommend = checkDupliComment(commentIdx,requestIP,userName);
+        isSameRecommend = checkDupliComment(commentIdx,requestIP,username);
 
         if(isSameRecommend)
         {
             return "이미 추천하였습니다";
         }
 
-        commentLikedUserInfo = commentLikeEntityBuild(commentIdx,requestIP,userName);
+        commentLikedUserInfo = commentLikeEntityBuild(commentIdx,requestIP,username);
         commentLikeRepository.save(commentLikedUserInfo);
 
         if(!commentService.updateLikes(commentIdx))
@@ -228,12 +228,12 @@ public class LikesService
         return validCheckResult;
     }
 
-    private Boolean checkDupliComment(Long commentIdx,String likedIP,String userName)
+    private Boolean checkDupliComment(Long commentIdx,String likedIP,String username)
     {
         CommentLikedUserInfo resultCommentLikedUserInfo;
-        if(!userName.equals("-"))
+        if(!username.equals("-"))
         {
-            resultCommentLikedUserInfo = commentLikeRepository.findByCommentIdxAndUserName(commentIdx,userName);
+            resultCommentLikedUserInfo = commentLikeRepository.findByCommentIdxAndUsername(commentIdx,username);
         }
         else
         {

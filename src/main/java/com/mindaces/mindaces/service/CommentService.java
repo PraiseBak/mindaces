@@ -162,9 +162,9 @@ public class CommentService
     @Transactional
     public Boolean deleteComment(CommentDto commentDto,Authentication authentication)
     {
-        String userName = roleService.getUserName(authentication);
+        String username = roleService.getUsername(authentication);
         //비로그인한 유저인경우 비밀번호 체크
-        if(userName.equals("-"))
+        if(username.equals("-"))
         {
             Comment matchComment = getMatchPasswordComment(commentDto);
             if(matchComment != null)
@@ -211,9 +211,9 @@ public class CommentService
             return;
         }
 
-        String userName = roleService.getUserName(authentication);
+        String username = roleService.getUsername(authentication);
         //비로그인한 유저인경우 비밀번호 체크
-        if(userName.equals("-"))
+        if(username.equals("-"))
         {
             Comment matchComment = getMatchPasswordComment(commentDto);
             if(matchComment != null)
@@ -237,16 +237,16 @@ public class CommentService
 
     public Boolean isSameUser(CommentDto commentDto,Authentication authentication)
     {
-        String userName = roleService.getUserName(authentication);
+        String username = roleService.getUsername(authentication);
         Long commentIdx = commentDto.getContentIdx();
-        if(userName.equals("-"))
+        if(username.equals("-"))
         {
             return false;
         }
         Comment comment = commentRepository.getById(commentIdx);
         if(comment.getIsLogged() == 1L)
         {
-            if(comment.getUser().equals(userName))
+            if(comment.getUser().equals(username))
             {
                 return true;
             }

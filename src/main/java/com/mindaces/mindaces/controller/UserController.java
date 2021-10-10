@@ -1,12 +1,9 @@
 package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.dto.UserDto;
-import com.mindaces.mindaces.service.BoardSearchService;
-import com.mindaces.mindaces.service.BoardService;
-import com.mindaces.mindaces.service.CommentService;
-import com.mindaces.mindaces.service.UserService;
+import com.mindaces.mindaces.service.*;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Request;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 public class UserController
 {
+    private RoleService roleService;
     private UserService userService;
     private BoardService boardService;
     private CommentService commentService;
@@ -172,11 +170,77 @@ public class UserController
     {
         String userEmail;
         String resultUserID;
-        userEmail = (String) request.getAttribute("userEmail");
+        userEmail = (String) request.getParameter("userEmail");
+        System.out.println(userEmail);
         return "userInfopage/findUserInfoResult";
     }
 
 
+    @GetMapping("/user/{username}/changePassword")
+    public String changePassword(
+            Model model,
+            @PathVariable String username,
+            Authentication authentication
+    )
+    {
+        Boolean isSameUser;
+        isSameUser = roleService.isSameUser(authentication,username);
+
+        if(!isSameUser)
+        {
+            return "redirect:/error/roleError";
+        }
+
+        model.addAttribute("username",username);
+        return "userInfopage/changeUserPassword";
+    }
+
+
+    @PostMapping("/user/{username}/changePassword")
+    public String changePasswordResult(
+            Model model,
+            @PathVariable String username,
+            Authentication authentication,
+            HttpServletRequest request
+    )
+    {
+        Boolean isSameUser;
+        String originPassword;
+        String newPasswordOne;
+        String newPasswordTwo;
+        Boolean changeResult;
+
+        isSameUser = roleService.isSameUser(authentication,username);
+
+        if(!isSameUser)
+        {
+            return "redirect:/error/roleError";
+        }
+
+        /*
+        이거 공부
+        Enumeration<String> e = request.getAttributeNames();
+        while(e.hasMoreElements()) {
+            System.out.println(e.nextElement());
+        }
+         */
+
+        originPassword = (String) request.getParameter("originUserPassword");
+        newPasswordOne = (String) request.getParameter("objUserPasswordOne");
+        newPasswordTwo = (String) request.getParameter("objUserPasswordTwo");
+
+        changeResult = userService.changePassword(originPassword,newPasswordOne,newPasswordTwo,username);
+
+        if(changeResult)
+        {
+            return "redirect:/user/logout";
+        }
+        else
+        {
+            model.addAttribute("changeResult","유효하지 않은 시도입니다");
+        }
+        return "userInfopage/changeUserPassword";
+    }
 
 
 }

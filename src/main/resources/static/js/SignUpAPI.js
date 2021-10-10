@@ -11,6 +11,7 @@ function checkDuplicateUserID (data)
     {
         userID : data
     };
+
     $.ajax({
         url: "/API/sendIDAPI",
         data: userDTO,
