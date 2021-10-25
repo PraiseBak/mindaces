@@ -41,7 +41,7 @@ public class Board extends BaseTimeEntity
     @Column(length = 80, nullable = false)
     private String password;
 
-    @Column(columnDefinition = "tinyint(1) default 0", name = "is_logged_user",nullable = false)
+    @Column(columnDefinition = "tinyint(1) default 0", name = "is_logged_user")
     private Long isLoggedUser;
 
 

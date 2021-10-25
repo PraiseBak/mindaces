@@ -47,17 +47,21 @@ public class GalleryController
             @PathVariable(name = "galleryName") String galleryName
     )
     {
+        //갤러리 여부 판단
         Boolean isGallery = galleryService.isGallery(galleryName);
         if(!isGallery)
         {
+            //에러 출력 URL로 이동
             return errorGalleryURL;
         }
 
+        //페이징 모드를 체크하고 에러 출력
         if(!(pagingMode.equals("board") || pagingMode.equals("mostLikedBoard")))
         {
             return errorBoardURL;
         }
 
+        //페이징을 모델에 추가해주는 부분
         boardSearchService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
 
         model.addAttribute("galleryName",galleryName);

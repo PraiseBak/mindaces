@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:insert="base/head.html">
+</head>
+
+<body>
+    <input id="testInput" class="testInput" name="testInput">
+    <button onclick="test1()">테스트</button>
+
+</body>
+
+<script>
+    function test1()
+    {
+        let testOne = $("#testInput");
+        //let testOne = $(".testInput");
+        //let testOne = $("input[name=testInput]");
+        let testTwo = document.getElementById("testInput");
+    }
+
+</script>
+
+
+</html>

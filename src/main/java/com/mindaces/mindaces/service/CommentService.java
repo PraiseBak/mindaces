@@ -140,12 +140,6 @@ public class CommentService
             commentDto.setContent(commentDto.getContent());
 
             Comment savedComment = commentRepository.save(commentDto.toEntity());
-            /*
-            if(commentDto.getParentCommentIdx() != null)
-            {
-                this.updateParentComment(commentDto.getParentCommentIdx(),savedComment);
-            }
-             */
 
             Likes likes = Likes.builder()
                 .contentIdx(savedComment.getContentIdx())
@@ -200,7 +194,6 @@ public class CommentService
                 return objComment;
             }
         }
-
         return null;
     }
     /*

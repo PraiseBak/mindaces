@@ -43,7 +43,6 @@ public class BoardDto
     }
 
 
-
     @Builder
     public BoardDto(String gallery, String user, Long contentIdx, String title, String content,Likes likes,String password,Long isLoggedUser,LocalDateTime createdDate,LocalDateTime modifiedDate,BoardInfo boardInfo)
     {
@@ -59,5 +58,4 @@ public class BoardDto
         this.modifiedDate = modifiedDate;
         this.boardInfo = boardInfo;
     }
-
 }

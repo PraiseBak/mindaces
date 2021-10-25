@@ -8,5 +8,4 @@ public interface GalleryRepository extends JpaRepository<Gallery, Long>
 {
     Gallery findByGalleryName(String galleryName);
 
-
 }

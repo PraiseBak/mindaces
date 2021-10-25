@@ -6,6 +6,7 @@ import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +30,7 @@ public class UserService implements UserDetailsService
     @Transactional
     public Long joinUser(UserDto userDto)
     {
+
         ValidCheck validCheck = new ValidCheck();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String inputID = userDto.getUserID();
@@ -47,15 +49,14 @@ public class UserService implements UserDetailsService
     }
     
     @Override
-    public UserDetails loadUserByUsername(String userID) throws UsernameNotFoundException
+    public UserDetails loadUserByUsername(String userID) throws InternalAuthenticationServiceException
     {
         //Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);
         User userEntityWrapper = userRepository.findByUserID(userID);
         UserDetails userDetails;
         if(userEntityWrapper == null)
         {
-            System.out.println("존재하지 않은 유저입니다");
-            throw new UsernameNotFoundException(userID + " : 존재하지 않는 유저입니다");
+            throw new UsernameNotFoundException(userID);
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();

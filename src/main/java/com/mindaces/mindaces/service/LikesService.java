@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -74,6 +75,7 @@ public class LikesService
         String validCheckResult = "";
         Board board;
 
+
         if(!(validCheckResult = checkRequestParamValid(galleryName,recommendMode,boardIdx) ).equals("통과"))
         {
             return validCheckResult;
@@ -104,15 +106,11 @@ public class LikesService
         }
         this.boardLikedUserInfoRepository.save(boardLikedUserInfo);
         Likes likes = this.getLikesOfBoard(boardIdx);
-        likes.updateLike();
 
-        /*
-        //board Likes에 개추 + 1
         if(!this.updateLikes(recommendMode,likes))
         {
             return "예기지 못한 오류가 발생했습니다";
         }
-         */
 
         board = boardSearchService.getGalleryNameAndBoardIdx(galleryName, boardIdx);
         board.getBoardLikedUserInfoList().add(boardLikedUserInfo);

@@ -40,9 +40,8 @@ public class User
 
 
     @Builder
-    public User(Long userIdx,String userID,String userPassword,String userEmail)
+    public User(String userID,String userPassword,String userEmail)
     {
-        this.userIdx = userIdx;
         this.userID = userID;
         this.userPassword = userPassword;
         this.userEmail = userEmail;

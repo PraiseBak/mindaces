@@ -15,7 +15,6 @@ function toggleNestedComment(contentIdx)
 {
     form = document.getElementById("toggleInput" + contentIdx);
 
-
     if(prevNestedCommentInput !== null)
     {
         if(form !== prevNestedCommentInput)
@@ -26,7 +25,6 @@ function toggleNestedComment(contentIdx)
     }
 
     prevNestedCommentInput = form;
-
 
     if(form.style.display == "")
     {
@@ -72,8 +70,6 @@ function checkCommentValid(curTag)
         }
     });
     return flag;
-
-
 }
 
 function  setCommentSubmitMode(mode)
@@ -110,6 +106,7 @@ function toggleCommentPasswordInputPassword(aTag)
 //삭제인 경우라면 비밀번호 입력 후 서버에 요청보냄(물론 서버에서 한번 더 유효한가 체크함)
 function checkPasswordAndSubmitNotLogged(childTag, commentIdx)
 {
+    document.getElementById('commentModifyForm'+commentIdx);
     var formTag =
         getParentTag(
         getParentTag(

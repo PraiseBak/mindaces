@@ -32,7 +32,6 @@ public class BoardAPIController
         this.likesService = likesService;
     }
 
-
     @PostMapping("/checkBoardPasswordAPI")
     @ResponseBody
     public Boolean checkBoardPassword(BoardDto boardDto)

@@ -14,6 +14,8 @@
 
     <tbody>
 
+
+
     <tr th:each="post : ${postList}" th:height="50px" class="text-center">
         <td>
             <a th:href="'/gallery/'+ ${post.gallery} " th:text="${post.gallery}"></a>

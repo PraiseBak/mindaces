@@ -16,6 +16,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>
     //참고 파라미터의 ids에 해당하는 것만 find
     //List<Board> findByContentIdxIn(List<Long> ids);
     List<Board> findTop10ByOrderByLikesLikeDesc();
+
     Page<Board> findByGalleryAndBoardInfoIsRecommendedBoardIsTrue(String gallery, Pageable pageable);
     Long countBoardByUserAndIsLoggedUser(String user,Long isLoggedUser);
     Page<Board> findByUserAndBoardInfoIsRecommendedBoardIsTrue(String user, Pageable pageable);

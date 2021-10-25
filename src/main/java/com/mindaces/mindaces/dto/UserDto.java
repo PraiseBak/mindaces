@@ -15,18 +15,14 @@ public class UserDto
 {
 
     private Long userIdx;
-    //use as a nickname
     private String userID;
     private String userPassword;
     private String userEmail;
-    @Enumerated(EnumType.STRING)
-    private SocialLoginType provider;
 
 
     public User toEntity()
     {
         User user = User.builder()
-                .userIdx(userIdx)
                 .userID(userID)
                 .userPassword(userPassword)
                 .userEmail(userEmail)
@@ -35,9 +31,8 @@ public class UserDto
     }
 
     @Builder
-    public UserDto(Long userIdx,String userID,String userPassword,String userEmail)
+    public UserDto(String userID,String userPassword,String userEmail)
     {
-        this.userIdx = userIdx;
         this.userID = userID;
         this.userPassword = userPassword;
         this.userEmail = userEmail;

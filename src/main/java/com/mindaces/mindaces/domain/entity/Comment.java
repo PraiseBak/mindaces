@@ -48,7 +48,6 @@ public class Comment extends BaseTimeEntity
     @JoinColumn(name = "comment_idx")
     private List<CommentLikedUserInfo> commentLikedUserInfoList = new ArrayList<>();
 
-    //TODO 대댓글은 순환참조?
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_comment_idx")
     private List<Comment> nestedCommentList = new ArrayList<>();

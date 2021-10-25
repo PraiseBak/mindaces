@@ -92,6 +92,7 @@ public class BoardSearchService
     }
 
 
+
     //검색페이지에서 해당 옵션에 맞춰서 boardList 가져옴
     public List<BoardDto> getBoardListBySearchKeyword(String keyword, String searchMode, Integer page, Boolean isRecommendedBoardMode, String gallerySearchKeyword)
     {
@@ -259,13 +260,13 @@ public class BoardSearchService
     }
 
 
+
     //주어진 모델에 페이징된 게시물들 및 버튼 추가 (해당 갤러리의 전체 게시물 contentList)
     public void addingPagedBoardToModel(Model model, String galleryName, int page, String pagingMode)
     {
         List<BoardDto> boardDtoList;
         Long count;
         Integer[] pageList;
-
         if(pagingMode.equals("mostLikedBoard"))
         {
             boardDtoList = getMostLikelyBoardListByFindObj(galleryName,page, "board");
@@ -278,6 +279,7 @@ public class BoardSearchService
             count = getCountBoardByGallery(galleryName);
             pageList = getPageList(page,count);
         }
+
         model.addAttribute("pageList",pageList);
         model.addAttribute("postList",boardDtoList);
     }
@@ -415,4 +417,14 @@ public class BoardSearchService
         board = this.getBoardDtoByGalleryAndIdx(gallery,boardIdx);
         return board.getTitle();
     }
+
+    public Board test(Long boardIdx)
+    {
+        return boardRepository.getById(boardIdx);
+    }
+    public void testSave(Board board)
+    {
+        boardRepository.save(board);
+    }
+
 }

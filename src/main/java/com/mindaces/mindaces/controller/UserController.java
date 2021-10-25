@@ -43,6 +43,12 @@ public class UserController
         return "userInfoPage/login";
     }
 
+    @PostMapping("/user/login")
+    public String userloginIDMaintain()
+    {
+        return "userInfoPage/login";
+    }
+
 
     // Login form with error
     @RequestMapping("/loginError.html")

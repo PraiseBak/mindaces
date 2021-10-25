@@ -37,7 +37,6 @@ public class BoardService
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boardDto.setPassword(passwordEncoder.encode(boardDto.getPassword()));
-
         boardDto.setTitle(utilService.getTrimedStr(boardDto.getTitle()));
 
         Board savedBoard= boardRepository.save(boardDto.toEntity());
@@ -52,7 +51,6 @@ public class BoardService
 
         savedBoard.updateBoardInfo(boardInfo);
         savedBoard.updateLikes(likes);
-        boardRepository.save(savedBoard);
         return 0L;
     }
 

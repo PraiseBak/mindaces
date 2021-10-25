@@ -1,8 +1,11 @@
 package com.mindaces.mindaces.config;
 
+import com.mindaces.mindaces.api.CustomAuthenticationFailHandler;
+import com.mindaces.mindaces.api.MyAuthProvider;
 import com.mindaces.mindaces.service.UserService;
 import com.mindaces.mindaces.service.social.GoogleOAuth2User;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,7 +20,6 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
 //설정관련 클래스는 Configuration이라고 명시해줘야함
 @Configuration
 //WebSecurity에 대한 클래스라는 것 명시
@@ -27,8 +29,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 //WebSecurityConfigurerAdapter를 상속받아 일반적으로 메서드를 구현하는게 일반적인 방법
 public class SecureConfig extends WebSecurityConfigurerAdapter
 {
-
     private UserService userService;
+    private MyAuthProvider myAuthProvider;
+    private CustomAuthenticationFailHandler customAuthenticationFailHandler;
 
     //스프링 제공 비밀번호 암호화 객체
     @Bean
@@ -54,8 +57,8 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                 .and() // 로그인 설정
                     .formLogin()
                     .loginPage("/user/login")
+                    .failureHandler(customAuthenticationFailHandler)
                     .defaultSuccessUrl("/")
-                    .failureUrl("/loginError.html")
                     .permitAll()
                 .and() // 로그아웃 설정
                     .logout()
@@ -75,22 +78,9 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                             .ignoringAntMatchers("/gallery/**/delete/**")
                             .ignoringAntMatchers("/gallery/**/postWrite/**");
 
-
-
-                /*
-                .ignoringAntMatchers("/sendIDAPI")
-                .ignoringAntMatchers("/checkBoardPasswordAPI")
-                        .ignoringAntMatchers(/)
-
-                 */
-
         http.oauth2Login()
                 .loginPage("/user/login");
     }
-
-
-
-
 
     //AutionticationManager가 모든 인증의 주체임
     //AutionticationManagerBuilder를 이용해서 AutionticationManager를 사용함
@@ -98,6 +88,7 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
     public void configure(AuthenticationManagerBuilder auth) throws Exception
     {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        auth.authenticationProvider(myAuthProvider);
     }
 
 }

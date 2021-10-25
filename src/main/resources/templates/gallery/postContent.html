@@ -20,6 +20,7 @@
 
                         <div class="contentUpper row"  style="margin-top:3px;">
                             <h3 class="col-sm-8">
+                                <p th:text="${board.boardInfo.gallery}"></p>
                                 <p style="display: inline" th:if="${board.boardInfo.isRecommendedBoard}"   th:text="|🍀|"></p>
                                 <span th:text="${board.title}"></span>
                             </h3>
@@ -28,7 +29,6 @@
                                 <p class="float-right" style="color: #9f9f9f" th:text="|댓글 ${board.boardInfo.commentCount}|"></p>
                                 <p class="float-right" style="color: #9f9f9f" th:text="|조회수 ${board.boardInfo.visitedNum}|"></p>
                             </div>
-
                         </div>
 
                         <div class="float-right">
@@ -111,7 +111,6 @@
 
                             <form th:id="'commentModifyForm'+${comment.contentIdx}" class="row" method="post">
                                 <div class="col-sm-3 form-input">
-
                                     <p id="commentModifyUser" th:if="${comment.isLogged} != 1" th:text="|${comment.user}"></p>
                                     <a id="commentModifyUser" th:if="${comment.isLogged} == 1" th:text="|${comment.user} 😎|" th:href="@{'/user/' + ${comment.user}}" ></a>
                                 </div>
@@ -147,7 +146,8 @@
                                     <div class="col-sm-2 form-input">
                                         <div class="modifyAndDeleteBtns">
                                             <input hidden th:value="${nestedComment.contentIdx}" name="contentIdx">
-                                            <a class="btn btn-dark" href="javascript:;" th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${nestedComment.contentIdx}]],[[${nestedComment.isLogged}]],[[${nestedComment.user}]])" style="font-size: 80%">삭제</a>
+                                            <a class="btn btn-dark" href="javascript:;"
+                                               th:onclick="checkCommentUserAndInputToggle(this,'deleteComment',[[${nestedComment.contentIdx}]],[[${nestedComment.isLogged}]],[[${nestedComment.user}]])" style="font-size: 80%">삭제</a>
                                             <a class="btn btn-dark" href="javascript:;" th:onclick="commentLikeDupliCheck([[${nestedComment.contentIdx}]],this)" th:text="|👍 ${nestedComment.likes?.like}|" style="font-size: 80%"></a>
                                             <input id="inputCommentPassword" name="commentPassword" type="password" minlength="4" maxlength="20" style="display: none; width: 160px;">
                                             <a class="btn btn-dark" href="javascript:;" th:onclick="checkPasswordAndSubmitNotLogged(this,[[${nestedComment.contentIdx}]])" id="checkBtn" style="font-size: 80%; display: none; ">✔</a>

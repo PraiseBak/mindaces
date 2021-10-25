@@ -18,37 +18,6 @@
                         <div class="col-sm-12 col-md-10">
                             <table th:replace="fragments/showingGalleryBoard">
                             </table>
-
-                            <!--table class="table table-borderless mt-4">
-                                <thead class="thead-dark">
-                                <tr class="text-center table-header">
-                                    <th scope="col">갤러리</th>
-                                    <th scope="col">제목</th>
-                                    <th scope="col">작성자</th>
-                                    <th scope="col">추천수</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="text-center" th:each="board : ${mostLikedBoardList}">
-                                        <th scope="row">
-                                            <span th:text="${board.gallery}"></span>
-                                        </th>
-                                        <td>
-                                            <a th:href="|gallery/${board.gallery}/${board.contentIdx}|">
-                                                <span th:text="${board.title}"></span>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <p th:if="${board.isLoggedUser} == 0" th:text="|${board.user}|"></p>
-                                            <a th:href="@{'/user/' + ${board.user}}" th:if="${board.isLoggedUser} == 1" th:text="|${board.user} &nbsp 😎|"></a>
-                                        </td>
-                                        <td>
-                                            <span th:text="${board.likes?.like}"></span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div -->
                     </div>
 
 

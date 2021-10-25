@@ -15,7 +15,7 @@ import java.io.Serializable;
 @DynamicInsert
 @Table(name= "likes")
 @IdClass(LikesID.class)
-public class Likes implements Serializable
+public class Likes
 {
     @Id
     @Column(name = "is_comment")

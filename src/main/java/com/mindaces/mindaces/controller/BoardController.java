@@ -1,6 +1,8 @@
 package com.mindaces.mindaces.controller;
 
 
+import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.entity.BoardLikedUserInfo;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.service.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.transaction.Transactional;
 
 
 @Controller
@@ -193,5 +197,7 @@ public class BoardController
         attributes.addAttribute("page",page);
         return "redirect:/gallery/" + galleryName;
     }
+
+
 
 }

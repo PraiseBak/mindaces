@@ -11,7 +11,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-
 public class BoardLikedUserInfoDto
 {
     public String gallery;
@@ -19,7 +18,6 @@ public class BoardLikedUserInfoDto
     public String likedIP;
     public String disLikedIP;
     private String username;
-
 
     public BoardLikedUserInfo toEntity()
     {
@@ -34,7 +32,4 @@ public class BoardLikedUserInfoDto
 
         return BoardLikedUserInfo.builder().build();
     }
-
-
-
 }
