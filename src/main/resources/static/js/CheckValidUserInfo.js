@@ -2,27 +2,15 @@ var userID = document.querySelector("#userID");
 var userPassword = document.querySelector("#userPassword");
 var userEmail = document.querySelector("#userEmail");
 var submitBtn = document.querySelector("#submitBtn");
-var checkMode = "signup";
-var changePasswordValidZero = false;
-var changePasswordValidOne = false;
-var changePasswordValidTwo = false;
 
 
-function addBlurCheckEvent(mode,id)
+function addBlurCheckEvent(mode)
 {
     if (mode === "signup")
     {
         userID.addEventListener("blur",displayValidateID);
         userPassword.addEventListener("blur",function (){displayValidatePassword(userPassword)});
         userEmail.addEventListener("blur",displayValidateEmail);
-        return;
-    }
-
-    if(mode === "password")
-    {
-        checkMode = "changePassword";
-        var tmpPasswordInput = document.querySelector(id);
-        tmpPasswordInput.addEventListener("blur",function (){displayValidatePassword(tmpPasswordInput)},true);
     }
 }
 
@@ -66,20 +54,10 @@ function displayValidateEmail()
 }
 
 
-
-function displayValidatePassword(passwordInput)
+function displayValidatePassword()
 {
-    isValidPassword = false;
     var data;
-    if (passwordInput == null)
-    {
-        data = this.userPassword.value;
-    }
-    else
-    {
-        data = passwordInput.value;
-    }
-    setValidMarkByName(passwordInput.name,false);
+    data = userPassword.value;
 
     if (data.length < 8 || data.length > 20) {
         $("#resultArea").text("비밀번호는 최소 8자 최대 20자만 가능합니다");
@@ -89,55 +67,11 @@ function displayValidatePassword(passwordInput)
     }
     else
     {
-        $("#resultArea").text("");
-        if(checkMode !== "changePassword")
-        {
-            displayAllValidateResult();
-        }
-        else
-        {
-            setValidMarkByName(passwordInput.name,true);
-            checkChangePasswordValid();
-        }
-
+        $("#resultArea").text("사용가능한 비밀번호입니다");
         isValidPassword = true;
     }
 
 }
-
-function isChangePasswordValid()
-{
-    return changePasswordValidOne && changePasswordValidTwo && changePasswordValidZero;
-}
-
-
-
-function checkChangePasswordValid()
-{
-
-    if (isChangePasswordValid())
-    {
-        $("#resultArea").text("");
-        if (($("#objUserPasswordOne").val()) !== ($("#objUserPasswordTwo").val()) )
-        {
-            $("#resultArea").text("변경할 비밀번호가 동일하지 않습니다");
-            return false;
-        }
-        return true;
-    }
-
-    if( ($("#originUserPassword").val() !== "")
-        && ($("#objUserPasswordOne").val() !== "")
-        && ($("#objUserPasswordTwo").val() !== ""  ))
-    {
-        $("#resultArea").text("입력란을 확인해주십시오");
-    }
-
-
-    return false;
-}
-
-
 
 function displayValidateID()
 {
@@ -157,7 +91,6 @@ function displayValidateID()
         }
     }
 }
-
 
 function checkValidateID(id)
 {
@@ -200,47 +133,3 @@ function checkValidUserInfo()
     $("#resultArea").text("입력란을 제대로 입력했는지 확인해주세요");
     return false;
 }
-
-
-
-function setValidMarkByName(name,mode)
-{
-    if (name.search("origin") != -1)
-    {
-        changePasswordValidZero = mode;
-    }
-
-    else if (name.search("One") != -1)
-    {
-        changePasswordValidOne = mode;
-
-    }
-    else if (name.search("Two") != -1)
-    {
-        changePasswordValidTwo = mode;
-    }
-}
-
-
-
-function doubleCheckPassword()
-{
-    addBlurCheckEvent("password","#originUserPassword");
-    addBlurCheckEvent("password","#objUserPasswordOne");
-    addBlurCheckEvent("password","#objUserPasswordTwo");
-
-    var objPasswordOne = $("#objUserPasswordOne").value;
-    var objPasswordTwo = $("#objUserPasswordTwo").value;
-    if(objPasswordOne !== objPasswordTwo)
-    {
-        $("resultArea").text("변경하려는 비밀번호가 일치하지 않습니다");
-        return false;
-    }
-
-    return true;
-}
-
-
-
-
-
