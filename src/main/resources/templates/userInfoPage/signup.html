@@ -35,24 +35,35 @@
                         <div class="col-sm-4">
                         </div>
 
-                        <div class="col-sm-8">
+                        <p id="resultID" th:text="${msg}"></p>
+
+
+                        <div class="col-sm-8 mt-2">
                             <input class="form-control" type="password" minlength="8" maxlength="20" required id="userPassword" name="userPassword" placeholder="비밀번호">
                         </div>
 
                         <div class="col-sm-4">
                         </div>
 
-                        <div class="col-sm-8">
+                        <p id="resultPW" th:text="${msg}"></p>
+
+
+                        <div class="col-sm-8 mt-2">
                             <input class="form-control" type="email" minlength="4" maxlength="40" required id="userEmail" name="userEmail" placeholder="인증 이메일">
                         </div>
 
                         <div class="col-sm-4">
                         </div>
 
+                        <p id="resultEmail" th:text="${msg}"></p>
+
+
                         <div class="col-sm-8">
                             <button class="form-control btn btn-dark" style="border:none;">제출</button>
-                            <p id="resultArea" th:text="${msg}"></p>
                         </div>
+
+                        <p id="resultArea" th:text="${msg}"></p>
+
 
                         <style>
                             input

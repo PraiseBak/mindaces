@@ -19,7 +19,7 @@ function checkDuplicateUserID (data)
         async: false
 
     }).done(function (fragment){
-        var alarmArea = $("#resultArea");
+        var alarmArea = $("#resultID");
         alarmArea.replaceWith(fragment);
         if(fragment.search("중복")=== -1)
         {
@@ -45,7 +45,7 @@ function checkDuplicateUserEmail (data)
         async: false
 
     }).done(function (fragment){
-        var alarmArea = $("#resultArea");
+        var alarmArea = $("#resultEmail");
         alarmArea.replaceWith(fragment);
         if(fragment.search("중복")=== -1)
         {

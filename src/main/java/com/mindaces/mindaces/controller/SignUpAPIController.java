@@ -37,7 +37,12 @@ public class SignUpAPIController
             msg = "사용가능한";
         }
         model.addAttribute("msg",msg + " " + idOrEmail);
-        return "userInfoPage/signup :: #resultArea";
+
+        if(idOrEmail.contains("이메일"))
+        {
+            return "userInfoPage/signup :: #resultEmail";
+        }
+        return "userInfoPage/signup :: #resultID";
     }
 
 }

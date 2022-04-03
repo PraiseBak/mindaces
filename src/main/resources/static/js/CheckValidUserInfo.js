@@ -37,11 +37,11 @@ function displayValidateEmail()
     var data = userEmail.value;
     isValidEmail = false;
     if (data.length < 4 || data.length > 40) {
-        $("#resultArea").text("유효하지 않은 이메일입니다");
+        $("#resultEmail").text("유효하지 않은 이메일입니다");
     }
     else if (checkValidateEmail(data) === false)
     {
-        $("#resultArea").text("유효하지 않은 이메일입니다");
+        $("#resultEmail").text("유효하지 않은 이메일입니다");
     }
     else
     {
@@ -60,14 +60,14 @@ function displayValidatePassword()
     data = userPassword.value;
 
     if (data.length < 8 || data.length > 20) {
-        $("#resultArea").text("비밀번호는 최소 8자 최대 20자만 가능합니다");
+        $("#resultPW").text("비밀번호는 최소 8자 최대 20자만 가능합니다");
     }
     else if (checkValidatePassword(data) === false) {
-        $("#resultArea").text("비밀번호는 숫자와 문자가 1개 이상이어야 합니다");
+        $("#resultPW").text("비밀번호는 숫자와 문자가 1개 이상이어야 합니다");
     }
     else
     {
-        $("#resultArea").text("사용가능한 비밀번호입니다");
+        $("#resultPW").text("사용가능한 비밀번호입니다");
         isValidPassword = true;
     }
 
@@ -78,9 +78,9 @@ function displayValidateID()
     var data = userID.value;
     isValidID = false;
     if (data.length < 2 || data.length > 20) {
-        $("#resultArea").text("입력은 최소 2자 최대 20자만 가능합니다");
+        $("#resultID").text("입력은 최소 2자 최대 20자만 가능합니다");
     } else if (checkValidateID(data) === false) {
-        $("#resultArea").text("닉네임은 한글, 영문, 숫자만 가능합니다");
+        $("#resultID").text("닉네임은 한글, 영문, 숫자만 가능합니다");
     }
     else
     {

@@ -23,7 +23,7 @@ function checkEmailAPI()
         if (result)
         {
             sendEmailAPI(userDto);
-            $("#resultArea").text("입력된 이메일로 임시 비밀번호를 보냈습니다");
+            $("#resultArea").text("입력된 이메일로 임시 비밀번호를 보냈습니다"); //비밀번호 수정하기 기능 수정해야함
 
         }
         else
