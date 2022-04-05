@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+
 //설정관련 클래스는 Configuration이라고 명시해줘야함
 @Configuration
 //WebSecurity에 대한 클래스라는 것 명시
@@ -30,6 +31,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecureConfig extends WebSecurityConfigurerAdapter
 {
     private UserService userService;
+
     private MyAuthProvider myAuthProvider;
     private CustomAuthenticationFailHandler customAuthenticationFailHandler;
 
@@ -88,7 +90,12 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
     public void configure(AuthenticationManagerBuilder auth) throws Exception
     {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-        auth.authenticationProvider(myAuthProvider);
+        //220405 22:48
+        //아래의 코드가 인증을 myAuthProvider을 대체하고 있었음
+        //무엇을 위해 이 코드를 작성했는지 모르겠으나 내 의도에는 맞지않아 주석처리함
+        //auth.authenticationProvider(myAuthProvider);
     }
+
+
 
 }

@@ -198,7 +198,7 @@ public class UserController
         }
 
         model.addAttribute("username",username);
-        return "userInfopage/changeUserPassword";
+        return "userInfoPage/changeUserPassword";
     }
 
 
