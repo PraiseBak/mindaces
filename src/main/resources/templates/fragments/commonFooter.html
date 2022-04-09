@@ -2,7 +2,8 @@
     <footer th:fragment="commonFooter" >
         <footer class="row mt-lg-5">
         <div class="col-md-12 text-center mt-lg-5">
-            Copyright ⓒ 2021 Mindaces. All rights reserved.
+            <span th:text="|Copyright ⓒ ${#calendars.format(#calendars.createNow(), 'yyyy')} Mindaces|"></span>
+            <span>All rights reserved</span>
         </div>
     </footer>
 </html>
@@ -15,3 +16,4 @@
 </style>
 
 
+s
