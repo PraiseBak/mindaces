@@ -78,7 +78,9 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
                             .ignoringAntMatchers("/gallery/**/**")
                             .ignoringAntMatchers("/gallery/**/modify/**")
                             .ignoringAntMatchers("/gallery/**/delete/**")
-                            .ignoringAntMatchers("/gallery/**/postWrite/**");
+                            .ignoringAntMatchers("/gallery/**/postWrite/**")
+                            .ignoringAntMatchers("/user/userObjAdd");
+
 
         http.oauth2Login()
                 .loginPage("/user/login");

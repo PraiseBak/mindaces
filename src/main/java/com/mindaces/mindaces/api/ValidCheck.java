@@ -1,6 +1,8 @@
 package com.mindaces.mindaces.api;
 
 
+import com.mindaces.mindaces.dto.UserObjDto;
+
 import java.util.regex.Pattern;
 
 public class ValidCheck
@@ -59,5 +61,21 @@ public class ValidCheck
         String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]+$";
         return Pattern.matches(regex,password);
     }
+
+    public boolean isValidObjInput(UserObjDto userObjDto)
+    {
+        String title = userObjDto.getObjTitle();
+        String content = userObjDto.getObjContent();
+        Integer day = userObjDto.getObjDay();
+        if(title.length() < 2 || title.length() > 20){
+            return false;
+        }else if(content.length() < 2 || content.length() > 40) {
+            return false;
+        }else if(day < 1 || day > 3650) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

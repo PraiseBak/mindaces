@@ -20,7 +20,6 @@
 
                         <div class="contentUpper row"  style="margin-top:3px;">
                             <h3 class="col-sm-8">
-                                <p th:text="${board.boardInfo.gallery}"></p>
                                 <p style="display: inline" th:if="${board.boardInfo.isRecommendedBoard}"   th:text="|🍀|"></p>
                                 <span th:text="${board.title}"></span>
                             </h3>
@@ -38,7 +37,7 @@
                         <br>
                         <br>
 
-                        <div class="" style="margin-top: 15px; border-bottom:1px solid #eee">
+                        <div class="" style="margin-top: 0px; border-bottom:1px solid #eee">
                             <p th:if="${board.isLoggedUser} == 0" th:text="|${board.user}|"></p>
                             <a th:href="@{'/user/' + ${board.user}}" th:if="${board.isLoggedUser} == 1" th:text="|${board.user}  😎|"></a>
                         </div>

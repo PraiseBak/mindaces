@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+<head th:insert="base/head.html">
+</head>
+<body>
+
+    <div id="body-wrapper">
+        <div id="body-content">
+            <div class="container" style="margin-top:5%">
+                <form class="objInputForm" method="post">
+                    <div class="form-group row">
+                        <div class="form-input objInputArea">
+                            <input type="text" name="objTitle" minlength="2" maxlength="20" placeholder="목표" class="form-control objInput" id="inputTitle"  th:value="${userObj?.objTitle}">
+                            <input type="text" name="objContent" minlength="2" maxlength="40" placeholder="부가 설명" class="form-control objInput mt-4" id="inputContent"  th:value="${userObj?.objContent}" style="height: 80%">
+                            <input type="number" min="1" max="3650" name="objDay" minlength="1" maxlength="6" placeholder="목표일" class="form-control mt-4" id="inputDay">
+                            <button type="submit" class="btn-lg btn-dark float-right mt-4" style="color: #4d4d4d">➕</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+
+</style>
