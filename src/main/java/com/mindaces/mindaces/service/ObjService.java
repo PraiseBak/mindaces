@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -26,22 +27,30 @@ public class ObjService
 
         UserObj userObj;
         User user;
+
         userObj = userObjDto.toEntity();
 
         user = userRepository.findByUserID(roleService.getUsername(authentication));
-        System.out.println(user == null);
         if(user != null)
         {
             userID = user.getUserIdx();
-            System.out.println(userID);
-            if(userID == -1){
-                return;
-            }
-
             userObj.setUserIdx(userID);
             objRepository.save(userObj);
 
         }
     }
 
+    public List<UserObj> getObjListOrderByDate(Authentication authentication)
+    {
+        Long userID;
+        User user = userRepository.findByUserID(roleService.getUsername(authentication));
+        List<UserObj> userObjs = null;
+        if(user != null)
+        {
+             userID = user.getUserIdx();
+             userObjs = objRepository.findAllByUserIdx(userID);
+        }
+
+        return userObjs;
+    }
 }

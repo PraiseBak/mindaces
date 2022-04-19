@@ -12,12 +12,14 @@ public class UserObjDto
 {
     private String objTitle;
     private String objContent;
-    private Integer objDay;
+    private Long objDay;
+    private Long isRepresentObj;
 
     public UserObj toEntity()
     {
         UserObj userObj = UserObj.builder()
                 .objDay(this.objDay)
+                .isRepresentObj(this.isRepresentObj)
                 .objContent(this.objContent)
                 .objTitle(this.objTitle)
                 .build();

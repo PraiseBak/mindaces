@@ -1,7 +1,7 @@
 package com.mindaces.mindaces.controller;
 
-
 import com.mindaces.mindaces.api.ValidCheck;
+import com.mindaces.mindaces.domain.entity.UserObj;
 import com.mindaces.mindaces.dto.UserObjDto;
 import com.mindaces.mindaces.service.ObjService;
 import com.mindaces.mindaces.service.RoleService;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -22,6 +24,8 @@ public class UserObjController
     @GetMapping("/user/userObjPage")
     public String UserObjPage(Authentication authentication, Model model)
     {
+        List<UserObj> userObjs = objService.getObjListOrderByDate(authentication);
+        model.addAttribute("userObjList",userObjs);
         return "userObjPage/userObjInfo";
     }
 
@@ -39,7 +43,6 @@ public class UserObjController
         {
             objService.addObj(authentication,userObjDto);
         }
-
 
         return "redirect:/user/userObjPage";
     }

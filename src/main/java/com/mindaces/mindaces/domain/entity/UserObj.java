@@ -2,6 +2,7 @@ package com.mindaces.mindaces.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Table(name = "USER_OBJ")
 public class UserObj extends BaseTimeEntity
 {
@@ -32,14 +34,18 @@ public class UserObj extends BaseTimeEntity
     private String objContent;
 
     @Column(name = "obj_day",columnDefinition = "INT UNSIGNED")
-    private Integer objDay;
+    private Long objDay;
+
+    @Column(name = "is_represent_obj",columnDefinition = "tinyint(1) default 0")
+    private Long isRepresentObj;
 
     @Builder
-    UserObj(String objTitle,String objContent,Integer objDay)
+    UserObj(String objTitle,String objContent,Long objDay,Long isRepresentObj)
     {
         this.objContent = objContent;
         this.objTitle = objTitle;
         this.objDay = objDay;
+        this.isRepresentObj = isRepresentObj;
     }
 
     public void setUserIdx(Long userIdx)

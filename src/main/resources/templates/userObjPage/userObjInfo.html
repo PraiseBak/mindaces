@@ -1,12 +1,68 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+<html lang="ko" xmlns:th="http://www.thymeleaf.rg" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns="http://www.w3.org/1999/html">
     <head th:insert="base/head.html">
     </head>
 
     <div id="body-wrapper">
         <div id="body-content">
-            <a class="btn-lg float-right mr-4" href="/user/userObjAdd " >➕</a>
+
+            <div class="objAddArea row">
+                <div class="col-sm-10">
+                    <!-- TODO 삭제기능, 주 목표 설정 기능-->
+                    <button class="btn-lg" name="removeObj" onclick="checkToggle()">➖</button>
+                    <button class="btn-lg" name="mainObj" onclick="buttonToggle()">🖤</button>
+                    <a class="btn-lg" href="/user/userObjAdd ">➕</a>
+                </div>
+            </div>
+
+            <div class="row" style="margin-left: 5%">
+                <div class="col-sm-11">
+                    <table class="table table-borderless mt-4" style="table-layout: fixed;"  th:if="${userObjList!=null and not userObjList.empty} ">
+
+                        <thead class="thead-dark">
+                            <tr class="text-center table-header">
+                                <th style="width: 25%;" scope="col">목표</th>
+                                <th style="width: 45%;" scope="col">부가 설명</th>
+                                <th style="width: 10%;" scope="col">목표설정일</th>
+                                <th style="width: 10%;" scope="col">지난일수</th>
+                                <th style="width: 10%;" scope="col">목표일</th>
+                                <th style="width: 10%;" scope="col">남은일</th>
+                                <th ></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        
+                            <tr th:each="userObj : ${userObjList}" th:height="50px" class="text-center">
+                                <td>
+                                    <p th:text="${userObj.objTitle}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${userObj.objContent}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="|${#temporals.format(userObj.createdDate,'yyyy-MM-dd')}|"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${#dateUtil.dateBetween(userObj.createdDate,userObj.objDay)}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${userObj.objDay}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${#dateUtil.dateSubtract(userObj.createdDate,userObj.objDay)}"></p>
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="form-check-input objCheck" style="display: none"></input>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
         </div>
     </div>
 
@@ -14,3 +70,14 @@
 
 
 </html>
+
+<script src="/js/UserObjUI.js"></script>
+<style>
+    .objCheck
+    {
+        margin-left:10px;
+        zoom:1.3;
+    }
+
+
+</style>
