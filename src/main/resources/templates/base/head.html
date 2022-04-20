@@ -33,10 +33,11 @@
             </nav>
         </div>
         <div class="container">
-            <nav class="nav">
+            <nav class="nav" sec:authorize="isAuthenticated()">
                 <!--a id="objInfo" th:if="!${objList != null}" th:text="|@{username}님의 ${obj}를 결심한지 ${objList.mainObj.day}일 째 입니다"></a!-->
-                <a id="objDay" class="nav-link" th:href="@{'/user/userObjPage'}" sec:authorize="isAuthenticated()">📃목표설정</a>
-                <p class="nav-link navbar-text">오늘로 [뭥농뭥농뭥농뭥농뭥농뭥농뭥농뭥농뭥농뭥농] D3+</p>
+                <a id="objDay" class="nav-link" th:href="@{'/user/userObjPage'}">📃목표설정</a>
+                <p class="nav-link navbar-text" th:text=""></p>
+
             </nav>
         </div>
 
@@ -82,6 +83,7 @@
 <link rel="stylesheet" href="/css/styles.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js">
 <script src="/js/RedirectURL.js"></script>
+<script src="/js/UserObjAPI.js"></script>
 
 </html>
 

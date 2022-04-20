@@ -8,4 +8,5 @@ import java.util.List;
 public interface ObjRepository extends JpaRepository<UserObj,Long>
 {
     List<UserObj> findAllByUserIdx(Long userID);
+    List<UserObj> findAllByIsRepresentObjAndUserIdx(Boolean isRepresentObj,Long userIdx);
 }

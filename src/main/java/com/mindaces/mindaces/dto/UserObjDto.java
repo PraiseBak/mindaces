@@ -10,10 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 public class UserObjDto
 {
+    private Long objIdx;
     private String objTitle;
     private String objContent;
     private Long objDay;
-    private Long isRepresentObj;
+    private Boolean isRepresentObj;
 
     public UserObj toEntity()
     {

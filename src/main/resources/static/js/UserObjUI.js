@@ -1,18 +1,10 @@
-let btnHTML = "<a class=\"form-check-input\">🖤</a>";
-let checkHTML = "<input type=\"checkbox\" class=\"form-check-input objCheck\"></input>";
-let prevHTML = "";
+let checkBoxClass = ".form-check-input";
 
-function toggleCSS(changeHTML)
+function toggleCSS(mode)
 {
-
-    if (prevHTML != changeHTML)
-    {
-        $(".form-check-input").each(function (){
-            $(this).replaceWith(changeHTML);
-        });
-    }
-
-    $(".form-check-input").each(function (){
+    let classInst = mode;
+    let anotherInst = (mode === "objDelete") ? "objRepresent" : "objDelete";
+    $(checkBoxClass + "." + classInst).each(function (){
         if(this.style.display == "none")
         {
             $(this).css("display", "block");
@@ -21,16 +13,11 @@ function toggleCSS(changeHTML)
             $(this).css("display", "none");
         }
     });
-    prevHTML = changeHTML;
+
+    $(checkBoxClass + "." + anotherInst).each(function (){
+        $(this).css("display", "none");
+    });
+
 }
 
-function checkToggle()
-{
-    toggleCSS(checkHTML);
-}
-
-function buttonToggle()
-{
-    toggleCSS(btnHTML);
-}
 

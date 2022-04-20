@@ -6,6 +6,7 @@ import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,10 +23,10 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserService implements UserDetailsService
 {
     private UserRepository userRepository;
-
 
     @Transactional
     public Long joinUser(UserDto userDto)

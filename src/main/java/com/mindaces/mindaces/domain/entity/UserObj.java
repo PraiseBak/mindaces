@@ -37,10 +37,10 @@ public class UserObj extends BaseTimeEntity
     private Long objDay;
 
     @Column(name = "is_represent_obj",columnDefinition = "tinyint(1) default 0")
-    private Long isRepresentObj;
+    private boolean isRepresentObj;
 
     @Builder
-    UserObj(String objTitle,String objContent,Long objDay,Long isRepresentObj)
+    UserObj(String objTitle,String objContent,Long objDay,boolean isRepresentObj)
     {
         this.objContent = objContent;
         this.objTitle = objTitle;
@@ -51,5 +51,11 @@ public class UserObj extends BaseTimeEntity
     public void setUserIdx(Long userIdx)
     {
         this.userIdx = userIdx;
+    }
+
+    public void setIsRepresentObj(boolean isRepresentObj)
+    {
+
+        this.isRepresentObj = isRepresentObj;
     }
 }

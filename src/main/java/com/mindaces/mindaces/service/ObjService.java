@@ -53,4 +53,22 @@ public class ObjService
 
         return userObjs;
     }
+
+    public Long getUserIdxByObjIdx(Long objIdx)
+    {
+        return objRepository.getById(objIdx).getUserIdx();
+    }
+
+    @Transactional
+    public void setRepresentObjByObjIdxAndUserIdx(Long objUserIdx, Long objIdx)
+    {
+        List<UserObj> objList;
+        objList = objRepository.findAllByIsRepresentObjAndUserIdx(true,objUserIdx);
+        for(UserObj obj : objList)
+        {
+            obj.setIsRepresentObj(false);
+        }
+        UserObj obj = objRepository.findById(objIdx).get();
+        obj.setIsRepresentObj(true);
+    }
 }

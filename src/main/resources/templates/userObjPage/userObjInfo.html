@@ -6,12 +6,12 @@
 
     <div id="body-wrapper">
         <div id="body-content">
-
             <div class="objAddArea row">
                 <div class="col-sm-10">
                     <!-- TODO 삭제기능, 주 목표 설정 기능-->
-                    <button class="btn-lg" name="removeObj" onclick="checkToggle()">➖</button>
-                    <button class="btn-lg" name="mainObj" onclick="buttonToggle()">🖤</button>
+                    <button class="btn-lg" name="removeObj" onclick="toggleCSS('objDelete')">➖</button>
+                    <button class="btn-lg" name="representObj" onclick="toggleCSS('objRepresent')">🖤</button>
+                    <button class="btn-lg" name="checkObj" onclick="updateUserObjInfo('delete')">✔</button>
                     <a class="btn-lg" href="/user/userObjAdd ">➕</a>
                 </div>
             </div>
@@ -33,10 +33,10 @@
                         </thead>
 
                         <tbody>
-                        
-                            <tr th:each="userObj : ${userObjList}" th:height="50px" class="text-center">
+                            <tr th:each="userObj : ${userObjList}" th:height="50px" class="text-center userObjTable"
+                                th:style="${userObj.isRepresentObj} == true ? 'background-color: #9f9f9f' : ''">
                                 <td>
-                                    <p th:text="${userObj.objTitle}"></p>
+                                    <p th:text="|${userObj.isRepresentObj == true ? '[🖤]' : ''} ${userObj.objTitle}|"></p>
                                 </td>
                                 <td>
                                     <p th:text="${userObj.objContent}"></p>
@@ -54,7 +54,8 @@
                                     <p th:text="${#dateUtil.dateSubtract(userObj.createdDate,userObj.objDay)}"></p>
                                 </td>
                                 <td>
-                                    <input type="checkbox" class="form-check-input objCheck" style="display: none"></input>
+                                    <input type="checkbox" th:id="|objDelete-${userObj.objIdx}|" class="form-check-input objDelete" style="display: none"></input>
+                                    <a class="form-check-input objRepresent" th:onclick='|updateUserObjInfo(${userObj.objIdx})|' style="display: none">🖤</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -72,6 +73,7 @@
 </html>
 
 <script src="/js/UserObjUI.js"></script>
+<script src="/js/UserObjAPI.js"></script>
 <style>
     .objCheck
     {

@@ -1,29 +1,22 @@
 package com.mindaces.mindaces.api;
 
-import java.util.Collections;
+import com.mindaces.mindaces.service.ObjService;
+import org.springframework.stereotype.Component;
+import org.thymeleaf.context.IExpressionContext;
+import org.thymeleaf.dialect.AbstractDialect;
+import org.thymeleaf.dialect.IExpressionObjectDialect;
+import org.thymeleaf.expression.IExpressionObjectFactory;
 
+import java.util.Collections;
 import java.util.Set;
 
 
-
-import org.springframework.stereotype.Component;
-
-import org.thymeleaf.context.IExpressionContext;
-
-import org.thymeleaf.dialect.AbstractDialect;
-
-import org.thymeleaf.dialect.IExpressionObjectDialect;
-
-import org.thymeleaf.expression.IExpressionObjectFactory;
-
-
-
 @Component
-public class DateUtilDialect extends AbstractDialect implements IExpressionObjectDialect {
+public class UserObjUtilDialect extends AbstractDialect implements IExpressionObjectDialect {
 
-    protected DateUtilDialect()
+    protected UserObjUtilDialect()
     {
-        super("dateUtil");
+        super("userObjUtil");
 
     }
 
@@ -34,13 +27,13 @@ public class DateUtilDialect extends AbstractDialect implements IExpressionObjec
 
             @Override
             public Set<String> getAllExpressionObjectNames() {
-                return Collections.singleton("dateUtil");
+                return Collections.singleton("userObjUtil");
             }
 
 
             @Override
             public Object buildObject(IExpressionContext context, String expressionObjectName) {
-                return new DateUtil();
+                return new UserObjUtil();
             }
 
             @Override
