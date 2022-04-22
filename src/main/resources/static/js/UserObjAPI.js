@@ -1,7 +1,16 @@
 
-function test()
+function getRepreObj()
 {
-    return "test";
+    let apiURL = "/API/getRepresentObj";
+    let repreObj = "";
+    $.ajax({
+        type : "GET",
+        url : apiURL,
+        async : false
+    }).done(function (result){
+        repreObj = result;
+    });
+    return repreObj;
 }
 
 

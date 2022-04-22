@@ -13,16 +13,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-class UserObjUtil
-{
-    public String getRepresentObj(String username)
-    {
-        return username;
-    }
-
-}
-
-class DateUtil
+public class DateUtil
 {
     public String dateSubtract(LocalDateTime localDateTime, Integer objDay)
     {

@@ -18,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserObjController
 {
-    private RoleService roleService;
     private ObjService objService;
 
     @GetMapping("/user/userObjPage")
@@ -43,11 +42,8 @@ public class UserObjController
         {
             objService.addObj(authentication,userObjDto);
         }
-
         return "redirect:/user/userObjPage";
     }
-
-
 
 
 }

@@ -23,7 +23,6 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserService implements UserDetailsService
 {
     private UserRepository userRepository;

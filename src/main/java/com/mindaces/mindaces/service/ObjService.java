@@ -3,7 +3,6 @@ package com.mindaces.mindaces.service;
 import com.mindaces.mindaces.domain.entity.User;
 import com.mindaces.mindaces.domain.entity.UserObj;
 import com.mindaces.mindaces.domain.repository.ObjRepository;
-import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserObjDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,8 +16,8 @@ import java.util.List;
 public class ObjService
 {
     ObjRepository objRepository;
-    UserRepository userRepository;
     RoleService roleService;
+    UserService userService;
 
     @Transactional
     public void addObj(Authentication authentication, UserObjDto userObjDto)
@@ -30,27 +29,23 @@ public class ObjService
 
         userObj = userObjDto.toEntity();
 
-        user = userRepository.findByUserID(roleService.getUsername(authentication));
-        if(user != null)
+        userID = userService.findUserID(roleService.getUsername(authentication));
+        if(userID != -1)
         {
-            userID = user.getUserIdx();
             userObj.setUserIdx(userID);
             objRepository.save(userObj);
-
         }
     }
 
     public List<UserObj> getObjListOrderByDate(Authentication authentication)
     {
-        Long userID;
-        User user = userRepository.findByUserID(roleService.getUsername(authentication));
+        Long userID = -1L;
+        userID = userService.findUserID(roleService.getUsername(authentication));
         List<UserObj> userObjs = null;
-        if(user != null)
+        if(userID != -1)
         {
-             userID = user.getUserIdx();
              userObjs = objRepository.findAllByUserIdx(userID);
         }
-
         return userObjs;
     }
 
@@ -63,7 +58,7 @@ public class ObjService
     public void setRepresentObjByObjIdxAndUserIdx(Long objUserIdx, Long objIdx)
     {
         List<UserObj> objList;
-        objList = objRepository.findAllByIsRepresentObjAndUserIdx(true,objUserIdx);
+        objList = getRepreUserObjListByUserIdx(objUserIdx);
         for(UserObj obj : objList)
         {
             obj.setIsRepresentObj(false);
@@ -71,4 +66,24 @@ public class ObjService
         UserObj obj = objRepository.findById(objIdx).get();
         obj.setIsRepresentObj(true);
     }
+
+    List<UserObj> getRepreUserObjListByUserIdx(Long objUserIdx)
+    {
+        List<UserObj> objList;
+        objList = objRepository.findAllByIsRepresentObjAndUserIdx(true,objUserIdx);
+        return objList;
+    }
+
+
+    public UserObj getRepresentObj(Long curUserIdx)
+    {
+        List<UserObj> objList;
+        objList = getRepreUserObjListByUserIdx(curUserIdx);
+        if(objList != null && objList.size() != 1)
+        {
+            return null;
+        }
+        return objList.get(0);
+    }
+
 }

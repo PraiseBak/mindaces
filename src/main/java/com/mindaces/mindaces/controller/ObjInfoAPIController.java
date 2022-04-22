@@ -1,5 +1,6 @@
 package com.mindaces.mindaces.controller;
 
+import com.mindaces.mindaces.api.DateUtil;
 import com.mindaces.mindaces.domain.entity.UserObj;
 import com.mindaces.mindaces.dto.UserObjDto;
 import com.mindaces.mindaces.service.ObjService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
+
 @RequestMapping("/API")
 @AllArgsConstructor
 @Controller
@@ -24,7 +27,7 @@ public class ObjInfoAPIController
 
     @PostMapping(value = "/setRepresentObj")
     @ResponseBody
-    public Boolean setRepresentObj(Authentication authentication, UserObjDto userObjDto)
+    public Boolean setRepresentObjAPI(Authentication authentication, UserObjDto userObjDto)
     {
         Long curUserIdx = userService.findUserID(roleService.getUsername(authentication));
         Long objUserIdx = objService.getUserIdxByObjIdx(userObjDto.getObjIdx());
@@ -39,11 +42,18 @@ public class ObjInfoAPIController
 
     @GetMapping(value = "/getRepresentObj")
     @ResponseBody
-    public String getRepresentObj(Authentication authentication)
+    public String getRepresentObjAPI(Authentication authentication)
     {
         Long curUserIdx = userService.findUserID(roleService.getUsername(authentication));
-        String result = "주목표가 없습니다";
+        String result = "목표가 없습니다";
         UserObj userObj = objService.getRepresentObj(curUserIdx);
+
+        if(userObj == null)
+        {
+            return result;
+        }
+        String curPlusDay = new DateUtil().dateBetween(userObj.getCreatedDate(),userObj.getObjDay().intValue());
+        result = userObj.getObjTitle() + " D+ " + curPlusDay;
         return result;
     }
 

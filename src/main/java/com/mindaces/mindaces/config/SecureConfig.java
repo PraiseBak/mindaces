@@ -1,7 +1,6 @@
 package com.mindaces.mindaces.config;
 
 import com.mindaces.mindaces.api.CustomAuthenticationFailHandler;
-import com.mindaces.mindaces.api.MyAuthProvider;
 import com.mindaces.mindaces.service.UserService;
 import com.mindaces.mindaces.service.social.GoogleOAuth2User;
 import lombok.AllArgsConstructor;
@@ -31,8 +30,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecureConfig extends WebSecurityConfigurerAdapter
 {
     private UserService userService;
-
-    private MyAuthProvider myAuthProvider;
     private CustomAuthenticationFailHandler customAuthenticationFailHandler;
 
     //스프링 제공 비밀번호 암호화 객체
@@ -91,6 +88,7 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception
     {
+
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
         //220405 22:48
         //아래의 코드가 인증을 myAuthProvider을 대체하고 있었음
