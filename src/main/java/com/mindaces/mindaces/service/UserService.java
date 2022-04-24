@@ -8,6 +8,7 @@ import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,7 @@ import java.util.*;
 @AllArgsConstructor
 public class UserService implements UserDetailsService
 {
+    private RoleService roleService;
     private UserRepository userRepository;
 
     @Transactional
@@ -72,6 +74,10 @@ public class UserService implements UserDetailsService
 
         userDetails = new org.springframework.security.core.userdetails.User(userEntityWrapper.getUserID(), userEntityWrapper.getUserPassword(), authorities);
         return userDetails;
+    }
+    public Long findUserID(Authentication authentication)
+    {
+        return findUserID(roleService.getUsername(authentication));
     }
 
     public Long findUserID(String userID)
@@ -144,5 +150,6 @@ public class UserService implements UserDetailsService
         user.setUserPassword(passwordEncoder.encode(newPasswordOne));
         return true;
     }
+
 
 }

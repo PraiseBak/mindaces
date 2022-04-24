@@ -28,24 +28,31 @@ function getSelectedObjIdxList()
 
 function updateUserObjAjax(input, isDelete)
 {
-    let userObjDto =
-    {
-        objIdx : input
-    };
     let apiURL = "/API/setRepresentObj";
     if(isDelete)
     {
         apiURL = "/API/delObjs";
+        input =
+        {
+            checkedList : input
+        }
+    }
+    else
+    {
+        input =
+        {
+            objIdx : input
+        };
     }
     $.ajax({
         type : "POST",
         url : apiURL,
-        data : userObjDto,
+        data : input,
         async : false
     }).done(function (result){
-        if (result == false)
+        if (result === "fail")
         {
-            alert("삭제하는데 실패하였습니다");
+            alert("요청을 수행하는데 실패했습니다");
         }
         else
         {
@@ -68,5 +75,6 @@ function updateUserObjInfo(input)
     {
         updateUserObjAjax(input,isDelete);
     }
+
 }
 

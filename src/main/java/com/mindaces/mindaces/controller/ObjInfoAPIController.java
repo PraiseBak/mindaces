@@ -9,12 +9,8 @@ import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RequestMapping("/API")
 @AllArgsConstructor
@@ -58,7 +54,15 @@ public class ObjInfoAPIController
     }
 
 
-
-
+    @PostMapping(value = "/delObjs")
+    @ResponseBody
+    boolean delObjs(@RequestParam(value = "checkedList[]") List<Long> selectedList,Authentication authentication)
+    {
+        if(objService.delObjs(selectedList,authentication))
+        {
+            return true;
+        }
+        return false;
+    }
 
 }

@@ -69,7 +69,7 @@ public class ValidCheck
         Long day = userObjDto.getObjDay();
         if(title.length() < 2 || title.length() > 20){
             return false;
-        }else if(content.length() < 2 || content.length() > 40) {
+        }else if(content.length() > 40) {
             return false;
         }else if(day < 1 || day > 3650) {
             return false;

@@ -20,7 +20,6 @@ public class UserObjDto
     {
         UserObj userObj = UserObj.builder()
                 .objDay(this.objDay)
-                .isRepresentObj(this.isRepresentObj)
                 .objContent(this.objContent)
                 .objTitle(this.objTitle)
                 .build();

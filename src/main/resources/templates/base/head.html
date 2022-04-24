@@ -11,14 +11,13 @@
 </head>
 <body>
 <div class="navbar navbar-dark bg-dark shadow-sm mb-3 row">
-    <div class="col"></div>
-    <div class="container d-flex justify-content-between col-sm-6">
+    <div class="container d-flex justify-content-between col-sm-3">
         <a href="/" class="navbar-brand d-flex align-items-center">
             <strong>Mindaces</strong>
         </a>
     </div>
 
-    <nav class="nav-bar col-sm-5">
+    <nav class="nav-bar col-sm-6 mb-0">
         <div class='container'>
             <nav class="nav">
                 <a class="nav-link" th:href="@{/user/selectSignup}" sec:authorize="isAnonymous()">회원가입</a>
@@ -26,20 +25,20 @@
                 <a id="logout" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
                 <a id="galleryList" class="nav-link" th:href="@{/gallery/galleryList}">갤러리리스트</a>
                 <a id="mypage" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{'/user/' + ${#authorization.getAuthentication().getName()} + '/board'}">내 페이지</a>
-                <form method="post" class="form-inline" th:action="@{'/user/findUserWroteContent'}">
-                    <input class="form-control mr-sm-2" name="searchUsername" id="searchUsername"  type="search" placeholder="유저 검색">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <form method="post" class="form-group" th:action="@{'/user/findUserWroteContent'}">
+                    <input class="input-group-text float-left" size="10%" name="searchUsername" id="searchUsername" type="search" placeholder="유저 검색">
+                    <button class="btn btn-outline-success ml-2" type="submit">Search</button>
                 </form>
             </nav>
         </div>
         <div class="container">
             <nav class="nav" sec:authorize="isAuthenticated()">
-                <!--a id="objInfo" th:if="!${objList != null}" th:text="|@{username}님의 ${obj}를 결심한지 ${objList.mainObj.day}일 째 입니다"></a!-->
                 <a id="objDay" class="nav-link" th:href="@{'/user/userObjPage'}">📃목표설정</a>
                 <p class="nav-link navbar-text" id="repreObjHeader"></p>
-
             </nav>
-
+            <nav class="nav">
+                <p class="nav-link navbar-text" id="randWise">어쩌구저쩌구 - by 1313</p>
+            </nav>
         </div>
 
     </nav>
@@ -91,8 +90,14 @@
 
 <script th:inline="javascript">
     $(function (){
+        //목표 불러오기
          let result = getRepreObj();
         $("#repreObjHeader").text(result);
+
+        //명언 불러오기
+        let wise = getRandWise();
+        $("#wise").text(wise);
+
     });
 </script>
 

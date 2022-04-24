@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Table(name = "USER_OBJ")
+@DynamicInsert
 public class UserObj extends BaseTimeEntity
 {
 
@@ -30,7 +32,7 @@ public class UserObj extends BaseTimeEntity
     @Column(name = "obj_title",nullable = false, length = 45)
     private String objTitle;
 
-    @Column(name = "obj_content",nullable = false)
+    @Column(name = "obj_content")
     private String objContent;
 
     @Column(name = "obj_day",columnDefinition = "INT UNSIGNED")

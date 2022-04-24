@@ -11,8 +11,8 @@
                     <!-- TODO 삭제기능, 주 목표 설정 기능-->
                     <button class="btn-lg" name="removeObj" onclick="toggleCSS('objDelete')">➖</button>
                     <button class="btn-lg" name="representObj" onclick="toggleCSS('objRepresent')">🖤</button>
-                    <button class="btn-lg" name="checkObj" onclick="updateUserObjInfo('delete')">✔</button>
-                    <a class="btn-lg" href="/user/userObjAdd ">➕</a>
+                    <button class="btn-lg" id="checkObjBtn" name="checkObj" onclick="updateUserObjInfo('delete')" style="display: none">✔</button>
+                    <button class="btn-lg" onclick="location.href='/user/userObjAdd'">➕</button>
                 </div>
             </div>
 
@@ -54,8 +54,8 @@
                                     <p th:text="${#dateUtil.dateSubtract(userObj.createdDate,userObj.objDay)}"></p>
                                 </td>
                                 <td>
-                                    <input type="checkbox" th:id="|objDelete-${userObj.objIdx}|" class="form-check-input objDelete" style="display: none"></input>
-                                    <a class="form-check-input objRepresent" th:onclick='|updateUserObjInfo(${userObj.objIdx})|' style="display: none">🖤</a>
+                                    <input type="checkbox" th:id="|objDelete-${userObj.objIdx}|" class="form-check-input objDelete" style="display: none; zoom: 1.5; margin-left: 5px"></input>
+                                    <a class="form-check-input objRepresent" th:onclick='|updateUserObjInfo(${userObj.objIdx})|' style="display: none; margin-left: 5px">🖤</a>
                                 </td>
                             </tr>
                         </tbody>

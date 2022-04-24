@@ -86,4 +86,35 @@ public class ObjService
         return objList.get(0);
     }
 
+    public boolean delObjs(List<Long> selectedList, Authentication authentication)
+    {
+        for(Long idx : selectedList)
+        {
+            if(delObj(idx,authentication) == false)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean delObj(Long objIdx, Authentication authentication)
+    {
+        Long userIdx = -1L;
+        userIdx = userService.findUserID(authentication);
+        Boolean isObjFromUserIdx;
+        isObjFromUserIdx = isObjPresentByUserIdx(objIdx,userIdx);
+        if(isObjFromUserIdx)
+        {
+            objRepository.deleteById(objIdx);
+            return true;
+        }
+        return false;
+        
+    }
+
+    private Boolean isObjPresentByUserIdx(Long objIdx, Long userIdx)
+    {
+        return this.objRepository.existsByUserIdxAndObjIdx(userIdx,objIdx);
+    }
 }

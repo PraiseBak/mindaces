@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -36,12 +37,19 @@ public class UserObjController
     }
 
     @PostMapping("/user/userObjAdd")
-    public String userObjAddPost(UserObjDto userObjDto,Authentication authentication)
+    public String userObjAddPost(UserObjDto userObjDto, Authentication authentication, RedirectAttributes re)
     {
+
         if(new ValidCheck().isValidObjInput(userObjDto))
         {
             objService.addObj(authentication,userObjDto);
         }
+        else
+        {
+            re.addAttribute("error","입력 양식이 맞지 않습니다");
+            return "redirect:";
+        }
+
         return "redirect:/user/userObjPage";
     }
 
