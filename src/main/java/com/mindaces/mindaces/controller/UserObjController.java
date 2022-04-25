@@ -47,9 +47,7 @@ public class UserObjController
         else
         {
             re.addAttribute("error","입력 양식이 맞지 않습니다");
-            return "redirect:";
         }
-
         return "redirect:/user/userObjPage";
     }
 

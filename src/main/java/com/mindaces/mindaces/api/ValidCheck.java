@@ -64,18 +64,24 @@ public class ValidCheck
 
     public boolean isValidObjInput(UserObjDto userObjDto)
     {
-        String title = userObjDto.getObjTitle();
-        String content = userObjDto.getObjContent();
-        Long day = userObjDto.getObjDay();
-        if(title.length() < 2 || title.length() > 20){
-            return false;
-        }else if(content.length() > 40) {
-            return false;
-        }else if(day < 1 || day > 3650) {
+        try
+        {
+            String title = userObjDto.getObjTitle();
+            String content = userObjDto.getObjContent();
+            Long day = userObjDto.getObjDay();
+            if(title.length() < 2 || title.length() > 20){
+                return false;
+            }else if(content.length() > 40) {
+                return false;
+            }else if(day < 1 || day > 3650) {
+                return false;
+            }
+
+        }catch (Exception e)
+        {
             return false;
         }
         return true;
     }
-
 
 }
