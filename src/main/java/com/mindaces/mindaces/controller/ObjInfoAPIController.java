@@ -41,13 +41,14 @@ public class ObjInfoAPIController
     public String getRepresentObjAPI(Authentication authentication)
     {
         Long curUserIdx = userService.findUserID(roleService.getUsername(authentication));
-        String result = "목표가 없습니다";
+        String result = "";
         UserObj userObj = objService.getRepresentObj(curUserIdx);
 
         if(userObj == null)
         {
             return result;
         }
+
         String curPlusDay = new DateUtil().dateBetween(userObj.getCreatedDate(),userObj.getObjDay().intValue());
         result = userObj.getObjTitle() + " D+ " + curPlusDay;
         return result;

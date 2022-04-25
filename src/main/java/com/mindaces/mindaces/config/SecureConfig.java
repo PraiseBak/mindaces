@@ -2,11 +2,10 @@ package com.mindaces.mindaces.config;
 
 import com.mindaces.mindaces.api.CustomAuthenticationFailHandler;
 import com.mindaces.mindaces.service.UserService;
-import com.mindaces.mindaces.service.social.GoogleOAuth2User;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -14,10 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 
 //설정관련 클래스는 Configuration이라고 명시해줘야함
@@ -27,7 +24,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @AllArgsConstructor
 //WebSecurityConfigurerAdapter를 상속받아 일반적으로 메서드를 구현하는게 일반적인 방법
-public class SecureConfig extends WebSecurityConfigurerAdapter
+public class
+SecureConfig extends WebSecurityConfigurerAdapter
 {
     private UserService userService;
     private CustomAuthenticationFailHandler customAuthenticationFailHandler;
@@ -95,7 +93,10 @@ public class SecureConfig extends WebSecurityConfigurerAdapter
         //아래의 코드가 인증을 myAuthProvider을 대체하고 있었음
         //무엇을 위해 이 코드를 작성했는지 모르겠으나 내 의도에는 맞지않아 주석처리함
         //auth.authenticationProvider(myAuthProvider);
+        //무엇을 위해 작성했는지 모르겠다는 것은 좀 문제가 있는 사항인 것 같음
+        //기록. 알기위해서는 기록하는 습관을 들일 것
     }
+
 
 
 
