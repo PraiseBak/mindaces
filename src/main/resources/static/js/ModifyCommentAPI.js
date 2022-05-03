@@ -62,10 +62,12 @@ function checkCommentValid(curTag)
         if(result == false)
         {
             alert("유효하지 않은 댓글입니다");
-            return flag;
         }
         else
         {
+            sendAlarm();
+            //TODO 삭제
+            return false;
             flag = true;
         }
     });

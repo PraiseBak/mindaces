@@ -12,6 +12,8 @@
                 <!-- 게시물 부분 -->
                 <div class="info-part">
                     <div class="form-group board-info-part">
+                        <button onclick="sendAlarmBySSE('praisebak')">connect</button>
+                        <button onclick="sendAlarm2()">test sse</button>
                         <div class="gallery-name-part" style="margin-bottom:20px; border-bottom:2px solid #cecece;">
                             <a th:href="." rel="keep-params">
                                 <h2 th:text="|${board.gallery} 갤러리|"></h2>
@@ -21,7 +23,8 @@
                         <div class="contentUpper row"  style="margin-top:3px;">
                             <h3 class="col-sm-8">
                                 <p style="display: inline" th:if="${board.boardInfo.isRecommendedBoard}"   th:text="|🍀|"></p>
-                                <span th:text="${board.title}"></span>
+                                <span id="boardTitle" th:text="${board.title}"></span>
+                                <span id="boardIdx" th:text="${board.getContentIdx()}"></span>
                             </h3>
                             <div class="col">
                                 <p class="float-right" id="contentUpperLikes" style="color: #9f9f9f" th:text="|추천수 ${board.likes.like}|"></p>
@@ -263,8 +266,10 @@
         }, 100);
     });
 
+    var title = [[${board.title}]];
     var galleryName = [[${board.gallery}]];
     var boardIdx = [[${board.contentIdx}]];
+    var userID = [[${board.user}]];
     var modifyURL = [[@{'/gallery/' + ${board.gallery} + '/modify/' + ${board.contentIdx}}]];
     var deleteURL = [[@{'/gallery/' + ${board.gallery} + '/delete/' + ${board.contentIdx}}]];
     var redirectURL = "";
@@ -276,6 +281,7 @@
 <script th:src="@{/js/ModifyBoardAPI.js}"></script>
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="/js/SseAlarm.js"></script>
 
 </body>
 

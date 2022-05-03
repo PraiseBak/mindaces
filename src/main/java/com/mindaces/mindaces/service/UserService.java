@@ -28,6 +28,7 @@ public class UserService implements UserDetailsService
 {
     private RoleService roleService;
     private UserRepository userRepository;
+    private NotificationService notificationService;
 
     @Transactional
     public Long joinUser(UserDto userDto)
@@ -38,7 +39,7 @@ public class UserService implements UserDetailsService
         String inputID = userDto.getUserID();
         boolean isValid = validCheck.isSignupValid(inputID,userDto.getUserPassword(),userDto.getUserEmail());
 
-        //중복확인으로 체크하긴 하지만 혹시모르니 더블 체크
+        //중복확인으로 체크하긴 하지만 더블 체크
         if(userRepository.findByUserID(inputID) != null || !isValid || userRepository.findByUserID(userDto.getUserEmail()) != null)
         {
             return (long) -1;
@@ -71,8 +72,8 @@ public class UserService implements UserDetailsService
         {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
         }
-
         userDetails = new org.springframework.security.core.userdetails.User(userEntityWrapper.getUserID(), userEntityWrapper.getUserPassword(), authorities);
+        notificationService.makeMappingSSEEmitter(userID);
         return userDetails;
     }
     public Long findUserID(Authentication authentication)

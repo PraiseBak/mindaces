@@ -57,12 +57,5 @@ public interface BoardRepository extends JpaRepository<Board, Long>
     //content를 포함한 [개념글] 게시물들
     Long countBoardByContentContainingAndBoardInfoIsRecommendedBoardIsTrue(String content);
 
-
-
-
-
-
-
-
 }
 
