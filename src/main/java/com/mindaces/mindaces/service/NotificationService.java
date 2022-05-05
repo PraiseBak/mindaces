@@ -3,35 +3,52 @@ package com.mindaces.mindaces.service;
 import com.mindaces.mindaces.dto.BoardDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import javax.management.Notification;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Builder
 @AllArgsConstructor
 public class NotificationService {
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
-    private HashMap<String,SseEmitter> emitterSet = new HashMap<>();
+    private static final Map<String,SseEmitter> emitterSet = new ConcurrentHashMap<>();
+    @Autowired
+    private SseEmitter emitter;
+
 
     public void send(BoardDto boardDto)
     {
         String userID = boardDto.getUser();
-        SseEmitter sseEmitter = emitterSet.get(userID);
-        sendToClient(sseEmitter,userID,boardDto);
-        System.out.println("REAL");
+        print();
+//        sseEmitter = emitterSet.get(userID);
+//        SseEmitter sseEmitter = emitterSet.get(userID);
+        System.out.println("ES : " + emitterSet.get(userID));
+        sendToClient(emitter,userID,boardDto);
+    }
+    //TODO test
+    public void print()
+    {
+        System.out.println("");
     }
 
+
     public SseEmitter makeMappingSSEEmitter(String userId) {
+
         // 2
-        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
-        System.out.println("*\n*\n*\n");
-        emitterSet.put(userId,emitter);
+        System.out.println("makeSSE");
+        emitter = new SseEmitter(DEFAULT_TIMEOUT);
+
+        //        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+//        emitterSet.put(userId,emitter);
+        System.out.println("ES : " + emitter);
+
+        print();
+
         emitter.onCompletion(() -> emitterSet.remove(userId));
         emitter.onTimeout(() -> emitterSet.remove(userId));
         // 503 에러를 방지하기 위한 더미 이벤트 전송
@@ -56,10 +73,13 @@ public class NotificationService {
     private void sendToClient(SseEmitter emitter, String userID,Object data) {
         try {
             System.out.println("STC");
+            print();
             emitter.send(SseEmitter.event()
+                    .id(userID)
                     .name("sse")
                     .data(data));
         } catch (IOException exception) {
+            System.out.println(exception.getCause());
             emitterSet.remove(userID);
             throw new RuntimeException("연결 오류!");
         }

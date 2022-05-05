@@ -19,8 +19,9 @@ public class NotificationController
      * @title 작성글의 유저 sse 연결
      */
 
-    @GetMapping(value = "/commentAlarm/{userID}", produces = "text/event-stream")
-    public SseEmitter setSSEEmitter(@PathVariable String userID)
+    @GetMapping(value = "/commentAlarm/setEmitter/{userID}", produces = "text/event-stream")
+    public SseEmitter setSSEEmitter(@PathVariable String userID,
+                                    @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "")String lastEventId)
     {
         return notificationService.makeMappingSSEEmitter(userID);
     }
@@ -28,7 +29,8 @@ public class NotificationController
     @GetMapping(value = "/commentAlarm/send")
     public void sendAlarm(BoardDto boardDto)
     {
-        System.out.println("send에요잉");
+        System.out.println("SEND");
         notificationService.send(boardDto);
     }
+
 }

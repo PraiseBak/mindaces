@@ -73,7 +73,6 @@ public class UserService implements UserDetailsService
             authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
         }
         userDetails = new org.springframework.security.core.userdetails.User(userEntityWrapper.getUserID(), userEntityWrapper.getUserPassword(), authorities);
-        notificationService.makeMappingSSEEmitter(userID);
         return userDetails;
     }
     public Long findUserID(Authentication authentication)
