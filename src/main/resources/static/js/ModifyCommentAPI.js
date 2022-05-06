@@ -66,9 +66,7 @@ function checkCommentValid(curTag)
         else
         {
             sendAlarm();
-            //TODO 삭제 fales -> true로 수정할 것
-
-            flag = false;
+            flag = true;
         }
     });
     return flag;

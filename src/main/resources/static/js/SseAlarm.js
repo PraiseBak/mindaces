@@ -15,32 +15,44 @@ function sendAlarm()
     });
 }
 
-function addSSEEmitter(user)
+function addSSEEmitter()
 {
-    alert(user);
-    const eventSource = new EventSource("/commentAlarm/setEmitter/" + user);
+    const eventSource = new EventSource("/commentAlarm/setEmitter");
     eventSource.addEventListener("sse", function (event) {
         const data = JSON.parse(event.data);
         (async () => {
             // 브라우저 알림
             const showNotification = () => {
+                let alarmHead = "글 제목 : " +data.title + "에 댓글이 작성됐습니다";
 
-                const notification = new Notification('코드 봐줘', {
-                    body: data.content
+                const notification = new Notification(alarmHead, {
+                    body: "댓글 작성자 : " + data.user
                 });
 
                 setTimeout(() => {
                     notification.close();
                 }, 10 * 1000);
-
+                let url = "https://localhost:8080/gallery/" + data.gallery +"/" + data.contentIdx;
+                let curURL = location.href.split("?")[0];
                 notification.addEventListener('click', () => {
-                    window.open(data.url, '_blank');
+                    console.log(curURL);
+                    console.log(url);
+                    console.log(url == curURL);
+                    if (curURL !== url)
+                    {
+                        window.open(url, '_blank');
+                    }else
+                    {
+                        location.reload();
+                    }
+
+
                 });
+
             }
 
             // 브라우저 알림 허용 권한
             let granted = false;
-
             if (Notification.permission === 'granted') {
                 granted = true;
             } else if (Notification.permission !== 'denied') {
@@ -55,6 +67,7 @@ function addSSEEmitter(user)
         })();
     })
 }
+
 
 /*
 
