@@ -77,7 +77,6 @@ SecureConfig extends WebSecurityConfigurerAdapter
                             .ignoringAntMatchers("/gallery/**/postWrite/**")
                             .ignoringAntMatchers("/user/userObjAdd");
 
-
         http.oauth2Login()
                 .loginPage("/user/login");
     }

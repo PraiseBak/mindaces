@@ -104,11 +104,15 @@
         let wise = getRandWise();
         $("#randWise").text(wise);
 
-        let userName = [[${#authorization.getAuthentication().getName()}]];
-        if (userName !== "anonymousUser")
+        if ([[${#authorization.getAuthentication()}]] != null)
         {
-            addSSEEmitter();
+            let userName = [[${#authorization.getAuthentication()?.getName()}]];
+            if (userName !== "anonymousUser")
+            {
+                addSSEEmitter();
+            }
         }
+
     });
 </script>
 <script src="/js/SseAlarm.js"></script>

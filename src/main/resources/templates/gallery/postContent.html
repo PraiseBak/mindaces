@@ -134,7 +134,8 @@
                                     <div class="col-sm-1 form-input" id="writeCommentInfo">&nbsp &nbsp &nbsp &nbsp ㄴ</div>
 
                                     <div class="col-sm-2 form-input">
-                                        <span id="commentModifyUser" th:text="${nestedComment.user}"></span>
+                                        <p id="commentModifyUser" th:if="${nestedComment.isLogged} != 1" th:text="|${nestedComment.user}"></p>
+                                        <a id="commentModifyUser" th:if="${nestedComment.isLogged} == 1" th:text="|${nestedComment.user} 😎|" th:href="@{'/user/' + ${nestedComment.user}}" ></a>
                                     </div>
                                     <div class="col-sm-7 form-input">
                                         <pre id="commentModifyContent" class="comment-content form-control" th:text="${nestedComment.content}" th:onclick="toggleNestedComment([[${nestedComment.contentIdx}]])"></pre>

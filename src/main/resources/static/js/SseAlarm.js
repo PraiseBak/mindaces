@@ -32,19 +32,11 @@ function addSSEEmitter()
                 setTimeout(() => {
                     notification.close();
                 }, 10 * 1000);
-                let url = "https://localhost:8080/gallery/" + data.gallery +"/" + data.contentIdx;
-                let curURL = location.href.split("?")[0];
+                //TODO url 다듬기
+                let url = "gallery/" + data.gallery +"/" + data.contentIdx;
                 notification.addEventListener('click', () => {
-                    console.log(curURL);
-                    console.log(url);
-                    console.log(url == curURL);
-                    if (curURL !== url)
-                    {
-                        window.open(url, '_blank');
-                    }else
-                    {
-                        location.reload();
-                    }
+                    //TODO 같은 url에서도 제대로 동작하도록 수정
+                    window.open(url, '_blank');
 
 
                 });

@@ -1,10 +1,10 @@
 package com.mindaces.mindaces.controller;
 
+import com.mindaces.mindaces.dto.MailDto;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.service.SendEmailService;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class SendEmailAPIController
         return isValid;
     }
 
-    @PostMapping(value = "/sendEmail")
+    @PostMapping(value = "/sendChangePWEmail")
     @ResponseBody
     public Boolean sendEmail(UserDto userDto)
     {
@@ -34,9 +34,7 @@ public class SendEmailAPIController
         {
             return false;
         }
-
-        isValid = sendEmailService.sendEmail(userDto);
-
+        isValid = sendEmailService.sendEmail(userDto,true);
         if(!isValid)
         {
             System.err.println("이메일 보내기 실패 " + userDto.getUserEmail());
