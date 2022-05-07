@@ -30,12 +30,11 @@ public class UserController
     @PostMapping("/user/signup")
     public String execSignup(UserDto userDto)
     {
-        //TODO
-        //random key 만들어서 link로 보냄
+        //TODO random key 만들어서 link로 보냄
         //link 누르면 그 링크가 api controller로 가서
         //repository에서 아이디 등록해줌
         sendEmailService.sendEmail(userDto,false);
-        //TODO 이메일 보내기
+
         /*
 
         if(userService.joinUser(userDto) == -1)
