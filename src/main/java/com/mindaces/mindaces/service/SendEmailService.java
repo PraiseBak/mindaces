@@ -1,22 +1,25 @@
 package com.mindaces.mindaces.service;
 
+import com.mindaces.mindaces.api.ValidCheck;
 import com.mindaces.mindaces.dto.MailDto;
 import com.mindaces.mindaces.dto.UserDto;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import javax.transaction.Transactional;
 import java.util.Random;
 
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SendEmailService
 {
     private UtilService utilService;
     private JavaMailSender mailSender;
-    private UserService userService;
 
 
     private static final String FROM_ADDRESS = "praisebak@naver.com";
@@ -38,7 +41,8 @@ public class SendEmailService
         return mailDto;
     }
 
-    private MailDto getSignupMailDto(UserDto userDto,String randomKey)
+    @Transactional
+    MailDto getSignupMailDto(UserDto userDto, String randomKey)
     {
         MailDto mailDto;
         mailDto = MailDto.builder()
@@ -50,8 +54,9 @@ public class SendEmailService
         mailDto.setMailContent(
                 //TODO 링크 수정
                 "mindaces 유저 " + userDto.getUserID() +"님의 회원가입 링크입니다 아래 링크를 클릭해주세요\n" +
-                        "https://localhost:8080/signup/" + randomKey
+                        "http://localhost:8080/user/signup/" + randomKey
         );
+
         return mailDto;
     }
 
@@ -72,21 +77,22 @@ public class SendEmailService
         return str;
     }
 
-
     public Boolean sendEmail(UserDto userDto, Boolean isChangeMode)
     {
         try
         {
-            String randomPassword;
             MailDto mailDto;
-            randomPassword = getRandomPassword();
             if(isChangeMode)
             {
+                String randomPassword;
+                randomPassword = getRandomPassword();
                 mailDto = this.getChangePWMailDto(userDto, randomPassword);
+//    TODO            userService.changeAsRandomPassword(userDto, randomPassword);
             }
             else
             {
-                String randomKey = this.utilService.getRandomStr();
+                String randomKey;
+                randomKey = utilService.getRandomStr();
                 mailDto = getSignupMailDto(userDto,randomKey);
             }
             SimpleMailMessage message;
@@ -96,11 +102,11 @@ public class SendEmailService
             message.setSubject(mailDto.getTitle());
             message.setText(mailDto.getMailContent());
             mailSender.send(message);
-            userService.changeAsRandomPassword(userDto, randomPassword);
             return true;
         }
         catch (Exception e)
         {
+            log.info("send email fail isChangeMode = " + isChangeMode + "\n" + e.getMessage());
             return false;
         }
     }

@@ -4,6 +4,7 @@ import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.service.BoardSearchService;
 import com.mindaces.mindaces.service.BoardService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
@@ -18,12 +19,12 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
+@Slf4j
 public class MainController
 {
     private BoardService boardService;
     private HttpSession httpSession;
     private BoardSearchService boardSearchService;
-
 
     @GetMapping("/")
     public String main(Model model)

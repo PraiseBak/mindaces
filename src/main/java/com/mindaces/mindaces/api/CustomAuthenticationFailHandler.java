@@ -30,6 +30,7 @@ public class CustomAuthenticationFailHandler implements AuthenticationFailureHan
         }
         else
         {
+            System.out.println(exception.getMessage());
             error = "알수 없는 에러입니다";
         }
 

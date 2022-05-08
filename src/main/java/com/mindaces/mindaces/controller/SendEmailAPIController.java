@@ -34,7 +34,7 @@ public class SendEmailAPIController
         {
             return false;
         }
-        isValid = sendEmailService.sendEmail(userDto,true);
+        isValid = sendEmailService.sendEmail(userDto,true,"");
         if(!isValid)
         {
             System.err.println("이메일 보내기 실패 " + userDto.getUserEmail());

@@ -2,15 +2,16 @@ package com.mindaces.mindaces.api;
 
 
 import com.mindaces.mindaces.dto.UserObjDto;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.regex.Pattern;
 
+@Slf4j
 public class ValidCheck
 {
 
     public boolean isSignupValid(String inputID, String userPassword, String userEmail)
     {
-        //@한개만 나왔는지 @.한개만 나왔는지
         if (!isValidEmail(userEmail))
         {
             return false;

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 
 @Controller
 @AllArgsConstructor
@@ -26,24 +27,27 @@ public class UserController
         return "userInfoPage/signup";
     }
 
+    @GetMapping("/user/signup/{key}")
+    public String emailCheckUserSignup(@PathVariable(name="key") String key)
+    {
+        this.userService.emailCheckUserSignup(key);
+        return "redirect:/user/login";
+    }
 
     @PostMapping("/user/signup")
     public String execSignup(UserDto userDto)
     {
+
         //TODO random key 만들어서 link로 보냄
         //link 누르면 그 링크가 api controller로 가서
         //repository에서 아이디 등록해줌
-        sendEmailService.sendEmail(userDto,false);
+        //TODO 수정 repository에서가 아니고 캐쉬 로컬 저장소에서 뽑아내서
 
-        /*
-
-        if(userService.joinUser(userDto) == -1)
+        if(sendEmailService.sendEmail(userDto,false) == false)
         {
             return "redirect:/fail";
         }
 
-
-         */
         return "redirect:/";
     }
 
@@ -187,7 +191,6 @@ public class UserController
         String userEmail;
         String resultUserID;
         userEmail = (String) request.getParameter("userEmail");
-        System.out.println(userEmail);
         return "userInfopage/findUserInfoResult";
     }
 

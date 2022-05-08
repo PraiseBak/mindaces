@@ -1,12 +1,17 @@
 package com.mindaces.mindaces.service;
 
 import com.mindaces.mindaces.domain.Role;
+import com.mindaces.mindaces.domain.entity.UncheckedUser;
 import com.mindaces.mindaces.domain.entity.User;
+import com.mindaces.mindaces.domain.repository.UncheckedUserRepository;
 import com.mindaces.mindaces.domain.repository.UserRepository;
 import com.mindaces.mindaces.dto.UserDto;
 import com.mindaces.mindaces.api.ValidCheck;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,39 +28,34 @@ import java.util.*;
 
 
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService
 {
     private RoleService roleService;
     private UserRepository userRepository;
-    private NotificationService notificationService;
+    private UncheckedUserRepository uncheckedUserRepository;
 
+    //TODO 이메일 링크 << 만료시간 전에 통과되면 joinUser 조지기
+    //이메일 보낼때
+    //유저 정보 입력란 유효성 체크하므로 validCheck 삭제
     @Transactional
     public Long joinUser(UserDto userDto)
     {
-
-        ValidCheck validCheck = new ValidCheck();
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String inputID = userDto.getUserID();
-        boolean isValid = validCheck.isSignupValid(inputID,userDto.getUserPassword(),userDto.getUserEmail());
-
         //중복확인으로 체크하긴 하지만 더블 체크
-        if(userRepository.findByUserID(inputID) != null || !isValid || userRepository.findByUserID(userDto.getUserEmail()) != null)
+        if(userRepository.findByUserID(inputID) != null || userRepository.findByUserID(userDto.getUserEmail()) != null)
         {
             return (long) -1;
         }
-
-        userDto.setUserID(userDto.getUserID());
-        userDto.setUserPassword(passwordEncoder.encode(userDto.getUserPassword()));
-        userDto.setUserEmail(userDto.getUserEmail());
+//        userDto.setUserPassword(new BCryptPasswordEncoder().encode(userDto.getUserPassword()));
         return userRepository.save(userDto.toEntity()).getUserIdx();
     }
     
     @Override
     public UserDetails loadUserByUsername(String userID) throws InternalAuthenticationServiceException
     {
-        //Optional<User> userEntityWrapper = userRepository.findByUserEmail(userEmail);
         User userEntityWrapper = userRepository.findByUserID(userID);
         UserDetails userDetails;
         if(userEntityWrapper == null)
@@ -75,6 +76,7 @@ public class UserService implements UserDetailsService
         userDetails = new org.springframework.security.core.userdetails.User(userEntityWrapper.getUserID(), userEntityWrapper.getUserPassword(), authorities);
         return userDetails;
     }
+
     public Long findUserID(Authentication authentication)
     {
         return findUserID(roleService.getUsername(authentication));
@@ -152,4 +154,32 @@ public class UserService implements UserDetailsService
     }
 
 
+    public void saveBeforeSignedUserInfo(String randomKey, UserDto userDto)
+    {
+        UncheckedUser uncheckedUser = UncheckedUser.builder()
+                .key(randomKey)
+                .userID(userDto.getUserID())
+                .userEmail(userDto.getUserEmail())
+                .userPassword(new BCryptPasswordEncoder().encode(userDto.getUserPassword()))
+                .build();
+        log.info(uncheckedUserRepository.save(uncheckedUser).toString());
+    }
+
+    @Transactional
+    public boolean emailCheckUserSignup(String key)
+    {
+        Boolean result = false;
+        UncheckedUser uncheckedUser = this.uncheckedUserRepository.getByKey(key);
+        UserDto userDto = UserDto.builder()
+                        .userEmail(uncheckedUser.getUserEmail())
+                        .userID(uncheckedUser.getUserID())
+                        .userPassword(uncheckedUser.getUserPassword())
+                .build();
+        result = joinUser(userDto) != -1L;
+        if(result)
+        {
+            uncheckedUserRepository.deleteByKey(key);
+        }
+        return result;
+    }
 }
