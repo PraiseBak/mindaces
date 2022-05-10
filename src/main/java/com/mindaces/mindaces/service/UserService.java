@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,7 +51,7 @@ public class UserService implements UserDetailsService
         {
             return (long) -1;
         }
-//        userDto.setUserPassword(new BCryptPasswordEncoder().encode(userDto.getUserPassword()));
+        userDto.setUserPassword(new BCryptPasswordEncoder().encode(userDto.getUserPassword()));
         return userRepository.save(userDto.toEntity()).getUserIdx();
     }
     
@@ -61,6 +63,10 @@ public class UserService implements UserDetailsService
         if(userEntityWrapper == null)
         {
             throw new UsernameNotFoundException(userID);
+        }
+        if(!userEntityWrapper.getIsAuthChecked())
+        {
+            throw new AuthenticationCredentialsNotFoundException("이메일 인증이 완료되지 않은 계정입니다\n 이메일을 확인해주세요");
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -159,8 +165,6 @@ public class UserService implements UserDetailsService
         UncheckedUser uncheckedUser = UncheckedUser.builder()
                 .key(randomKey)
                 .userID(userDto.getUserID())
-                .userEmail(userDto.getUserEmail())
-                .userPassword(new BCryptPasswordEncoder().encode(userDto.getUserPassword()))
                 .build();
         log.info(uncheckedUserRepository.save(uncheckedUser).toString());
     }
@@ -169,13 +173,27 @@ public class UserService implements UserDetailsService
     public boolean emailCheckUserSignup(String key)
     {
         Boolean result = false;
-        UncheckedUser uncheckedUser = this.uncheckedUserRepository.getByKey(key);
-        UserDto userDto = UserDto.builder()
-                        .userEmail(uncheckedUser.getUserEmail())
-                        .userID(uncheckedUser.getUserID())
-                        .userPassword(uncheckedUser.getUserPassword())
-                .build();
-        result = joinUser(userDto) != -1L;
+        UncheckedUser unCheckedUser = this.uncheckedUserRepository.getByKey(key);
+        if(unCheckedUser != null)
+        {
+            try
+            {
+                User user = userRepository.findByUserID(unCheckedUser.getUserID());
+
+                if(unCheckedUser.getUserID().equals(user.getUserID()))
+                {
+                    user.setIsAuthChecked(true);
+                    //save하지않아도 transaction에서 감지
+                    userRepository.save(user);
+                    result = true;
+                }
+            }
+            catch(NullPointerException e)
+            {
+                return false;
+            }
+
+        }
         if(result)
         {
             uncheckedUserRepository.deleteByKey(key);

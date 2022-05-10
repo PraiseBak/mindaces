@@ -20,6 +20,7 @@ public class SendEmailService
 {
     private UtilService utilService;
     private JavaMailSender mailSender;
+    private UserService userService;
 
 
     private static final String FROM_ADDRESS = "praisebak@naver.com";
@@ -87,13 +88,15 @@ public class SendEmailService
                 String randomPassword;
                 randomPassword = getRandomPassword();
                 mailDto = this.getChangePWMailDto(userDto, randomPassword);
-//    TODO            userService.changeAsRandomPassword(userDto, randomPassword);
+                userService.changeAsRandomPassword(userDto, randomPassword);
             }
             else
             {
                 String randomKey;
                 randomKey = utilService.getRandomStr();
                 mailDto = getSignupMailDto(userDto,randomKey);
+                userService.saveBeforeSignedUserInfo(randomKey,userDto);
+
             }
             SimpleMailMessage message;
             message = new SimpleMailMessage();

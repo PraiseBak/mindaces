@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -20,18 +21,20 @@ public class CustomAuthenticationFailHandler implements AuthenticationFailureHan
     public void onAuthenticationFailure(HttpServletRequest req, HttpServletResponse res, AuthenticationException exception)
             throws IOException, ServletException, AuthenticationException,UsernameNotFoundException,InternalAuthenticationServiceException
     {
-        String error;
+        String error = "";
 
         //res.sendRedirect("/user/login?error="+arg2.getMessage());
         req.removeAttribute("password");
 
-        if(exception instanceof BadCredentialsException || exception instanceof InternalAuthenticationServiceException) {
-            error = "아이디나 비밀번호가 잘못되었습니다";
-        }
-        else
+        if(exception instanceof InternalAuthenticationServiceException)
         {
-            System.out.println(exception.getMessage());
-            error = "알수 없는 에러입니다";
+            error = "인증이 완료되지 않은 계정입니다 이메일을 확인해주세요";
+        }
+        else if(exception instanceof BadCredentialsException) {
+            error = "아이디나 비밀번호가 잘못되었습니다";
+        }else
+        {
+            error = "로그인 할 수 없습니다 관리자에게 문의해주세요";
         }
 
         req.setAttribute("errorMsg",error);

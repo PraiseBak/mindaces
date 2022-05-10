@@ -24,14 +24,4 @@ public class UncheckedUser
 
     @Column(name="user_id",length = 45,nullable = false)
     private String userID;
-
-    @Column(name="user_pw",length = 80,nullable = false)
-    private String userPassword;
-
-    @Column(name="user_email",length = 45,nullable = false)
-    private String userEmail;
-
-    @CreatedDate
-    @Column(name = "user_create_time", nullable = false, updatable = false)
-    private LocalDateTime createdDate;
 }

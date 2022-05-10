@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.websocket.server.PathParam;
 
 @Controller
@@ -34,21 +35,22 @@ public class UserController
         return "redirect:/user/login";
     }
 
+    @Transactional
     @PostMapping("/user/signup")
     public String execSignup(UserDto userDto)
     {
-
         //TODO random key 만들어서 link로 보냄
         //link 누르면 그 링크가 api controller로 가서
         //repository에서 아이디 등록해줌
         //TODO 수정 repository에서가 아니고 캐쉬 로컬 저장소에서 뽑아내서
-
-        if(sendEmailService.sendEmail(userDto,false) == false)
+        if(userService.joinUser(userDto) != -1L)
         {
-            return "redirect:/fail";
+            if(sendEmailService.sendEmail(userDto,false) != false)
+            {
+                return "redirect:/";
+            }
         }
-
-        return "redirect:/";
+        return "redirect:/fail";
     }
 
     @GetMapping("/user/login")
