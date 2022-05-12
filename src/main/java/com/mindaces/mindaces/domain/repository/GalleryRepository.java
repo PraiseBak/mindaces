@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface GalleryRepository extends JpaRepository<Gallery, Long>
 {
     Gallery findByGalleryName(String galleryName);
+    Gallery findByGalleryURL(String galleryURL);
 
 }

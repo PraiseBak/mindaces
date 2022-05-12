@@ -5,7 +5,6 @@ import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.GalleryDto;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +16,6 @@ public class GalleryService
     //이 카운트를 넘어가야 평균치로 개념글 기준 잡음
     private final int renewRecommendeBoardCount = 5;
     private final int initRecommendStandard = 10;
-
-
 
     public GalleryService(GalleryRepository galleryRepository)
     {
@@ -50,16 +47,16 @@ public class GalleryService
     }
 
 
-    public GalleryDto getGalleryInfo(String galleryName)
+    public GalleryDto getGalleryInfo(String galleryURL)
     {
-        Gallery gallery = galleryRepository.findByGalleryName(galleryName);
+        Gallery gallery = galleryRepository.findByGalleryURL(galleryURL);
         GalleryDto galleryDto = this.convertEntityToDto(gallery);
         return galleryDto;
     }
 
-    public Boolean isGallery(String galleryName)
+    public Boolean isGallery(String galleryURL)
     {
-        Gallery gallery = galleryRepository.findByGalleryName(galleryName);
+        Gallery gallery = galleryRepository.findByGalleryURL(galleryURL);
         if(gallery == null)
         {
             return false;
@@ -67,15 +64,15 @@ public class GalleryService
         return true;
     }
 
-    public Long getRecommendStandard(String galleryName)
+    public Long getRecommendStandard(String galleryURL)
     {
-        Gallery gallery = this.getGalleryByGalleryName(galleryName);
+        Gallery gallery = this.getGalleryByGalleryURL(galleryURL);
         return gallery.getRecommendStandard();
     }
 
-    public void updateRecommendInfo(String galleryName,Long likes,Boolean isNewRecommended)
+    public void updateRecommendInfo(String galleryURL,Long likes,Boolean isNewRecommended)
     {
-        Gallery gallery = this.getGalleryByGalleryName(galleryName);
+        Gallery gallery = this.getGalleryByGalleryURL(galleryURL);
         if(isNewRecommended)
         {
             gallery.addRecommendedLikesSum(likes);
@@ -88,19 +85,19 @@ public class GalleryService
     }
 
 
-    private Gallery getGalleryByGalleryName(String galleryName)
+    private Gallery getGalleryByGalleryURL(String galleryURL)
     {
-        return this.galleryRepository.findByGalleryName(galleryName);
+        return this.galleryRepository.findByGalleryURL(galleryURL);
     }
 
-    public Long getCountRecommendedBoardByGalleryName(String galleryName)
+    public Long getCountRecommendedBoardByGalleryURL(String galleryURL)
     {
-        return this.getGalleryByGalleryName(galleryName).getRecommendedBoardCount();
+        return this.getGalleryByGalleryURL(galleryURL).getRecommendedBoardCount();
     }
 
-    public void updateRecommendStandard(String galleryName)
+    public void updateRecommendStandard(String galleryURL)
     {
-        Gallery gallery = this.getGalleryByGalleryName(galleryName);
+        Gallery gallery = this.getGalleryByGalleryURL(galleryURL);
         Long recommendedBoardCount = gallery.getRecommendedBoardCount();
         Long recommendedLikesSum = gallery.getRecommendedLikesSum();
         if(recommendedBoardCount < 10)
@@ -118,6 +115,10 @@ public class GalleryService
 
     }
 
+    public String getGalleryNameByURL(String galleryURL)
+    {
+        return this.galleryRepository.findByGalleryURL(galleryURL).getGalleryName();
+    }
 }
 
 

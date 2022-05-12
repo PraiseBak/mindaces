@@ -34,7 +34,6 @@ public class CommentService
     Sort getSortByCreateDate()
     {
         return Sort.by(Sort.Direction.ASC,"createdDate");
-
     }
 
     public List<CommentDto> getCommentByContentIdxAndGalleryName(String galleryName, Long contentIdx)
@@ -68,7 +67,7 @@ public class CommentService
 
         String commentPassword = commentDto.getCommentPassword();
         String user = commentDto.getUser();
-        String content =commentDto.getContent();
+        String content = commentDto.getContent();
 
         if(utilService.isLRWhiteSpace(commentPassword) || utilService.isLRWhiteSpace(user))
         {

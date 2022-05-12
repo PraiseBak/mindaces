@@ -2,20 +2,15 @@ package com.mindaces.mindaces.controller;
 
 import com.mindaces.mindaces.domain.entity.Board;
 import com.mindaces.mindaces.dto.CommentDto;
-import com.mindaces.mindaces.service.BoardInfoService;
-import com.mindaces.mindaces.service.BoardSearchService;
-import com.mindaces.mindaces.service.BoardService;
-import com.mindaces.mindaces.service.CommentService;
+import com.mindaces.mindaces.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.transaction.Transactional;
 
@@ -28,11 +23,12 @@ public class CommentController
     private BoardService boardService;
     private BoardInfoService boardInfoService;
     private BoardSearchService boardSearchService;
+    private GalleryService galleryService;
 
     @Transactional
-    @PostMapping(value = "/{galleryName}/{index}")
+    @PostMapping(value = "/{galleryURL}/{index}")
     public String commentAdd(
-            @PathVariable(name="galleryName") String galleryName,
+            @PathVariable(name= "galleryURL") String galleryURL,
             @PathVariable(name="index") Long contentIdx,
             CommentDto commentDto,
             Authentication authentication,
@@ -43,6 +39,7 @@ public class CommentController
     {
         Board board;
         Boolean result;
+        String galleryName = galleryService.getGalleryNameByURL(galleryURL);
         result = commentService.addComment(galleryName,contentIdx,authentication,commentDto);
         board = boardSearchService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
         boardInfoService.updateCommentCount(board);
@@ -53,9 +50,9 @@ public class CommentController
     }
 
     @Transactional
-    @PostMapping(value = "/{galleryName}/{index}/deleteComment")
+    @PostMapping(value = "/{galleryURL}/{index}/deleteComment")
     public String commentDelete(
-            @PathVariable(name="galleryName") String galleryName,
+            @PathVariable(name="galleryURL") String galleryURL,
             @PathVariable(name="index") Long contentIdx,
             CommentDto commentDto,
             Authentication authentication,
@@ -65,6 +62,7 @@ public class CommentController
     )
     {
         Board board;
+        String galleryName = galleryService.getGalleryNameByURL(galleryURL);
         board = boardSearchService.getGalleryNameAndBoardIdx(galleryName, contentIdx);
         commentService.deleteComment(commentDto,authentication);
         boardInfoService.updateCommentCount(board);

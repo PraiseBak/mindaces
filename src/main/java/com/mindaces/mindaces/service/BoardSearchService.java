@@ -262,21 +262,21 @@ public class BoardSearchService
 
 
     //주어진 모델에 페이징된 게시물들 및 버튼 추가 (해당 갤러리의 전체 게시물 contentList)
-    public void addingPagedBoardToModel(Model model, String galleryName, int page, String pagingMode)
+    public void addingPagedBoardToModel(Model model, String galleryURL, int page, String pagingMode)
     {
         List<BoardDto> boardDtoList;
         Long count;
         Integer[] pageList;
         if(pagingMode.equals("mostLikedBoard"))
         {
-            boardDtoList = getMostLikelyBoardListByFindObj(galleryName,page, "board");
-            count = galleryService.getCountRecommendedBoardByGalleryName(galleryName);
+            boardDtoList = getMostLikelyBoardListByFindObj(galleryURL,page, "board");
+            count = galleryService.getCountRecommendedBoardByGalleryURL(galleryURL);
             pageList = getPageList(page,count);
         }
         else
         {
-            boardDtoList = getPostByFindObj(galleryName,page,"board");
-            count = getCountBoardByGallery(galleryName);
+            boardDtoList = getPostByFindObj(galleryURL,page,"board");
+            count = getCountBoardByGallery(galleryURL);
             pageList = getPageList(page,count);
         }
 
@@ -367,14 +367,14 @@ public class BoardSearchService
 
 
 
-    //갤러리와 id와 일치하는 BoardDto 조회
+    //갤러리와 id가 일치하는 BoardDto 조회
     public BoardDto getBoardDtoByGalleryAndIdx(String galleryName, Long contentIdx)
     {
         Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);
         return this.convertEntityToDto(board);
     }
 
-    //갤러리와 id와 일치하는 Board 조회
+    //갤러리와 id가 일치하는 Board 조회
     public Board getGalleryNameAndBoardIdx(String galleryName, Long contentIdx)
     {
         Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);

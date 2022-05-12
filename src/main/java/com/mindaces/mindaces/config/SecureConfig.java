@@ -53,29 +53,29 @@ SecureConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/user/myinfo").hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .and() // 로그인 설정
-                    .formLogin()
-                    .loginPage("/user/login")
-                    .failureHandler(customAuthenticationFailHandler)
-                    .defaultSuccessUrl("/")
-                    .permitAll()
+                .formLogin()
+                .loginPage("/user/login")
+                .failureHandler(customAuthenticationFailHandler)
+                .defaultSuccessUrl("/")
+                .permitAll()
                 .and() // 로그아웃 설정
-                    .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                    .logoutSuccessUrl("/")
-                    .invalidateHttpSession(true)
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
                 .and()
                 // 403 예외처리 핸들링
-                    //this line has effect when user is authenticated
-                    .exceptionHandling()
-                        .accessDeniedPage("/error/noPermission");
+                //this line has effect when user is authenticated
+                .exceptionHandling()
+                .accessDeniedPage("/error/noPermission");
 
         http.csrf()
-                            .ignoringAntMatchers("/API/**")
-                            .ignoringAntMatchers("/gallery/**/**")
-                            .ignoringAntMatchers("/gallery/**/modify/**")
-                            .ignoringAntMatchers("/gallery/**/delete/**")
-                            .ignoringAntMatchers("/gallery/**/postWrite/**")
-                            .ignoringAntMatchers("/user/userObjAdd");
+                .ignoringAntMatchers("/API/**")
+                .ignoringAntMatchers("/gallery/**/**")
+                .ignoringAntMatchers("/gallery/**/modify/**")
+                .ignoringAntMatchers("/gallery/**/delete/**")
+                .ignoringAntMatchers("/gallery/**/postWrite/**")
+                .ignoringAntMatchers("/user/userObjAdd");
 
         http.oauth2Login()
                 .loginPage("/user/login");

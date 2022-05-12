@@ -39,16 +39,16 @@ public class GalleryController
         return "gallery/galleryList";
     }
 
-    @GetMapping(value = "/{galleryName}" )
+    @GetMapping(value = "/{galleryURL}")
     public String galleryContentList(
             Model model,
             @RequestParam(required = false,defaultValue = "board",value = "pagingMode") String pagingMode,
             @RequestParam(required = false,defaultValue = "1") Integer page,
-            @PathVariable(name = "galleryName") String galleryName
+            @PathVariable(name = "galleryURL") String galleryURL
     )
     {
         //갤러리 여부 판단
-        Boolean isGallery = galleryService.isGallery(galleryName);
+        Boolean isGallery = galleryService.isGallery(galleryURL);
         if(!isGallery)
         {
             //에러 출력 URL로 이동
@@ -62,9 +62,11 @@ public class GalleryController
         }
 
         //페이징을 모델에 추가해주는 부분
-        boardSearchService.addingPagedBoardToModel(model,galleryName,page,pagingMode);
+        boardSearchService.addingPagedBoardToModel(model,galleryURL,page,pagingMode);
 
-        model.addAttribute("galleryName",galleryName);
+        String galleryName = galleryService.getGalleryNameByURL(galleryURL);
+
+        model.addAttribute("galleryName",galleryURL);
         model.addAttribute("pagingMode",pagingMode);
         model.addAttribute("page",page);
         return "gallery/galleryContentList";
