@@ -66,13 +66,6 @@ public class UserController
     }
 
 
-    // Login form with error
-    @RequestMapping("/loginError.html")
-    public String loginError(Model model) {
-        model.addAttribute("errorMsg", "로그인에 실패하였습니다.");
-        return "userInfoPage/login";
-    }
-
     @GetMapping("/user/login/result")
     public String loginResult()
     {

@@ -43,13 +43,29 @@
                         </div>
                         <div class="col-sm-4">
                         </div>
+
+                        <div class="col-sm-8 text-center mt-lg-5">
+                            <button type="button" th:onclick="|window.location.href = '@{/user/signup}'|" class="form-control btn btn-dark" >회원가입</button>
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+
+
+
+
                         <div class="col-sm-8 text-center mt-1">
                             <button type="button" th:onclick="|window.location.href = '@{/user/userInfo/findPassword}'|" class="form-control btn btn-dark" >비밀번호 찾기</button>
                         </div>
 
                         <div class="col-sm-4">
                         </div>
-                        <p class="col-sm-12" th:if="${errorMsg}" th:text="${errorMsg}"></p>
+
+
+
+                        <span th:text="${@environment.getProperty('errorMsg' + param.error)}"></span>
+
+
+                        <p class="col-sm-12" th:if="${param.error} == 1" th:text="${errorMsg1}"></p>
 
                     </form>
 
@@ -66,7 +82,7 @@
                     </div>
 
                     <div class="googleOauthArea">
-                        <button class="btn btn-dark btn-lg col-sm-8" style="margin-top: 50px" th:onclick="|location.href='@{/oauth2/authorization/google}'|  ">아직 만드는 중임</button>
+                        <button class="btn btn-dark btn-lg col-sm-8" style="margin-top: 50px" th:onclick="|location.href='@{/oauth2/authorization/google}'|  ">Google로 로그인</button>
                     </div>
                 </div>
                 <div class="col-md-5">
