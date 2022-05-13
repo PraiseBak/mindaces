@@ -110,6 +110,19 @@
 
 </html>
 <script src="/js/SseAlarm.js"></script>
+<script>
+
+
+    $(function () {
+        const queryStr = window.location.search;
+        const urlParams = new URLSearchParams(queryStr);
+        if (urlParams.get("successEmailCheck") == 1)
+        {
+            alert("이메일 인증에 성공했습니다!");
+        }
+    });
+
+</script>
 
 
 

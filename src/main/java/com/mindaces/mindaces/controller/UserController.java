@@ -32,7 +32,7 @@ public class UserController
     public String emailCheckUserSignup(@PathVariable(name="key") String key)
     {
         this.userService.emailCheckUserSignup(key);
-        return "redirect:/user/login";
+        return "redirect:/user/login?successEmailCheck=1";
     }
 
     @Transactional
