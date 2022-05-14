@@ -1,4 +1,4 @@
-package com.mindaces.mindaces.api;
+package com.mindaces.mindaces.config;
 
 import java.io.IOException;
 

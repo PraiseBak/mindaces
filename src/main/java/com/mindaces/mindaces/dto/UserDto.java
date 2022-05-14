@@ -1,7 +1,6 @@
 package com.mindaces.mindaces.dto;
 
 import com.mindaces.mindaces.domain.entity.User;
-import com.mindaces.mindaces.helper.constants.SocialLoginType;
 import lombok.*;
 
 import javax.persistence.EnumType;

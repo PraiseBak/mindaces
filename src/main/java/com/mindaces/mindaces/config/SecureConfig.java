@@ -1,11 +1,9 @@
 package com.mindaces.mindaces.config;
 
-import com.mindaces.mindaces.api.CustomAuthenticationFailHandler;
 import com.mindaces.mindaces.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,8 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+
+import javax.sql.DataSource;
 
 
 //설정관련 클래스는 Configuration이라고 명시해줘야함
@@ -27,8 +28,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 public class
 SecureConfig extends WebSecurityConfigurerAdapter
 {
-    private UserService userService;
-    private CustomAuthenticationFailHandler customAuthenticationFailHandler;
+    private final UserService userService;
+    private final CustomAuthenticationFailHandler customAuthenticationFailHandler;
+    private final DataSource dataSource;
 
     //스프링 제공 비밀번호 암호화 객체
     @Bean
@@ -77,6 +79,13 @@ SecureConfig extends WebSecurityConfigurerAdapter
                 .ignoringAntMatchers("/gallery/**/postWrite/**")
                 .ignoringAntMatchers("/user/userObjAdd");
 
+        http.rememberMe()
+                .rememberMeParameter("remember-me")
+                .tokenValiditySeconds(3600)
+                .userDetailsService(userService)
+                .tokenRepository(tokenRepository());
+
+
         http.oauth2Login()
                 .loginPage("/user/login");
     }
@@ -86,7 +95,6 @@ SecureConfig extends WebSecurityConfigurerAdapter
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception
     {
-
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
         //220405 22:48
         //아래의 코드가 인증을 myAuthProvider을 대체하고 있었음
@@ -96,7 +104,12 @@ SecureConfig extends WebSecurityConfigurerAdapter
         //기록. 알기위해서는 기록하는 습관을 들일 것
     }
 
-
-
+    @Bean
+    public PersistentTokenRepository tokenRepository() {
+        // JDBC 기반의 tokenRepository 구현체
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource); // dataSource 주입
+        return jdbcTokenRepository;
+    }
 
 }
