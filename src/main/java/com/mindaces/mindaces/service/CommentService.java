@@ -34,6 +34,7 @@ public class CommentService
     Sort getSortByCreateDate()
     {
         return Sort.by(Sort.Direction.ASC,"createdDate");
+
     }
 
     public List<CommentDto> getCommentByContentIdxAndGalleryName(String galleryName, Long contentIdx)
@@ -67,7 +68,7 @@ public class CommentService
 
         String commentPassword = commentDto.getCommentPassword();
         String user = commentDto.getUser();
-        String content = commentDto.getContent();
+        String content =commentDto.getContent();
 
         if(utilService.isLRWhiteSpace(commentPassword) || utilService.isLRWhiteSpace(user))
         {
@@ -141,9 +142,9 @@ public class CommentService
             Comment savedComment = commentRepository.save(commentDto.toEntity());
 
             Likes likes = Likes.builder()
-                .contentIdx(savedComment.getContentIdx())
-                .isComment(true)
-                .build();
+                    .contentIdx(savedComment.getContentIdx())
+                    .isComment(true)
+                    .build();
 
             savedComment.setLikes(likes);
             commentRepository.save(savedComment);
@@ -337,7 +338,7 @@ public class CommentService
         return pageList;
     }
 
-    
+
     public void addingPagedCommentToModel(Model model, String galleryName, Long boardIdx, int page)
     {
         List<CommentDto> commentDtoList;

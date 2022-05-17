@@ -1,6 +1,8 @@
 package com.mindaces.mindaces.controller;
 
 
+import com.mindaces.mindaces.domain.entity.Board;
+import com.mindaces.mindaces.domain.entity.BoardLikedUserInfo;
 import com.mindaces.mindaces.dto.BoardDto;
 import com.mindaces.mindaces.service.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.transaction.Transactional;
 
 
 @Controller
@@ -28,14 +32,14 @@ public class BoardController
     final String galleryError = "존재하지 않는 갤러리입니다";
 
 
-    @GetMapping(value = "/{galleryURL}/postWrite")
+    @GetMapping(value = "/{galleryName}/postWrite")
     public String postWrite(
-            @PathVariable(name = "galleryURL") String galleryURL,
+            @PathVariable(name = "galleryName") String galleryName,
             Model model,
             Authentication authentication,
             RedirectAttributes attributes)
     {
-        if(!galleryService.isGallery(galleryURL))
+        if(!galleryService.isGallery(galleryName))
         {
             attributes.addAttribute("errorMsg",this.galleryError);
             return errorGalleryURL;
@@ -53,8 +57,8 @@ public class BoardController
         return "gallery/postWrite";
     }
 
-    @PostMapping(value = "/{galleryURL}/postWrite")
-    public Object postSubmit(@PathVariable(name = "galleryURL") String galleryURL,
+    @PostMapping(value = "/{galleryName}/postWrite")
+    public Object postSubmit(@PathVariable(name = "galleryName") String galleryName,
                              BoardDto boardDto,
                              Authentication authentication,
                              RedirectAttributes attributes,
@@ -63,7 +67,7 @@ public class BoardController
     {
         //로그인한 유저가 작성한 글의 비밀번호는 ****로 저장됨 어차피 나중에 확인할때 비밀번호 없이 확인할것이라 상관 X
         //존재하지 않는 갤러리라던가 등
-        if(!galleryService.isGallery(galleryURL))
+        if(!galleryService.isGallery(galleryName))
         {
             return errorGalleryURL;
         }
@@ -81,7 +85,6 @@ public class BoardController
             boardDto.setIsLoggedUser(1L);
         }
 
-        String galleryName = galleryService.getGalleryNameByURL(galleryURL);
         boardDto.setGallery(galleryName);
         boardService.savePost(boardDto);
 
@@ -91,9 +94,9 @@ public class BoardController
         return "redirect:";
     }
 
-    @PostMapping(value = "/{galleryURL}/modify/{index}")
+    @PostMapping(value = "/{galleryName}/modify/{index}")
     public String modify(
-            @PathVariable(name = "galleryURL") String galleryURL,
+            @PathVariable(name = "galleryName") String galleryName,
             @PathVariable(name = "index") Long contentIdx,
             Model model,
             String hiddenPassword,
@@ -102,11 +105,10 @@ public class BoardController
             RedirectAttributes attributes
     )
     {
-        if(!galleryService.isGallery(galleryURL))
+        if(!galleryService.isGallery(galleryName))
         {
             return errorGalleryURL;
         }
-        String galleryName = galleryService.getGalleryNameByURL(galleryURL);
         BoardDto boardDto = boardSearchService.getBoardDtoByGalleryAndIdx(galleryName,contentIdx);
         boardDto.setPassword("****");
         model.addAttribute("inputPassword",hiddenPassword);
@@ -119,9 +121,9 @@ public class BoardController
         return "gallery/postWrite";
     }
 
-    @PostMapping(value = "/{galleryURL}/modify/postModify/{index}")
+    @PostMapping(value = "/{galleryName}/modify/postModify/{index}")
     public String postModify(
-            @PathVariable(name = "galleryURL") String galleryURL,
+            @PathVariable(name = "galleryName") String galleryName,
             @PathVariable(name = "index") Long contentIdx,
             String hiddenPassword,
             BoardDto boardDto,
@@ -132,7 +134,6 @@ public class BoardController
 
     )
     {
-        String galleryName = galleryService.getGalleryNameByURL(galleryURL);
         if(!galleryService.isGallery(galleryName))
         {
             return errorGalleryURL;
@@ -164,9 +165,9 @@ public class BoardController
         return "redirect:/gallery/" + galleryName;
     }
 
-    @PostMapping(value = "/{galleryURL}/delete/{index}")
+    @PostMapping(value = "/{galleryName}/delete/{index}")
     public String deletePost(
-            @PathVariable(name = "galleryURL") String galleryURL,
+            @PathVariable(name = "galleryName") String galleryName,
             @PathVariable(name = "index") Long contentIdx,
             String hiddenPassword,
             Authentication authentication,
@@ -175,7 +176,6 @@ public class BoardController
             RedirectAttributes attributes
     )
     {
-        String galleryName = galleryService.getGalleryNameByURL(galleryURL);
         if(!galleryService.isGallery(galleryName))
         {
             return errorGalleryURL;
@@ -195,7 +195,9 @@ public class BoardController
         }
         attributes.addAttribute("pagingMode",pagingMode);
         attributes.addAttribute("page",page);
-        return "redirect:/gallery/" + galleryURL;
+        return "redirect:/gallery/" + galleryName;
     }
+
+
 
 }
