@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+<head th:insert="base/head.html">
+</head>
+
+<body>
+<div id="body-wrapper">
+    <div id="body-content">
+        <form class="form-control" method="POST">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="text" name="galleryName">갤러리 이름
+            <input type="text" name="galleryURL">갤러리 URL
+            <input type="checkbox" name="specialGallery" >스페셜 갤러리 유무
+            <button type="submit">제출</button>
+        </form>
+
+        <div th:replace="fragments/commonFooter :: commonFooter">
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
+

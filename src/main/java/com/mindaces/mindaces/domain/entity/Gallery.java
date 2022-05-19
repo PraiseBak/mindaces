@@ -1,18 +1,20 @@
 package com.mindaces.mindaces.domain.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Entity
-@NoArgsConstructor
+@DynamicInsert
+@Builder
 @Table(name = "GALLERY")
 public class Gallery
 {
@@ -27,33 +29,24 @@ public class Gallery
     @Column(name = "gallery_name")
     private String galleryName;
 
-    @Column(name = "special_gallery")
+    @Column(name = "special_gallery",columnDefinition = "tinyint(1) default 0")
     private Boolean specialGallery;
 
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime galleryCreatedDate;
 
-    @Column(name = "recommend_standard",columnDefinition = "bigint default 10",nullable = false)
+    @Column(name = "recommend_standard",columnDefinition = "bigint default 10")
     private Long recommendStandard;
 
-    @Column(name = "recommend_likes_sum",columnDefinition = "bigint default 0",nullable = false)
+    @Column(name = "recommend_likes_sum",columnDefinition = "bigint default 0")
     private Long recommendedLikesSum;
 
 
-    @Column(name = "recommend_board_count",columnDefinition = "bigint default 0",nullable = false)
+    @Column(name = "recommend_board_count",columnDefinition = "bigint default 0")
     private Long recommendedBoardCount;
 
 
-    @Builder
-    public Gallery(Long galleryIdx,String galleryName,String galleryURL,Boolean specialGallery,Long recommendBoardCount)
-    {
-        this.galleryIdx = galleryIdx;
-        this.galleryURL = galleryURL;
-        this.galleryName = galleryName;
-        this.specialGallery = specialGallery;
-        this.recommendedBoardCount = recommendBoardCount;
-    }
 
     public void updateRecommendBoardCount()
     {

@@ -38,7 +38,7 @@ public class Comment extends BaseTimeEntity
     @Column(name = "comment_password",nullable = false,length = 80)
     String commentPassword;
 
-    @Column(columnDefinition = "tinyint(1) default 0",nullable = false,name = "is_logged_user")
+    @Column(columnDefinition = "tinyint(1) default 0",name = "is_logged_user")
     Long isLogged;
 
     @OneToOne(cascade = CascadeType.ALL)

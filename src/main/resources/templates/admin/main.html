@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+<head th:insert="base/head.html">
+</head>
+
+<body>
+<div id="body-wrapper">
+    <div id="body-content">
+
+        <div>
+            <button onclick="window.location.href='/admin/gallery'">갤러리 관리</button>
+            <button onclick="window.location.href='/admin/user'">유저 관리</button>
+        </div>
+
+
+
+
+
+
+
+
+
+        <div th:replace="fragments/commonFooter :: commonFooter">
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
+

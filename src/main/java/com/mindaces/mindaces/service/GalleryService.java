@@ -5,7 +5,6 @@ import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.GalleryDto;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +116,18 @@ public class GalleryService
         }
 
     }
+
+    public Gallery galleryAdd(GalleryDto galleryDto)
+    {
+        Gallery gallery = Gallery.builder()
+                .galleryName(galleryDto.getGalleryName())
+                .galleryURL(galleryDto.getGalleryURL())
+                .specialGallery(false)
+                .build();
+        return galleryRepository.save(gallery);
+
+    }
+
 
 }
 

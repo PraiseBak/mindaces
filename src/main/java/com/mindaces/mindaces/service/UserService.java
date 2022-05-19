@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        if(("praisebak@naver.com").equals(userID))
+        if(("praisebak").equals(userID))
         {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
         }
