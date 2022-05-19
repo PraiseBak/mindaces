@@ -22,8 +22,9 @@ public class GalleryDto
 
 
     @Builder
-    public GalleryDto(Long galleryIdx,String galleryName,String galleryURL,Boolean specialGallery,LocalDateTime galleryCreatedTime)
+    public GalleryDto(Long galleryIdx,String galleryName,String galleryURL,Boolean specialGallery)
     {
+        this.galleryIdx = galleryIdx;
         this.galleryName = galleryName;
         this.specialGallery = specialGallery;
         this.galleryURL = galleryURL;

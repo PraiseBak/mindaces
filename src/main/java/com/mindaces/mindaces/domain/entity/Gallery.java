@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @DynamicInsert
 @Builder
 @Table(name = "GALLERY")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Gallery
 {
     @Id

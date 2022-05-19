@@ -4,6 +4,7 @@ import com.mindaces.mindaces.domain.entity.Gallery;
 import com.mindaces.mindaces.domain.repository.GalleryRepository;
 import com.mindaces.mindaces.dto.GalleryDto;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,18 +44,11 @@ public class GalleryService
                 .galleryIdx(gallery.getGalleryIdx())
                 .galleryName(gallery.getGalleryName())
                 .specialGallery(gallery.getSpecialGallery())
-                .galleryCreatedTime(gallery.getGalleryCreatedDate())
+//                .galleryCreatedTime(gallery.getGalleryCreatedDate())
                 .galleryURL(gallery.getGalleryURL())
                 .build();
     }
 
-
-    public GalleryDto getGalleryInfo(String galleryName)
-    {
-        Gallery gallery = galleryRepository.findByGalleryName(galleryName);
-        GalleryDto galleryDto = this.convertEntityToDto(gallery);
-        return galleryDto;
-    }
 
     public Boolean isGallery(String galleryName)
     {
@@ -129,6 +123,10 @@ public class GalleryService
     }
 
 
+    public void delGallery(List<Long> checkedList)
+    {
+        galleryRepository.deleteAllById(checkedList);
+    }
 }
 
 

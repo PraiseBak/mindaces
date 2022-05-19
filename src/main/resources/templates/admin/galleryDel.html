@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+
+<head th:insert="base/head.html">
+</head>
+
+<body>
+
+
+<div id="body-wrapper">
+    <div id="body-content" >
+
+
+        <table class="table text-center " width="800">
+            <thead>
+            <tr>
+                <th class="header" width="100">NO</th>
+                <th class="header" width="250">갤러리 이름</th>
+                <th class="header" width="250">갤러리 URL</th>
+                <th class="header" width="200">특별 갤러리 유무</th>
+                <th class="header" width="30"><input type="checkbox" disabled id="checkall" /></th>
+            </tr>
+            </thead>
+            <tr th:each="gallery : ${galleryList}" th:height="50px" class="text-center galleryDelTable">
+
+                <th>
+                    <p th:text="${gallery.galleryIdx}"></p>
+                </th>
+                <th>
+                    <p th:text="${gallery.galleryName}"></p>
+                </th>
+                <th>
+                    <p th:text="${gallery.galleryURL}"></p>
+                </th>
+                <th>
+                    <p th:text="${gallery.specialGallery}"></p>
+                </th>
+                <th>
+                    <input type="checkbox" th:id="|checkGallery-${gallery.galleryIdx}|">
+                </th>
+            </tr>
+            <td colspan="5" style="text-align:right;"><button class="btn btn-dark" onclick="delGallery()">선택삭제</button></td>
+
+        </table>
+
+
+        <div th:replace="fragments/commonFooter :: commonFooter">
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
+
+<script>
+    function delGallery()
+    {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        var input ={
+            checkedList : getSelectedItem()
+        }
+        $.ajax({
+            data : input,
+            type : "POST",
+            url : "/admin/gallery/del",
+            traditional: true,
+            beforeSend : function(xhr)
+            {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function(data){
+                location.reload();
+            },
+            error:function(xhr,status,error){
+                console.log('error:'+error);
+            }
+        });
+
+    }
+
+    function getSelectedItem()
+    {
+        let idxList = [];
+        $(".galleryDelTable").find('input:checked').each(function (){
+            let idStr = this.id + "";
+            idxList.push(idStr.split("-")[1]);
+        });
+        return idxList;
+    }
+
+</script>
