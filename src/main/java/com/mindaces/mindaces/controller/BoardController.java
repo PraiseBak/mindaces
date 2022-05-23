@@ -121,7 +121,7 @@ public class BoardController
         return "gallery/postWrite";
     }
 
-    @PostMapping(value = "/{galleryName}/modify/postModify/{index}")
+    @PostMapping(value = "/{galleryName}/postModify/{index}")
     public String postModify(
             @PathVariable(name = "galleryName") String galleryName,
             @PathVariable(name = "index") Long contentIdx,
@@ -134,6 +134,7 @@ public class BoardController
 
     )
     {
+
         if(!galleryService.isGallery(galleryName))
         {
             return errorGalleryURL;
@@ -156,6 +157,7 @@ public class BoardController
         {
             result = boardService.isBoardModifyAuthValidUser(contentIdx,hiddenPassword,galleryName);
         }
+        System.out.println("통");
         if(result)
         {
             boardService.updatePost(boardDto,galleryName);

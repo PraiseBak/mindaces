@@ -19,4 +19,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long>
     Long countByGalleryAndBoardIdx(String galleryName, Long boardIdx);
     void deleteByBoardIdxAndGallery(Long contentIdx,String gallery);
     Long countByUserAndIsLogged(String user, Long isLogged);
+
 }

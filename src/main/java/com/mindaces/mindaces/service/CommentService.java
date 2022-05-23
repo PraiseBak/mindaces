@@ -1,6 +1,7 @@
 package com.mindaces.mindaces.service;
 
 import com.mindaces.mindaces.domain.entity.Comment;
+import com.mindaces.mindaces.domain.entity.CommentLikedUserInfo;
 import com.mindaces.mindaces.domain.entity.Likes;
 import com.mindaces.mindaces.domain.repository.CommentRepository;
 import com.mindaces.mindaces.domain.repository.LikesRepository;
@@ -381,8 +382,15 @@ public class CommentService
         this.commentRepository.save(comment);
     }
 
+    @Transactional
     public void deleteCommentByBoardIdxAndGalleryName(Long contentIdx,String galleryName)
     {
+        List<Comment> commentList = commentRepository.getCommentByBoardIdxAndGalleryOrderByCreatedDateAsc(contentIdx,galleryName);
+        for(Comment comment : commentList)
+        {
+            comment.getCommentLikedUserInfoList().clear();
+        }
+
         this.commentRepository.deleteByBoardIdxAndGallery(contentIdx,galleryName);
     }
 }
