@@ -358,6 +358,7 @@ public class CommentService
         List<CommentDto> commentDtoList;
         Long count;
         Integer[] pageList;
+        String title = "";
         List<String> contentTitleList = new ArrayList<>();
 
         commentDtoList = getPagedCommentList(null,null,username,page);
@@ -366,7 +367,8 @@ public class CommentService
 
         for(CommentDto comment : commentDtoList)
         {
-            contentTitleList.add(boardSearchService.getBoardTitleByBoardIdxAndGallery(comment.getBoardIdx(),comment.getGallery()));
+            title = boardSearchService.getBoardTitleByBoardIdxAndGallery(comment.getBoardIdx(),comment.getGallery());
+            contentTitleList.add(title);
         }
 
         model.addAttribute("contentTitleList",contentTitleList);

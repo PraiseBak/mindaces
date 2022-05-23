@@ -371,6 +371,10 @@ public class BoardSearchService
     public BoardDto getBoardDtoByGalleryAndIdx(String galleryName, Long contentIdx)
     {
         Board board =  boardRepository.findByGalleryAndContentIdx(galleryName,contentIdx,Board.class);
+        if(board == null)
+        {
+            return null;
+        }
         return this.convertEntityToDto(board);
     }
 
@@ -415,6 +419,10 @@ public class BoardSearchService
     {
         BoardDto board;
         board = this.getBoardDtoByGalleryAndIdx(gallery,boardIdx);
+        if(board == null)
+        {
+            return "삭제된 글입니다";
+        }
         return board.getTitle();
     }
 
