@@ -5,15 +5,18 @@ import com.mindaces.mindaces.service.BoardSearchService;
 import com.mindaces.mindaces.service.BoardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalTime;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -25,6 +28,13 @@ public class MainController
     private BoardService boardService;
     private HttpSession httpSession;
     private BoardSearchService boardSearchService;
+
+    @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @ResponseBody
+    public String handleSSE() {
+        System.out.println("넵");
+        return "sse event";
+    }
 
     @GetMapping("/")
     public String main(Model model)
